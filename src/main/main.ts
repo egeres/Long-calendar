@@ -15,7 +15,34 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { globalShortcut } from 'electron';
-import { directory_setup } from "./long_calendar_functionality";
+import { directory_setup }            from "./long_calendar_functionality";
+import { get_sources_in_data_folder } from "./long_calendar_functionality";
+
+const electron = require('electron');
+const fs       = require('fs');
+
+
+let path_directory_data : string = path.join(__dirname, "..", "..", "data");
+
+console.log("...")
+console.log(get_sources_in_data_folder(path_directory_data))
+
+const express     = require('express');
+const bodyParser  = require('body-parser');
+const cors        = require('cors')
+const app_express = express();
+
+app_express.use(bodyParser.urlencoded({extended:false}));
+app_express.use(bodyParser.json());
+app_express.use(cors())
+app_express.get("/sources_in_data_folder", (_req: any, res: any) => {
+  res.json(
+    get_sources_in_data_folder(path_directory_data)
+  )
+})
+app_express.listen(17462, () => { console.log("Listening") })
+
+
 
 export default class AppUpdater {
   constructor() {
@@ -25,7 +52,6 @@ export default class AppUpdater {
   }
 }
 
-const electron = require('electron');
 
 let mainWindow: BrowserWindow | null = null;
 let mainWindow_ishidden : boolean                 = false;
