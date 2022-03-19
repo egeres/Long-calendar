@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { globalShortcut } from 'electron';
 
 export default class AppUpdater {
   constructor() {
@@ -23,7 +24,11 @@ export default class AppUpdater {
   }
 }
 
+const electron = require('electron');
+
 let mainWindow: BrowserWindow | null = null;
+let mainWindow_ishidden : boolean                 = false;
+let mainWindow_cantogglehidden_cooldown : boolean = true;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -69,11 +74,19 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
+  let monitorWidth  = electron.screen.getPrimaryDisplay().size.width;
+  let monitorHeight = electron.screen.getPrimaryDisplay().size.height;
+
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    icon: getAssetPath('icon.png'),
+    show           : false,
+    frame          : false, // Frameless
+    autoHideMenuBar: true,  // No upper menu
+    transparent    : true,
+
+    width  : monitorWidth ,
+    height : monitorHeight,
+
+    icon          : getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -82,6 +95,31 @@ const createWindow = async () => {
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
   mainWindow.on('ready-to-show', () => {
+
+    globalShortcut.register('Alt+E', () => {
+
+      if (mainWindow_cantogglehidden_cooldown) {
+
+        // The cooldown is set
+        mainWindow_cantogglehidden_cooldown = false;
+        setTimeout(() => {mainWindow_cantogglehidden_cooldown = true;}, 300);
+        
+        // We toggle the state of the window
+        if (mainWindow !== null)
+        {
+          if (!mainWindow_ishidden) {
+            mainWindow?.hide()
+            mainWindow_ishidden = true;
+          }
+          else {
+            mainWindow?.show()
+            mainWindow_ishidden = false;
+          }
+        }
+      }
+        
+    })
+
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
