@@ -15,6 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { globalShortcut } from 'electron';
+import { directory_setup } from "./long_calendar_functionality";
 
 export default class AppUpdater {
   constructor() {
@@ -163,6 +164,11 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+
+    directory_setup(
+      path.join(__dirname, "..", "..")
+    );
+
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
