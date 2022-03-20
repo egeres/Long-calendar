@@ -24,6 +24,9 @@ class Home extends Component
       categories   : [],
       color        : "#0F0",
       picking_color: false,
+
+      graph_width  : 500,
+      graph_height : 500,
     }
 
     this.toggle_visibility_by_id = this.toggle_visibility_by_id.bind(this)
@@ -67,9 +70,11 @@ class Home extends Component
     return <div className='centered'>
     
     <Container_graphs_time
-    categories              = {this.state.categories}
+    categories = {this.state.categories}
+    width      = {this.state.graph_width}
+    height     = {this.state.graph_height}
     />
-    
+
     <div className='spacer_10'/>
 
     <Container_categories
