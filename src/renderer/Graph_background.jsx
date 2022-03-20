@@ -49,8 +49,8 @@ export default class Graph_background extends Component
         .attr("height", this.props.height)
         .attr("x", 0)
         .attr("y", 0)
-        .attr("fill", "#F00")
-        .style("opacity", 0.25);
+        .attr("fill", "#000")
+        .style("opacity", 0.7);
 
         d3
         .select(this.refs.group_main)
@@ -60,7 +60,7 @@ export default class Graph_background extends Component
         .append('line')
             .attr("x1", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.axis_length - 1) })
             .attr("x2", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.axis_length - 1) })
-            .attr("y1",              thiz.props.margin)
+            .attr("y1", thiz.props.margin)
             .attr("y2", thiz.props.height - thiz.props.margin)
             .attr("class", "line_vertical")
             .style("stroke-dasharray", ("2, 2"))

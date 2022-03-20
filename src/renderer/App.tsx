@@ -4,6 +4,7 @@ import './App.css';
 import { HexColorPicker } from "react-colorful";
 import Container_categories from './Container_categories';
 import Container_graphs_time from './Container_graphs_time';
+import Tooltip from './Tooltip';
 
 class Home extends Component
 {
@@ -95,6 +96,8 @@ class Home extends Component
       <HexColorPicker color={this.state.color}/>
     </div>
 
+    <Tooltip/>
+    
     </div>
   }
 }

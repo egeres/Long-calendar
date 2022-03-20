@@ -16,6 +16,11 @@ export default class Graph_time extends Component
     constructor(props)
     {
         super(props);
+
+        // this.tooltip = d3.select("#tooltip").node();
+        this.tooltip = d3.select("#tooltip");
+
+        console.log(this.tooltip)
     }
 
     render()
@@ -55,6 +60,32 @@ export default class Graph_time extends Component
             .attr("y2", i => { return thiz.props.margin + ((moment(i.end  ).hour()+moment(i.end  ).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
             .style("stroke", i => this.props.color)
             .style("stroke-width", 10)
+
+            .attr("tooltip", i => i.tooltip)
+
+			.on("mouseover", function(e) {
+
+                console.log(e.target.getAttribute("tooltip"))
+
+                if (e.target.getAttribute("tooltip"))
+                {
+                    thiz.tooltip.transition()
+					.duration(50)
+					.style("opacity", .9);
+
+				    thiz.tooltip.html((d, i) => {
+					return e.target.getAttribute("tooltip") })
+					.style("left",function(d) {return e.pageX + "px"})
+					.style("top" ,function(d) {return e.pageY + "px"})
+                }
+
+			})
+
+			.on("mouseout", function(_d) {
+				thiz.tooltip.transition()
+					.duration(50)
+					.style("opacity", 0);
+			});
     }
 
     componentDidMount()
