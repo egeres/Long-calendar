@@ -4,58 +4,55 @@ import * as eva from 'eva-icons';
 
 export default class Button_category extends Component
 {
-    static defaultProps = {
-    };
-
-    stringToColour = function(str) {
-        var hash = 0;
-        for (var i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        var colour = '#';
-        for (var i = 0; i < 3; i++) {
-            var value = (hash >> (i * 8)) & 0xFF;
-            colour += ('00' + value.toString(16)).substr(-2);
-        }
-        return colour;
-    }
-
     constructor(props)
     {
         super(props);
-        this.state = {
-            color  : this.stringToColour(this.props.title),
-            visible: true,
-        }
     }
 
     componentDidMount()
     {
-
         eva.replace();
     }
 
     render()
     {
-
         const render_icon_eye = () => {
-
-            if (this.state.visible)
+            if (this.props.visible)
             {
-                return <i data-eva="eye-outline" data-eva-fill="#FFF"/>
+                return <span onClick={() => this.props.on_click_eye(this.props.id)}><i data-eva="eye-outline" data-eva-fill="#FFF"/></span>
             }
             else
             {
-                return <i data-eva="eye-off-outline" data-eva-fill="#FFF"/>
+                return <span onClick={() => this.props.on_click_eye(this.props.id)}><i data-eva="eye-off-outline" data-eva-fill="#FFF"/></span>
             }
         }
 
+        const get_display = () => {
+            if (this.props.visible)
+            {return "block"}
+            else
+            {return "none"}
+        }
+
         return <div className='button_category noselect'>
+
             <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>
-            {render_icon_eye()}
+
+            <span onClick={() => this.props.on_click_eye(this.props.id)}>
+                <div className={this.props.visible ? 'empty':'hidden'}>
+                    <i data-eva="eye-outline" data-eva-fill="#FFF"/>
+                </div>
+                <div className={this.props.visible ? 'hidden':'empty'}>
+                    <i data-eva="eye-off-outline" data-eva-fill="#FFF"/>
+                </div>
+            </span>
+
             <div className='spacer_10'/>
-            <div className='button_color_picker' style={{backgroundColor:this.state.color}}/>
+
+            <div className='button_color_picker' style={{backgroundColor:this.props.color}}/>
+
             {this.props.title}
+            
         </div>
     }
 }

@@ -123,3 +123,11 @@ a:hover {
   user-select          : none;  /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
+
+.empty {
+
+}
+
+.hidden {
+  display: none;
+}

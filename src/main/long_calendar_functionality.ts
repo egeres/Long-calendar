@@ -12,6 +12,19 @@ function isFile(path:String) {
     }
 }
 
+function stringToColour(str:String) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    var colour = '#';
+    for (var i = 0; i < 3; i++) {
+        var value = (hash >> (i * 8)) & 0xFF;
+        colour += ('00' + value.toString(16)).substr(-2);
+    }
+    return colour;
+}
+
 export function directory_setup(path_directory:string)
 {
     // We create the directory for the data
@@ -41,8 +54,13 @@ export function get_sources_in_data_folder(path_directory:string)
     .filter(filename => isFile(path.join(path_directory, filename)))
     .filter(filename => filename !== "config.json")
 
-    return {
-        names:filenames
-        // WIP, a list with the configuration of each one of these elements
-    }
+    let to_return = filenames.map((x, i) => { return {
+        id     : i,
+        title  : x,
+        visible: true,
+        color  : "#0FF",
+        // color: stringToColour(x)
+    }})
+
+    return to_return
 }
