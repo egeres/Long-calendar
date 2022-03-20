@@ -22,10 +22,12 @@ export default class Container_graphs_time extends Component
 
             {this.props.categories.map(x => {return (
                 <Graph_time
-                width  = {this.props.width }
-                height = {this.props.height}
-                data   = {x.data}
-                color  = {x.color}
+                key     = {x.id}
+                width   = {this.props.width }
+                height  = {this.props.height}
+                data    = {x.data}
+                color   = {x.color}
+                visible = {x.visible}
                 />
             )})}
 

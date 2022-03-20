@@ -16,9 +16,11 @@ export default class Container_categories extends Component
             {this.props.categories.map(x => {return (
             <Row_category
                 id             = {x.id}
+                key            = {x.id}
                 title          = {x.title}
                 color          = {x.color}
                 visible        = {x.visible}
+                error          = {x.status === "success"}
                 on_click_eye   = {this.props.toggle_visibility_by_id}
                 on_click_color = {this.props.set_color_by_id}
             />

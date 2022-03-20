@@ -35,11 +35,43 @@ const app_express = express();
 app_express.use(bodyParser.urlencoded({extended:false}));
 app_express.use(bodyParser.json());
 app_express.use(cors())
+
 app_express.get("/sources_in_data_folder", (_req: any, res: any) => {
   res.json(
     get_sources_in_data_folder(path_directory_data)
   )
 })
+
+app_express.get("/get_file_data", (req: any, res: any) => {
+
+  try
+  {
+    let rawdata = fs.readFileSync(req.query.path_file);
+
+    if (rawdata === "")
+    {
+      res.json({
+        "status"     : "error",
+        "description": "File is empty",
+      })
+    }
+
+    let data    = JSON.parse(rawdata);
+    res.json({
+        "status": "success",
+        "data"  : data
+    });
+  }
+  catch (exception)
+  {
+    res.json({
+      "status"     : "error",
+      "description": exception.toString(),
+    })
+  }
+
+});
+
 app_express.listen(17462, () => { console.log("Listening") })
 
 

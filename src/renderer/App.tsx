@@ -7,26 +7,17 @@ import Container_graphs_time from './Container_graphs_time';
 
 class Home extends Component
 {
-
-  ctrl_is_being_pressed : Boolean = false;
-
-  // ctrl_down(event) { if (event.key === "Control") {/*console.log("A");*/ this.ctrl_is_being_pressed = true ;} }
-  // ctrl_up(  event) { if (event.key === "Control") {/*console.log("B");*/ this.ctrl_is_being_pressed = false;} }
-
   constructor(props)
   {
     super(props);
-
-    // this.ctrl_down = this.ctrl_down.bind(this);
-    // this.ctrl_up   = this.ctrl_up.bind(  this);
 
     this.state = {
       categories   : [],
       color        : "#0F0",
       picking_color: false,
 
-      graph_width  : 500,
-      graph_height : 500,
+      graph_width  : 700,
+      graph_height : 700,
     }
 
     this.toggle_visibility_by_id = this.toggle_visibility_by_id.bind(this)
@@ -37,7 +28,24 @@ class Home extends Component
   {
       let out = await fetch("http://localhost:17462/sources_in_data_folder");
       out = await out.json()
-      console.log(out)
+      // console.log("out 0 =", out)
+
+      out = out.map(async (x) => {
+
+        let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
+        x.status = o.status
+
+        if (o.status === "success") { x.data        = o.data; }
+        else                        { x.description = o.description; }
+
+        return x
+      })
+
+      out = await Promise.all(out)
+
+      // let out = await fetch("http://localhost:17462/get_file_data?file=" + "asd");
+      // console.log("out 1 =", out)
+
       await this.setState({
           categories:out,
       })

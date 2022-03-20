@@ -11,7 +11,10 @@ export default class Row_category extends Component
 
     componentDidMount()
     {
-        eva.replace();
+        eva.replace({
+            height: 28,
+            width : 28,
+        });
     }
 
     render()
@@ -45,6 +48,10 @@ export default class Row_category extends Component
             />
 
             {this.props.title}
+
+            <div className={this.props.error ? 'hidden':'to_the_right'}>
+                    <i data-eva="alert-circle-outline" data-eva-fill="#F00"/>
+            </div>
             
         </div>
     }

@@ -22,11 +22,12 @@ export default class Graph_time extends Component
     {
         return (
         <svg
-            viewBox = {"0 0 "+this.props?.width+" "+this.props?.height}
-            width   = {this.props?.width}
-            height  = {this.props?.height}
-            ref     = "root"
-            style={{position:"absolute"}}
+            className = {this.props.visible ? 'empty':'hidden'}
+            viewBox   = {"0 0 "+this.props?.width+" "+this.props?.height}
+            width     = {this.props?.width}
+            height    = {this.props?.height}
+            ref       = "root"
+            style     = {{position:"absolute"}}
         >
         <g ref="group_main"></g>
         </svg>

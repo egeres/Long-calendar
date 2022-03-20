@@ -56,17 +56,12 @@ export function get_sources_in_data_folder(path_directory:string)
     .filter(filename => filename !== "config.json")
 
     let to_return = filenames.map((x, i) => { return {
-        id     : i,
-        title  : x,
-        visible: true,
-        color  : stringToColour(x),
-        // color  : "#0FF",
-        data   : [
-            {
-                "start": moment("2022-03-19 12:00:00"),
-                "end"  : moment("2022-03-19 20:00:00"),
-            },
-        ],
+        id       : i,
+        title    : x,
+        path_file: path.join(path_directory, x),
+        visible  : true,
+        color    : stringToColour(x), // "#0FF",
+        data     : [],
     }})
 
     return to_return

@@ -138,3 +138,11 @@ a:hover {
 .hidden {
   display: none;
 }
+
+.to_the_right {
+  /* position: absolute; */
+  /* right   : 0; */
+  /* float:right; */
+  margin-left : auto;
+  margin-right: 5px;
+}
