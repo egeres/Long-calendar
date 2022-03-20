@@ -2,7 +2,7 @@
 import React, { PureComponent, Component } from 'react';
 import * as eva from 'eva-icons';
 
-export default class Button_category extends Component
+export default class Row_category extends Component
 {
     constructor(props)
     {
@@ -16,17 +16,6 @@ export default class Button_category extends Component
 
     render()
     {
-        const render_icon_eye = () => {
-            if (this.props.visible)
-            {
-                return <span onClick={() => this.props.on_click_eye(this.props.id)}><i data-eva="eye-outline" data-eva-fill="#FFF"/></span>
-            }
-            else
-            {
-                return <span onClick={() => this.props.on_click_eye(this.props.id)}><i data-eva="eye-off-outline" data-eva-fill="#FFF"/></span>
-            }
-        }
-
         const get_display = () => {
             if (this.props.visible)
             {return "block"}
@@ -49,7 +38,11 @@ export default class Button_category extends Component
 
             <div className='spacer_10'/>
 
-            <div className='button_color_picker' style={{backgroundColor:this.props.color}}/>
+            <div
+            className = 'button_color_picker'
+            style     = {{backgroundColor:this.props.color}}
+            onClick   = {() => this.props.on_click_color(this.props.id)}
+            />
 
             {this.props.title}
             

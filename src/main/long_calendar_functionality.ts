@@ -58,8 +58,8 @@ export function get_sources_in_data_folder(path_directory:string)
         id     : i,
         title  : x,
         visible: true,
-        color  : "#0FF",
-        // color: stringToColour(x)
+        color  : stringToColour(x)
+        // color  : "#0FF",
     }})
 
     return to_return

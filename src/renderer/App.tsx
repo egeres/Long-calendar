@@ -1,7 +1,8 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { Component } from 'react';
 import './App.css';
-import List_categories from './List_categories';
+import Container_categories from './Container_categories';
+import { HexColorPicker } from "react-colorful";
 
 class Home extends Component
 {
@@ -19,10 +20,13 @@ class Home extends Component
     // this.ctrl_up   = this.ctrl_up.bind(  this);
 
     this.state = {
-      categories:[]
+      categories   : [],
+      color        : "#0F0",
+      picking_color: false,
     }
 
     this.toggle_visibility_by_id = this.toggle_visibility_by_id.bind(this)
+    this.set_color_by_id         = this.set_color_by_id        .bind(this)
   }
 
   async componentDidMount()
@@ -39,37 +43,47 @@ class Home extends Component
 
   toggle_visibility_by_id(id)
   {
-    console.log("eye clicked", id)
-    console.log(this.state.categories)
+    // console.log("eye clicked", id)
+    // console.log(this.state.categories)
 
     let categories_now = this.state.categories
     let objIndex       = categories_now.findIndex((obj => obj.id == id));
 
-    console.log(objIndex)
-    categories_now[objIndex].visible = false
-    categories_now[objIndex].title   = "aaa"
+    // console.log(objIndex)
+    categories_now[objIndex].visible = !categories_now[objIndex].visible
     this.setState({
       categories:categories_now
     })
-    console.log(this.state.categories)
+    // console.log(this.state.categories)
+  }
+
+  set_color_by_id(id)
+  {
+    let objIndex = this.state.categories.findIndex((obj => obj.id == id));
+
+    this.setState({
+      color        : this.state.categories[objIndex].color,
+      picking_color: true,
+    })
+
   }
 
   render()
   {
     return <div className='centered'>
     
-    <List_categories
+    <Container_categories
     categories              = {this.state.categories}
     toggle_visibility_by_id = {this.toggle_visibility_by_id}
+    set_color_by_id         = {this.set_color_by_id}
     />
+
+    <div className={this.state.picking_color ? 'empty':'hidden'}>
+      <HexColorPicker color={this.state.color}/>
+    </div>
 
     </div>
   }
-
-  // componentDidUpdate()
-  // {
-  //     this.render();
-  // }
 }
 
 export default function App() {
