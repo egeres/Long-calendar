@@ -1,8 +1,9 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { Component } from 'react';
 import './App.css';
-import Container_categories from './Container_categories';
 import { HexColorPicker } from "react-colorful";
+import Container_categories from './Container_categories';
+import Container_graphs_time from './Container_graphs_time';
 
 class Home extends Component
 {
@@ -43,24 +44,17 @@ class Home extends Component
 
   toggle_visibility_by_id(id)
   {
-    // console.log("eye clicked", id)
-    // console.log(this.state.categories)
-
     let categories_now = this.state.categories
     let objIndex       = categories_now.findIndex((obj => obj.id == id));
-
-    // console.log(objIndex)
     categories_now[objIndex].visible = !categories_now[objIndex].visible
     this.setState({
       categories:categories_now
     })
-    // console.log(this.state.categories)
   }
 
   set_color_by_id(id)
   {
     let objIndex = this.state.categories.findIndex((obj => obj.id == id));
-
     this.setState({
       color        : this.state.categories[objIndex].color,
       picking_color: true,
@@ -72,6 +66,12 @@ class Home extends Component
   {
     return <div className='centered'>
     
+    <Container_graphs_time
+    categories              = {this.state.categories}
+    />
+    
+    <div className='spacer_10'/>
+
     <Container_categories
     categories              = {this.state.categories}
     toggle_visibility_by_id = {this.toggle_visibility_by_id}

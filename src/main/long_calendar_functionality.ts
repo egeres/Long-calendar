@@ -1,5 +1,6 @@
 
-const fs = require('fs')
+const fs     = require('fs')
+const moment = require('moment');
 import path from 'path';
 
 function isFile(path:String) {
@@ -58,8 +59,14 @@ export function get_sources_in_data_folder(path_directory:string)
         id     : i,
         title  : x,
         visible: true,
-        color  : stringToColour(x)
+        color  : stringToColour(x),
         // color  : "#0FF",
+        data   : [
+            {
+                "start": moment("2022-03-19 12:00:00"),
+                "end"  : moment("2022-03-19 20:00:00"),
+            },
+        ],
     }})
 
     return to_return
