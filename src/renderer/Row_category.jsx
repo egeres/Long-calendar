@@ -44,7 +44,7 @@ export default class Row_category extends Component
             <div
             className = 'button_color_picker'
             style     = {{backgroundColor:this.props.color}}
-            onClick   = {() => this.props.on_click_color(this.props.id)}
+            onClick   = {(event) => this.props.on_click_color(event, this.props.id)}
             />
 
             {this.props.title}

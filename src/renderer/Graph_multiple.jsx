@@ -67,13 +67,12 @@ export default class Graph_multiple extends Component
                 .style("stroke-width", 10)
     
                 .attr("tooltip", i => i.tooltip)
-    
                 .on("mouseover", function(e) {
                     if (e.target.getAttribute("tooltip"))
                     {
                         thiz.tooltip.transition()
-                        .duration(50)
-                        .style("opacity", .9);
+                        .duration(150)
+                        .style("opacity", 1.0);
                         thiz.tooltip.html((d, i) => {
                         return e.target.getAttribute("tooltip") })
                         .style("left",function(d) {return e.pageX + "px"})
@@ -82,7 +81,7 @@ export default class Graph_multiple extends Component
                 })
                 .on("mouseout", function(_d) {
                     thiz.tooltip.transition()
-                        .duration(50)
+                        .duration(150)
                         .style("opacity", 0);
                 });
         });
