@@ -5,6 +5,8 @@ import { HexColorPicker } from "react-colorful";
 import Container_categories from './Container_categories';
 import Container_graphs_time from './Container_graphs_time';
 import Container_colorpicker from './Container_colorpicker';
+import Container_options from './Container_options';
+
 import Tooltip from './Tooltip';
 
 class Home extends Component
@@ -104,6 +106,21 @@ class Home extends Component
       this.setState({
         categories:categories_new
       })
+
+      fetch(
+        "http://localhost:17462/set_config_prop?target=" +  this.state.categories[objIndex].title,
+        {
+          method: 'POST',
+          headers: {
+            'Accept'      : 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            color : this.state.color_to_assign
+          })
+        }
+      );
+
     }
 
     this.setState({
@@ -124,11 +141,18 @@ class Home extends Component
 
     <div className='spacer_10'/>
 
-    <Container_categories
-    categories              = {this.state.categories}
-    toggle_visibility_by_id = {this.toggle_visibility_by_id}
-    set_color_by_id         = {this.colorpicking_open_picker}
-    />
+    <div className='centered_column'>
+      <Container_options/>
+      <div className='spacer_10'/>
+      <Container_categories
+      categories              = {this.state.categories}
+      toggle_visibility_by_id = {this.toggle_visibility_by_id}
+      set_color_by_id         = {this.colorpicking_open_picker}
+      />
+
+    </div>
+
+
 
     {/* <div id="colorpicker" className={this.state.picking_color ? 'empty':'hidden'} style={{position:"absolute"}}>
       <HexColorPicker color={this.state.color}/>

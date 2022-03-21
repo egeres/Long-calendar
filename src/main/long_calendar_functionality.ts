@@ -49,20 +49,70 @@ export function directory_setup(path_directory:string)
     }
 }
 
+export function get_config(path_directory:string)
+{
+    return JSON.parse(fs.readFileSync(path.join(path_directory, "data", "config.json"), 'utf8'));
+}
+
+export function override_config(path_directory, title, content)
+{
+    let path_file_config : string = path.join(path_directory, "data", "config.json");
+
+    // console.log(title)
+    // console.log(content)
+    // console.log(global.config)
+
+    for (let key in content)
+    {
+        if (!(title in global.config))
+        {
+            global.config[title] = {}
+        }
+
+        global.config[title][key] = content[key]
+    }
+
+    // console.log("...")
+    // console.log(global.config)
+
+    fs.writeFileSync(
+        path_file_config,
+        JSON.stringify(global.config, null, 4)
+    );
+
+}
+
 export function get_sources_in_data_folder(path_directory:string)
 {
     let filenames = fs.readdirSync(path_directory)
     .filter(filename => isFile(path.join(path_directory, filename)))
     .filter(filename => filename !== "config.json")
+    .filter(filename => filename.endsWith(".json"))
 
-    let to_return = filenames.map((x, i) => { return {
-        id       : i,
-        title    : x,
-        path_file: path.join(path_directory, x),
-        visible  : true,
-        color    : stringToColour(x), // "#0FF",
-        data     : [],
-    }})
+    let to_return = filenames.map((x, i) => {
+        
+        let sub_dict = {
+            id       : i,
+            title    : x,
+            path_file: path.join(path_directory, x),
+            visible  : true,
+            color    : stringToColour(x), // "#0FF",
+            data     : [],
+        }
+
+        console.log(x)
+
+        if (x in global.config)
+        {
+            for (let key in global.config[x])
+            {
+                console.log("overwritting...", key, x, global.config[x][key])
+                sub_dict[key] = global.config[x][key]
+            }
+        }
+
+        return sub_dict
+    })
 
     return to_return
 }

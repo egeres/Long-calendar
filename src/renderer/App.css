@@ -63,6 +63,11 @@ a:hover {
   justify-content: center;
 }
 
+.centered_column {
+  display       : flex;
+  flex-direction: column;
+}
+
 .small_circle {
   background-color: rgb(83, 83, 83);
   width           : 20px;
@@ -157,4 +162,23 @@ a:hover {
   align-items     : center;
   align-content   : center;
   text-align      : center;
+}
+
+
+.container_options {
+  background-color: rgb(32, 32, 32);
+  width           : 300px;
+  /* align-items: center; */
+  /* justify-content: center;
+  display        : flex; */
+}
+
+table {
+  table-layout: fixed;
+  width       : 100%;
+}
+
+td {
+  text-align    : center;
+  vertical-align: middle;
 }

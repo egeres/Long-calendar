@@ -17,12 +17,15 @@ import { resolveHtmlPath } from './util';
 import { globalShortcut } from 'electron';
 import { directory_setup }            from "./long_calendar_functionality";
 import { get_sources_in_data_folder } from "./long_calendar_functionality";
+import { get_config }                 from "./long_calendar_functionality";
+import { override_config }            from "./long_calendar_functionality";
 
 const electron = require('electron');
 const fs       = require('fs');
 
 
 let path_directory_data : string = path.join(__dirname, "..", "..", "data");
+global.config = {}
 
 console.log("...")
 console.log(get_sources_in_data_folder(path_directory_data))
@@ -72,6 +75,18 @@ app_express.get("/get_file_data", (req: any, res: any) => {
 
 });
 
+app_express.post("/set_config_prop", (req: any, res: any) => {
+
+  console.log(req.query.target,)
+  console.log(req.body,)
+
+  override_config(
+    path.join(__dirname, "..", ".."),
+    req.query.target,
+    req.body,
+  )
+
+})
 app_express.listen(17462, () => { console.log("Listening") })
 
 
@@ -226,6 +241,10 @@ app
     directory_setup(
       path.join(__dirname, "..", "..")
     );
+    
+    global.config = get_config(
+      path.join(__dirname, "..", "..")
+    )
 
     createWindow();
     app.on('activate', () => {

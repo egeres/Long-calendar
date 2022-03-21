@@ -13,7 +13,7 @@ export default class Tooltip extends Component
     }
     render()
     {
-        return <div id="tooltip">
+        return <div id="tooltip" style={{opacity:0.0, display:"none"}}>
             {/* {this.props.content} */}
             ...
         </div>
