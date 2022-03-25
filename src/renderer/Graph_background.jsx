@@ -7,15 +7,18 @@ export default class Graph_background extends Component
 {
 
     static defaultProps = {
-        axis_length             : 40,
-        width                   : 500,
-        height                  : 500,
-        margin                  : 40,
+        days_to_display: 40 ,
+        width          : 500,
+        height         : 500,
+        margin         : 40 ,
+        axis_length    : 40 ,
     };
 
     constructor(props)
     {
         super(props);
+
+        console.log(this.props.days_to_display)
     }
 
     render()
@@ -55,11 +58,11 @@ export default class Graph_background extends Component
         d3
         .select(this.refs.group_main)
         .selectAll('.line_vertical')
-        .data(d3.range(this.props?.axis_length))
+        .data(d3.range(this.props?.days_to_display))
         .enter()
         .append('line')
-            .attr("x1", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.axis_length - 1) })
-            .attr("x2", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.axis_length - 1) })
+            .attr("x1", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1) })
+            .attr("x2", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1) })
             .attr("y1", thiz.props.margin)
             .attr("y2", thiz.props.height - thiz.props.margin)
             .attr("class", "line_vertical")

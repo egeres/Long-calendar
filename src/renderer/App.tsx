@@ -5,7 +5,7 @@ import { HexColorPicker } from "react-colorful";
 import Container_categories from './Container_categories';
 import Container_graphs_time from './Container_graphs_time';
 import Container_colorpicker from './Container_colorpicker';
-import Container_options from './Container_options';
+import Container_options_days from './Container_options_days';
 
 import Tooltip from './Tooltip';
 
@@ -22,14 +22,16 @@ class Home extends Component
       color_to_assign: "#000",
       id_to_assign   : null,
 
-      graph_width  : 700,
-      graph_height : 700,
+      graph_width     : 700,
+      graph_height    : 700,
+      days_to_display : 40 ,
     }
 
     this.toggle_visibility_by_id  = this.toggle_visibility_by_id .bind(this)
     this.colorpicking_open_picker = this.colorpicking_open_picker.bind(this)
     this.set_color_by_id          = this.set_color_by_id         .bind(this)
     this.set_color_to_assign      = this.set_color_to_assign     .bind(this)
+    this.set_days_to_display      = this.set_days_to_display     .bind(this)
   }
 
   async componentDidMount()
@@ -59,6 +61,27 @@ class Home extends Component
       })
 
       console.log(this.state)
+  }
+
+  set_days_to_display(event)
+  {
+    // this.setState({timecalendar_axis_length: event.target.value});
+    // console.log(event)
+
+    if (event)
+    {
+      if (this.state.days_to_display != event.target.value)
+      {
+
+        if (event.target.value)
+        {
+          console.log(event.target.value)
+          this.setState({days_to_display: event.target.value});
+
+        }
+
+      }
+    }
   }
 
   set_color_to_assign(input_value)
@@ -134,16 +157,22 @@ class Home extends Component
     return <div className='centered'>
     
     <Container_graphs_time
-    categories = {this.state.categories  }
-    width      = {this.state.graph_width }
-    height     = {this.state.graph_height}
+    categories      = {this.state.categories     }
+    width           = {this.state.graph_width    }
+    height          = {this.state.graph_height   }
+    days_to_display = {this.state.days_to_display}
     />
 
     <div className='spacer_10'/>
 
     <div className='centered_column'>
-      <Container_options/>
+
+      <Container_options_days
+      set_days_to_display = {this.set_days_to_display}
+      />
+      
       <div className='spacer_10'/>
+
       <Container_categories
       categories              = {this.state.categories}
       toggle_visibility_by_id = {this.toggle_visibility_by_id}

@@ -38,10 +38,10 @@ export default class Container_options extends Component
         <td>40 D</td>
         <td>10 D</td>
         </tr>
-        <tr>
+        <tr onChange={this.props.set_days_to_display(event)}>
         <td><input type="radio" value={100}                name="days"/></td>
-        <td><input type="radio" value={40}  defaultChecked name="days"/></td>
-        <td><input type="radio" value={10}                 name="days"/></td>
+        <td><input type="radio" value={40 } defaultChecked name="days"/></td>
+        <td><input type="radio" value={10 }                name="days"/></td>
         </tr>
         </tbody>
         </table>

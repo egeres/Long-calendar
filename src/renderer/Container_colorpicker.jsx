@@ -28,8 +28,7 @@ export default class Container_colorpicker extends Component
     {
         if (this.wrapperRef && !this.wrapperRef.current.contains(event.target))
         {
-            // alert("You clicked outside of me!");
-            console.log("You clicked outside of me!")
+            // console.log("You clicked outside of me!")
             this.props.set_color_by_id()
         }
     }
@@ -46,7 +45,6 @@ export default class Container_colorpicker extends Component
         color    = {this.props.color}
         onChange = {this.props.set_color_to_assign}
         />
-        {/* <i data-eva="plus-circle-outline" data-eva-fill="#AAA"/> */}
       </div>
     }
 }
