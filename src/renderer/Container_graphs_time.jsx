@@ -11,9 +11,8 @@ export default class Container_graphs_time extends Component
     {
         return <div style={{
             position: "relative",
-            width   : this.props.width ,
-            height  : this.props.height,
-            
+            width   : this.props.width  + "px",
+            height  : this.props.height + "px",
         }}>
 
             <Graph_background

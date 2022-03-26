@@ -76,18 +76,21 @@ class Home extends Component
         if (event.target.value)
         {
 
-          this.setState({days_to_display: event.target.value});
+          // this.setState({days_to_display: event.target.value});
           // console.log(event.target.getAttribute("v_daystodisplay"))
           // console.log(event.target.getAttribute("v_widthline"))
           // console.log(event.target.getAttribute("v_width"))
           // console.log(event.target.getAttribute("v_height"))
 
-          // this.setState({
-            // days_to_display: event.target.getAttribute("v_daystodisplay"),
-          //   // widthline      : event.target.getAttribute("v_widthline"),
-          //   // width          : event.target.getAttribute("v_width"),
+          this.setState({
+
+            // days_to_display: event.target.value,
+
+            days_to_display: event.target.getAttribute("v_daystodisplay"),
+            widthline      : event.target.getAttribute("v_widthline"),
+            graph_width          : event.target.getAttribute("v_width"),
           //   // height         : event.target.getAttribute("v_height"),
-          // });
+          });
 
         }
       }
@@ -141,7 +144,7 @@ class Home extends Component
       })
 
       fetch(
-        "http://localhost:17462/set_config_prop?target=" +  this.state.categories[objIndex].title,
+        "http://localhost:17462/set_config_prop?target=" + this.state.categories[objIndex].title,
         {
           method: 'POST',
           headers: {
