@@ -39,9 +39,9 @@ export default class Container_options extends Component
         <td>10 D</td>
         </tr>
         <tr onChange={this.props.set_days_to_display(event)}>
-        <td><input type="radio" value={100}                name="days"/></td>
-        <td><input type="radio" value={40 } defaultChecked name="days"/></td>
-        <td><input type="radio" value={10 }                name="days"/></td>
+        <td><input type="radio" value={100} v_daystodisplay={100} v_width={500} v_height={500} v_widthline={5 }                name="days"/></td>
+        <td><input type="radio" value={40 } v_daystodisplay={40 } v_width={500} v_height={500} v_widthline={10} defaultChecked name="days"/></td>
+        <td><input type="radio" value={10 } v_daystodisplay={10 } v_width={500} v_height={500} v_widthline={20}                name="days"/></td>
         </tr>
         </tbody>
         </table>

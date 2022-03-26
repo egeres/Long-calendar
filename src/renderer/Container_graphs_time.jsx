@@ -34,10 +34,11 @@ export default class Container_graphs_time extends Component
             )})} */}
 
             <Graph_multiple
-            width           = {this.props.width     }
-            height          = {this.props.height    }
-            data            = {this.props.categories}
+            width           = {this.props.width          }
+            height          = {this.props.height         }
+            data            = {this.props.categories     }
             days_to_display = {this.props.days_to_display}
+            widthline       = {this.props.widthline      }
             />
 
         </div>

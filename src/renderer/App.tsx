@@ -1,6 +1,7 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { Component } from 'react';
 import './App.css';
+import './App_b.scss';
 import { HexColorPicker } from "react-colorful";
 import Container_categories from './Container_categories';
 import Container_graphs_time from './Container_graphs_time';
@@ -25,6 +26,7 @@ class Home extends Component
       graph_width     : 700,
       graph_height    : 700,
       days_to_display : 40 ,
+      widthline       : 10 ,
     }
 
     this.toggle_visibility_by_id  = this.toggle_visibility_by_id .bind(this)
@@ -38,8 +40,6 @@ class Home extends Component
   {
       let out = await fetch("http://localhost:17462/sources_in_data_folder");
       out = await out.json()
-      // console.log("out 0 =", out)
-
       out = out.map(async (x) => {
 
         let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
@@ -60,7 +60,7 @@ class Home extends Component
           categories:out,
       })
 
-      console.log(this.state)
+      // console.log(this.state)
   }
 
   set_days_to_display(event)
@@ -72,14 +72,24 @@ class Home extends Component
     {
       if (this.state.days_to_display != event.target.value)
       {
-
+        // if (event.target.getAttribute("v_daystodisplay"))
         if (event.target.value)
         {
-          console.log(event.target.value)
+
           this.setState({days_to_display: event.target.value});
+          // console.log(event.target.getAttribute("v_daystodisplay"))
+          // console.log(event.target.getAttribute("v_widthline"))
+          // console.log(event.target.getAttribute("v_width"))
+          // console.log(event.target.getAttribute("v_height"))
+
+          // this.setState({
+            // days_to_display: event.target.getAttribute("v_daystodisplay"),
+          //   // widthline      : event.target.getAttribute("v_widthline"),
+          //   // width          : event.target.getAttribute("v_width"),
+          //   // height         : event.target.getAttribute("v_height"),
+          // });
 
         }
-
       }
     }
   }
@@ -161,6 +171,7 @@ class Home extends Component
     width           = {this.state.graph_width    }
     height          = {this.state.graph_height   }
     days_to_display = {this.state.days_to_display}
+    widthline       = {this.state.widthline      }
     />
 
     <div className='spacer_10'/>
@@ -180,12 +191,6 @@ class Home extends Component
       />
 
     </div>
-
-
-
-    {/* <div id="colorpicker" className={this.state.picking_color ? 'empty':'hidden'} style={{position:"absolute"}}>
-      <HexColorPicker color={this.state.color}/>
-    </div> */}
 
     <Container_colorpicker
     visible             = {this.state.picking_color}

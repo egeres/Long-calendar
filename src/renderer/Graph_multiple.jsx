@@ -70,7 +70,8 @@ export default class Graph_multiple extends Component
                 .attr("y1", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
                 .attr("y2", i => { return thiz.props.margin + ((moment(i.end  ).hour()+moment(i.end  ).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
                 .style("stroke", i => sub_data.color)
-                .style("stroke-width", 10)
+                // .style("stroke-width", 10)
+                .style("stroke-width", this.props.widthline)
     
                 .attr("tooltip", i => i.tooltip)
                 .on("mouseover", function(e) {

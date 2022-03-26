@@ -1,0 +1,42 @@
+
+$color_0:rgb(00, 00, 00);
+$color_1:rgb(37, 37, 37);
+$color_2:rgb(77, 77, 77);
+
+$corner_size: 5px;
+$spacing_s  : 5px;
+$spacing_m  : 10px;
+$spacing_l  : 20px;
+
+.container_options {
+    background-color       : $color_1;
+    width                  : 300px;
+    border-top-left-radius : $corner_size;
+    border-top-right-radius: $corner_size;
+}
+
+#tooltip {
+    position        : absolute;
+    padding         : 10px;
+    background-color: $color_1;
+    border-radius   : $corner_size;
+    align-items     : center;
+    align-content   : center;
+    text-align      : center;
+    font-size       : 17px;
+  
+    display: none;
+}
+
+.button_category {
+    background-color: $color_1;
+    display         : flex;
+    align-items     : center;
+    padding-top     : 5px;
+    padding-bottom  : 5px;
+    width           : 300px;
+}
+
+.button_category:hover {
+    background-color: $color_2;
+}
