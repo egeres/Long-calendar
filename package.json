@@ -227,6 +227,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.2",
+    "chokidar": "^3.5.3",
     "cors": "^2.8.5",
     "d3": "^7.3.0",
     "electron-debug": "^3.2.0",

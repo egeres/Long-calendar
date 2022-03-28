@@ -22,6 +22,7 @@ import { override_config }            from "./long_calendar_functionality";
 
 const electron = require('electron');
 const fs       = require('fs');
+const chokidar = require('chokidar')
 
 
 let path_directory_data : string = path.join(__dirname, "..", "..", "data");
@@ -245,6 +246,30 @@ app
     global.config = get_config(
       path.join(__dirname, "..", "..")
     )
+
+    function update_front(path)
+    {
+      console.log(path)
+      mainWindow.webContents.send('asynchronous-message', {'event': 'updated'});
+    }
+
+    let watcher = chokidar.watch(
+      path.join(__dirname, "..", "..", "data", "*.json"),
+      {
+        // ignored         : /^\./,
+        persistent      : true,
+        awaitWriteFinish: {
+          stabilityThreshold: 2000,
+          pollInterval      : 100
+        },
+      }
+    );
+    watcher
+      .on('add',    function(path ) { update_front(path) /* console.log('File', path, 'has been added');   */ })
+      .on('change', function(path ) { update_front(path) /* console.log('File', path, 'has been changed'); */ })
+      .on('unlink', function(path ) { update_front(path) /* console.log('File', path, 'has been removed'); */ })
+      .on('error',  function(error) { console.error('Error happened', error); })
+    
 
     createWindow();
     app.on('activate', () => {

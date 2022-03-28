@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import moment from 'moment';
 import { readSync } from 'original-fs';
+// import { ipcRenderer } from 'electron';
+// window.ipcRenderer = require('electron').ipcRenderer;
+import { ipcRenderer, ipcMain, dialog } from 'electron'
 
 export default class Graph_multiple extends Component
 {
@@ -24,9 +27,15 @@ export default class Graph_multiple extends Component
 
         // console.log(this.tooltip)
 
-        setTimeout(() => {
-            this.tooltip = d3.select("#tooltip");
-        }, 100)
+        setTimeout(
+            () => { this.tooltip = d3.select("#tooltip"); },
+            100
+        )
+
+        // ipcRenderer.on('asynchronous-message', function (evt, message) {
+        //     console.log(message); // Returns: {'SAVED': 'File Saved'}
+        // });
+
     }
 
     render()
@@ -53,9 +62,28 @@ export default class Graph_multiple extends Component
         .select(this.refs.group_main)
         .selectAll("*")
         .remove();
-
         // console.log(this.props.data)
 
+        // Single data is displated!
+        this.props.data
+        .filter(x => x.visible)
+        .forEach(sub_data => {
+            d3
+            .select(thiz.refs.group_main)
+            .selectAll('.type_circle')
+            .data(sub_data.data)
+            .enter()
+            .append('circle')
+            .filter(i => (moment().diff(moment(i.date_sta).startOf('day'),"days")) < thiz.props.days_to_display)
+            .filter(i => !i.end)
+                .attr("cx", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
+                .attr("cy", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
+                .attr( "r"      , d => (d?.size    ?? sub_data.size    ?? 4.5   ))
+                .style("fill"   , d => (d?.color   ?? sub_data.color   ?? "#FFF"))
+                .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
+        });
+
+        // Segment data is displated!
         this.props.data
         .filter(x => x.visible)
         .forEach(sub_data => {
@@ -66,26 +94,23 @@ export default class Graph_multiple extends Component
             .enter()
             .append('line')
             .filter(i => (moment().diff(moment(i.date_sta).startOf('day'),"days")) < thiz.props.days_to_display)
+            .filter(i => i.end)
                 .attr("x1", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
                 .attr("x2", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.end  ).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
                 .attr("y1", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
                 .attr("y2", i => { return thiz.props.margin + ((moment(i.end  ).hour()+moment(i.end  ).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
                 .style("stroke", i => sub_data.color)
                 .style("stroke-width", this.props.widthline)
-    
                 .attr("tooltip", i => i.tooltip)
                 .on("mouseover", function(e) {
-
                     if (e.target.getAttribute("tooltip"))
                     {
                         let rect = e.target.getBoundingClientRect()
                         let x    = rect.x
                         let y    = rect.y + rect.height / 2
-
                         thiz.tooltip
                         .style("opacity", 1.0)
                         .style("display", "block");
-
                         thiz.tooltip
                         // .transition()
                         // .duration(70)
@@ -108,6 +133,14 @@ export default class Graph_multiple extends Component
     componentDidMount()
     {
     	this.draw();
+
+        // ipcRenderer.on('asynchronous-message', function (evt, message) {
+        //     console.log(message); // Returns: {'SAVED': 'File Saved'}
+        // });
+
+        // window.ipcRenderer.on('ping', (event, message) => { 
+        //     console.log(message) 
+        // });
     }
 
     componentDidUpdate()
