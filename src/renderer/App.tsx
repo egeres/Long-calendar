@@ -36,31 +36,38 @@ class Home extends Component
     this.set_days_to_display      = this.set_days_to_display     .bind(this)
   }
 
+  async update_content()
+  {
+    let out = await fetch("http://localhost:17462/sources_in_data_folder");
+    out = await out.json()
+    out = out.map(async (x) => {
+
+      let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
+      x.status = o.status
+
+      if (o.status === "success") { x.data        = o.data; }
+      else                        { x.description = o.description; }
+
+      return x
+    })
+
+    out = await Promise.all(out)
+
+    // let out = await fetch("http://localhost:17462/get_file_data?file=" + "asd");
+    // console.log("out 1 =", out)
+
+    await this.setState({
+        categories:out,
+    })
+  }
+
   async componentDidMount()
   {
-      let out = await fetch("http://localhost:17462/sources_in_data_folder");
-      out = await out.json()
-      out = out.map(async (x) => {
+      await this.update_content();
 
-        let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
-        x.status = o.status
-
-        if (o.status === "success") { x.data        = o.data; }
-        else                        { x.description = o.description; }
-
-        return x
-      })
-
-      out = await Promise.all(out)
-
-      // let out = await fetch("http://localhost:17462/get_file_data?file=" + "asd");
-      // console.log("out 1 =", out)
-
-      await this.setState({
-          categories:out,
-      })
-
-      // console.log(this.state)
+      window.electron.ipcRenderer.on("poll_update", async (data) => {
+        await this.update_content();
+      });
   }
 
   set_days_to_display(event)
