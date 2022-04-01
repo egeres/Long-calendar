@@ -257,7 +257,7 @@ app
     let watcher = chokidar.watch(
       path.join(__dirname, "..", "..", "data", "*.json"),
       {
-        // ignored         : /^\./,
+        ignored         : "config.json",
         persistent      : true,
         awaitWriteFinish: {
           stabilityThreshold: 2000,

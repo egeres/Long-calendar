@@ -9,6 +9,8 @@ import Container_colorpicker from './Container_colorpicker';
 import Container_options_days from './Container_options_days';
 
 import Tooltip from './Tooltip';
+import Button_menu_main from './Button_menu_main';
+import Menu_main from './Menu_main';
 
 class Home extends Component
 {
@@ -27,6 +29,8 @@ class Home extends Component
       graph_height    : 700,
       days_to_display : 40 ,
       widthline       : 10 ,
+
+      menu_main_visible : false,
     }
 
     this.toggle_visibility_by_id  = this.toggle_visibility_by_id .bind(this)
@@ -34,6 +38,18 @@ class Home extends Component
     this.set_color_by_id          = this.set_color_by_id         .bind(this)
     this.set_color_to_assign      = this.set_color_to_assign     .bind(this)
     this.set_days_to_display      = this.set_days_to_display     .bind(this)
+    this.show_menu_main           = this.show_menu_main          .bind(this)
+    this.hide_menu_main           = this.hide_menu_main          .bind(this)
+
+    // this.props.show_menu_main()
+  }
+
+  show_menu_main() {
+    this.setState({menu_main_visible:true,})
+  }
+
+  hide_menu_main() {
+    this.setState({menu_main_visible:false,})
   }
 
   async update_content()
@@ -119,7 +135,21 @@ class Home extends Component
     categories_now[objIndex].visible = !categories_now[objIndex].visible
     this.setState({
       categories:categories_now
-    })
+    });
+
+    fetch(
+      "http://localhost:17462/set_config_prop?target=" + this.state.categories[objIndex].title,
+      {
+        method: 'POST',
+        headers: {
+          'Accept'      : 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          visible : categories_now[objIndex].visible
+        })
+      }
+    );
   }
 
   colorpicking_open_picker(event, id)
@@ -210,6 +240,15 @@ class Home extends Component
     />
 
     <Tooltip/>
+
+    <Button_menu_main show_menu_main   ={this.show_menu_main}/>
+    {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
+
+    <div className='centered_panel'>
+      <Menu_main menu_main_visible={this.state.menu_main_visible} hide_menu_main={this.hide_menu_main}/>
+    </div>
+
+    {/* <div> aaaa {this.state.menu_main_visible + "aa"}</div> */}
 
     </div>
   }

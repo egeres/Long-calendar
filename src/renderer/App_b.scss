@@ -1,6 +1,6 @@
 
 $color_0:rgb(00, 00, 00);
-$color_1:rgb(37, 37, 37);
+$color_1:rgb(29, 29, 29);
 $color_2:rgb(77, 77, 77);
 
 $corner_size: 5px;
@@ -39,4 +39,29 @@ $spacing_l  : 20px;
 
 .button_category:hover {
     background-color: $color_2;
+}
+
+.button_menu {
+    position: absolute;
+    top     : 30px;
+    right   : 30px;
+    // background-color: red;
+}
+
+.container_menu_main {
+    width           : 50%;
+    height          : 50%;
+    background-color: red;
+    pointer-events  : all;
+    border-radius   : $corner_size;
+}
+
+.centered_panel {
+    display        : flex;
+    height         : 100%;
+    width          : 100%;
+    align-items    : center;
+    justify-content: center;
+    position       : absolute;
+    pointer-events : none;
 }
