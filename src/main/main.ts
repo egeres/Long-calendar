@@ -19,6 +19,7 @@ import { directory_setup }            from "./long_calendar_functionality";
 import { get_sources_in_data_folder } from "./long_calendar_functionality";
 import { get_config }                 from "./long_calendar_functionality";
 import { override_config }            from "./long_calendar_functionality";
+import { override_config_singleprop } from "./long_calendar_functionality";
 
 const electron = require('electron');
 const fs       = require('fs');
@@ -43,6 +44,14 @@ app_express.use(cors())
 app_express.get("/sources_in_data_folder", (_req: any, res: any) => {
   res.json(
     get_sources_in_data_folder(path_directory_data)
+  )
+})
+
+app_express.get("/get_config", (_req: any, res: any) => {
+  res.json(
+    get_config(
+      path.join(__dirname, "..", "..")
+    )
   )
 })
 
@@ -77,17 +86,27 @@ app_express.get("/get_file_data", (req: any, res: any) => {
 });
 
 app_express.post("/set_config_prop", (req: any, res: any) => {
-
-  console.log(req.query.target,)
-  console.log(req.body,)
-
+  // console.log(req.query.target,)
+  // console.log(req.body,)
   override_config(
     path.join(__dirname, "..", ".."),
     req.query.target,
     req.body,
   )
+})
+
+app_express.post("/set_single_config_prop", (req: any, res: any) => {
+  // console.log(req.query.target,)
+  // console.log(req.body,)
+  // console.log(req)
+  override_config_singleprop(
+    path.join(__dirname, "..", ".."),
+    req.query.target,
+    req.body.content,
+  )
 
 })
+
 app_express.listen(17462, () => { console.log("Listening") })
 
 
@@ -152,20 +171,59 @@ const createWindow = async () => {
   let monitorWidth  = electron.screen.getPrimaryDisplay().size.width;
   let monitorHeight = electron.screen.getPrimaryDisplay().size.height;
 
-  mainWindow = new BrowserWindow({
+  console.log("Config:")
+  console.log(global.config)
+
+
+  // let show_frame   = false;
+  // let is_resizable = false;
+  // if (global?.config?.fullscreen === undefined)
+  // {
+  // }
+  // else
+  // {
+  //   show_frame   = ! global?.config?.fullscreen
+  //   is_resizable =   global?.config?.fullscreen
+  // }
+
+  let windows_configuration = {
     show           : false,
-    frame          : false, // Frameless
-    autoHideMenuBar: true,  // No upper menu
-    transparent    : true,
-
-    width  : monitorWidth ,
-    height : monitorHeight,
-
-    icon          : getAssetPath('icon.png'),
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+    resizeable     : false,
+    movable        : false,
+    frame          : false, // Si es una ventana frameless
+    fullscreen     : true ,
+    alwaysOnTop    : true ,
+    autoHideMenuBar: true ,
+    transparent    : true ,
+    width          : monitorWidth ,
+    height         : monitorHeight,
+    icon           : getAssetPath('icon.png'),
+    webPreferences : {
+      preload : path.join(__dirname, 'preload.js'),
+      devTools: true,
     },
-  });
+  }
+
+  if (global?.config?.fullscreen !== undefined && (!global?.config?.fullscreen))
+  {
+    // windows_configuration.frame       = true;
+    // windows_configuration.resizeable  = true;
+    // windows_configuration.movable     = true;
+    // windows_configuration.fullscreen  = false;
+    // windows_configuration.alwaysOnTop = true;
+    
+    windows_configuration = {
+      autoHideMenuBar: true ,
+      // transparent    : true ,
+      icon           : getAssetPath('icon.png'),
+      webPreferences : {
+        preload : path.join(__dirname, 'preload.js'),
+        // devTools: false,
+      },
+    }
+  }
+
+  mainWindow = new BrowserWindow(windows_configuration);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
@@ -270,9 +328,9 @@ app
       .on('change', function(path ) { update_front(path) /* console.log('File', path, 'has been changed'); */ })
       .on('unlink', function(path ) { update_front(path) /* console.log('File', path, 'has been removed'); */ })
       .on('error',  function(error) { console.error('Error happened', error); })
-    
 
     createWindow();
+
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.

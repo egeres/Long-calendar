@@ -82,6 +82,18 @@ export function override_config(path_directory, title, content)
 
 }
 
+export function override_config_singleprop(path_directory, key, value)
+{
+    let path_file_config : string = path.join(path_directory, "data", "config.json");
+
+    global.config[key] = value;
+
+    fs.writeFileSync(
+        path_file_config,
+        JSON.stringify(global.config, null, 4)
+    );
+}
+
 export function get_sources_in_data_folder(path_directory:string)
 {
     let filenames = fs.readdirSync(path_directory)

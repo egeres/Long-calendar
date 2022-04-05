@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Row_category from './Row_category';
 import * as eva from 'eva-icons';
+import e from 'express';
 
 export default class Container_categories extends Component
 {
@@ -15,14 +16,15 @@ export default class Container_categories extends Component
         return <div style={{display:"flex", flexDirection:"column"}}>
             {this.props.categories.map(x => {return (
             <Row_category
-                id             = {x.id}
-                key            = {x.id}
-                title          = {x.title}
-                color          = {x.color}
-                visible        = {x.visible}
-                error          = {x.status === "success"}
-                on_click_eye   = {this.props.toggle_visibility_by_id}
-                on_click_color = {this.props.set_color_by_id}
+                id                = {x.id}
+                key               = {x.id}
+                title             = {x.title}
+                color             = {x.color}
+                visible           = {x.visible}
+                error             = {x.status === "success"}
+                error_description = {x.error_description}
+                on_click_eye      = {this.props.toggle_visibility_by_id}
+                on_click_color    = {this.props.set_color_by_id}
             />
             )})}
             

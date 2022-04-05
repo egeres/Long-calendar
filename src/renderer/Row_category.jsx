@@ -1,6 +1,7 @@
 
 import React, { PureComponent, Component } from 'react';
 import * as eva from 'eva-icons';
+import ReactTooltip from 'react-tooltip';
 
 export default class Row_category extends Component
 {
@@ -49,8 +50,8 @@ export default class Row_category extends Component
 
             {this.props.title}
 
-            <div className={this.props.error ? 'hidden':'to_the_right'}>
-                    <i data-eva="alert-circle-outline" data-eva-fill="#F00"/>
+            <div className={this.props.error ? 'hidden':'to_the_right'} data-tip={this.props.error_description}>
+                <i data-eva="alert-circle-outline" data-eva-fill="#F00"/>
             </div>
             
         </div>

@@ -12,6 +12,8 @@ import Tooltip from './Tooltip';
 import Button_menu_main from './Button_menu_main';
 import Menu_main from './Menu_main';
 
+import ReactTooltip from 'react-tooltip';
+
 class Home extends Component
 {
   constructor(props)
@@ -19,11 +21,11 @@ class Home extends Component
     super(props);
 
     this.state = {
-      categories     : [],
-      color          : "#0F0",
-      picking_color  : false,
-      color_to_assign: "#000",
-      id_to_assign   : null,
+      categories      : [],
+      color           : "#0F0",
+      picking_color   : false,
+      color_to_assign : "#000",
+      id_to_assign    : null,
 
       graph_width     : 700,
       graph_height    : 700,
@@ -61,8 +63,8 @@ class Home extends Component
       let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
       x.status = o.status
 
-      if (o.status === "success") { x.data        = o.data; }
-      else                        { x.description = o.description; }
+      if (o.status === "success") { x.data              = o.data; }
+      else                        { x.error_description = o.description; }
 
       return x
     })
@@ -84,6 +86,8 @@ class Home extends Component
       window.electron.ipcRenderer.on("poll_update", async (data) => {
         await this.update_content();
       });
+
+      ReactTooltip.rebuild()
   }
 
   set_days_to_display(event)
@@ -241,7 +245,13 @@ class Home extends Component
 
     <Tooltip/>
 
-    <Button_menu_main show_menu_main   ={this.show_menu_main}/>
+    <ReactTooltip
+    className = 'customeTheme'
+    place     = "right"
+    effect    = "solid"
+    />
+
+    <Button_menu_main show_menu_main={this.show_menu_main}/>
     {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
 
     <div className='centered_panel'>
