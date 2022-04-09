@@ -38,7 +38,7 @@ export default class Row_category extends Component
 
         return <div className='button_category noselect'>
 
-            {/* <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/> */}
+            <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>
             {/* <DragHandle/> */}
 
             <span onClick={() => this.props.on_click_eye(this.props.id)}>

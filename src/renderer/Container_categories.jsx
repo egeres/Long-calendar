@@ -10,6 +10,12 @@ import {
     sortableHandle   ,
 } from 'react-sortable-hoc';
 
+// import {DndContext} from '@dnd-kit/core';
+// import {Droppable} from './Droppable';
+
+
+
+
 const DragHandle     = sortableHandle(() => <span>::</span>);
 
 const SortableItem   = sortableElement(({value}) => <li>{value}</li>);
@@ -47,7 +53,7 @@ export default class Container_categories extends Component
         eva.replace();
     }
 
-    render_static()
+    render()
     {
         return <div style={{display:"flex", flexDirection:"column"}}>
             {this.props.categories.map(x => {return (
@@ -71,7 +77,7 @@ export default class Container_categories extends Component
         </div>
     }
       
-    render()
+    render_discarded()
     {
         console.log("SortableItem_2", this.props.categories)
 

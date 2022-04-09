@@ -46,13 +46,13 @@ export default class Menu_main extends Component
     {
         document.addEventListener(   "mousedown", this.handleClickOutside);
 
-        let out = fetch("http://localhost:17462/get_config").then(x => x.json()).then(x => console.log(x));
-        
-        console.log(out)
-
-        this.setState({
-            fullscreen:out.fullscreen,
-        })
+        let out = fetch("http://localhost:17462/get_config")
+        .then(x => x.json())
+        .then(x => 
+            this.setState({
+                fullscreen:x.fullscreen,
+            })    
+        )
     }
 
     componentWillUnmount()
