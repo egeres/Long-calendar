@@ -3,6 +3,15 @@ import React, { PureComponent, Component } from 'react';
 import * as eva from 'eva-icons';
 import ReactTooltip from 'react-tooltip';
 
+
+import {
+    sortableContainer,
+    sortableElement,
+    sortableHandle,
+} from 'react-sortable-hoc';
+
+const DragHandle = sortableHandle(() => <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>);
+
 export default class Row_category extends Component
 {
     constructor(props)
@@ -29,7 +38,8 @@ export default class Row_category extends Component
 
         return <div className='button_category noselect'>
 
-            <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>
+            {/* <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/> */}
+            {/* <DragHandle/> */}
 
             <span onClick={() => this.props.on_click_eye(this.props.id)}>
                 <div className={this.props.visible ? 'empty':'hidden'}>

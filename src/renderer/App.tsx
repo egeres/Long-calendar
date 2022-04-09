@@ -13,6 +13,7 @@ import Button_menu_main from './Button_menu_main';
 import Menu_main from './Menu_main';
 
 import ReactTooltip from 'react-tooltip';
+import {arrayMoveImmutable} from 'array-move';
 
 class Home extends Component
 {
@@ -42,6 +43,7 @@ class Home extends Component
     this.set_days_to_display      = this.set_days_to_display     .bind(this)
     this.show_menu_main           = this.show_menu_main          .bind(this)
     this.hide_menu_main           = this.hide_menu_main          .bind(this)
+    this.onSortEnd                = this.onSortEnd               .bind(this)
 
     // this.props.show_menu_main()
   }
@@ -204,7 +206,16 @@ class Home extends Component
       picking_color: false,
     })
 
-   }
+  }
+
+  onSortEnd = ({oldIndex, newIndex}) => {
+
+      console.log("a", oldIndex, newIndex)
+
+      this.setState(({categories}) => ({
+        categories: arrayMoveImmutable(categories, oldIndex, newIndex),
+      }));
+  };
 
   render()
   {
@@ -232,6 +243,7 @@ class Home extends Component
       categories              = {this.state.categories}
       toggle_visibility_by_id = {this.toggle_visibility_by_id}
       set_color_by_id         = {this.colorpicking_open_picker}
+      onSortEnd               = {this.onSortEnd}
       />
 
     </div>

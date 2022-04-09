@@ -226,6 +226,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "array-move": "^4.0.0",
     "body-parser": "^1.19.2",
     "chokidar": "^3.5.3",
     "cors": "^2.8.5",
