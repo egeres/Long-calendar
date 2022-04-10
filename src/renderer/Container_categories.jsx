@@ -79,7 +79,7 @@ export default class Container_categories extends Component
       
     render_discarded()
     {
-        console.log("SortableItem_2", this.props.categories)
+        // console.log("SortableItem_2", this.props.categories)
 
         // return <SortableContainer onSortEnd={this.onSortEnd}>
         return <SortableContainer onSortEnd={this.props.onSortEnd} useDragHandle>

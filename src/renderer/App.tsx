@@ -210,7 +210,7 @@ class Home extends Component
 
   onSortEnd = ({oldIndex, newIndex}) => {
 
-      console.log("a", oldIndex, newIndex)
+      // console.log("a", oldIndex, newIndex)
 
       this.setState(({categories}) => ({
         categories: arrayMoveImmutable(categories, oldIndex, newIndex),

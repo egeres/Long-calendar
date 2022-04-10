@@ -1,9 +1,10 @@
 
+import moment from 'moment';
 import React, { Component } from 'react';
 import Graph_background from './Graph_background';
 import Graph_multiple from './Graph_multiple';
 import Graph_time from './Graph_time';
-import moment from 'moment';
+import Clock_vertical from './Clock_vertical';
 
 export default class Container_graphs_time extends Component
 {
@@ -38,6 +39,12 @@ export default class Container_graphs_time extends Component
             data            = {this.props.categories     }
             days_to_display = {this.props.days_to_display}
             widthline       = {this.props.widthline      }
+            margin          = {40}
+            />
+
+            <Clock_vertical
+            height          = {this.props.height}
+            margin          = {40}
             />
 
         </div>

@@ -20,7 +20,7 @@ export default class Graph_time extends Component
         // this.tooltip = d3.select("#tooltip").node();
         this.tooltip = d3.select("#tooltip");
 
-        console.log(this.tooltip)
+        // console.log(this.tooltip)
     }
 
     render()
@@ -65,7 +65,7 @@ export default class Graph_time extends Component
 
 			.on("mouseover", function(e) {
 
-                console.log(e.target.getAttribute("tooltip"))
+                // console.log(e.target.getAttribute("tooltip"))
 
                 if (e.target.getAttribute("tooltip"))
                 {

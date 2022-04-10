@@ -25,9 +25,9 @@ export default class Menu_main extends Component
     
     set_property_fullscreen(e)
     {
-        console.log(
-            e.target.checked
-        )
+        // console.log(
+        //     e.target.checked
+        // )
         
         fetch(
             "http://localhost:17462/set_single_config_prop?target=fullscreen",
@@ -64,7 +64,7 @@ export default class Menu_main extends Component
     {
         if (this.wrapperRef && this.wrapperRef.current && !this.wrapperRef.current.contains(event.target))
         {
-            console.log("out")
+            // console.log("out")
             this.props.hide_menu_main()
         }
     }

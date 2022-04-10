@@ -18,7 +18,7 @@ export default class Graph_background extends Component
     {
         super(props);
 
-        console.log(this.props.days_to_display)
+        // console.log(this.props.days_to_display)
     }
 
     render()
