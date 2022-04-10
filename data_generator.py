@@ -7,6 +7,33 @@ import datetime
 from dateutil import parser
 from typing import * # type: ignore
 import copy
+import hashlib
+
+
+
+
+
+# 💊 Configuration
+days_to_export  : int  = 5
+url_buckets     : str  = "http://localhost:5600/api/0/buckets"
+labels          : dict = {
+    "gaming":{
+        "titles": ["Red Dead Redemption 2"],
+        "apps"  : ["CivilizationVI.exe", "Deathloop.exe", "eldenring.exe"],
+        "color" : "#262626",
+    },
+    "video":{
+        "titles": [],
+        "apps"  : ["vlc.exe"],
+        "color" : "#262626",
+    },
+    "drawing":{
+        "titles": [],
+        "apps"  : ["krita.exe"],
+        "color" : "#262626",
+    },
+}
+
 
 
 
@@ -104,53 +131,82 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
 
         return all_segments
 
+def get_cached_data_if_valid(path_dir_cache:str, labels_hash:int, filename) -> Optional[List[dict]]:
+
+    if not os.path.exists(path_dir_cache): os.makedirs(path_dir_cache)
+
+    if os.path.exists(f"{path_dir_cache}/{filename}.json"):
+        with open(    f"{path_dir_cache}/{filename}.json", "r") as f:
+            data = json.load(f)
+            if data["hash"] == labels_hash:
+                return data["content"]
+
+def cache_events(path_dir_cache:str, labels_hash:int, list_of_events, filename:str) -> None:
+
+    if not os.path.exists(path_dir_cache): os.makedirs(path_dir_cache)
+
+    with open(f"{path_dir_cache}/{filename}.json", "w") as f:
+        json.dump({
+            "hash"   : str(labels_hash),
+            "content": list_of_events,
+        }, f, indent=4)
+
+
+
+
+
 if __name__ == "__main__":
 
-    # 💊 Configuration
-    days_to_export  : int  = 5
-    path_dir_target : str  = os.path.abspath(os.path.join(os.path.abspath(__file__), ".."))
-    url_buckets     : str  = "http://localhost:5600/api/0/buckets"
-    labels          : dict = {
-        "gaming":{
-            "titles": ["Red Dead Redemption 2"],
-            "apps"  : ["CivilizationVI.exe", "Deathloop.exe", "eldenring.exe"],
-            "color" : "#262626",
-        },
-        "video":{
-            "titles": [],
-            "apps"  : ["vlc.exe"],
-            "color" : "#262626",
-        },
-        "drawing":{
-            "titles": [],
-            "apps"  : ["krita.exe"],
-            "color" : "#262626",
-        },
-    }
+    # 💊 Other stuff
+    hash_labels     : int = int(hashlib.sha256(json.dumps(labels).encode('utf-8')).hexdigest(), 16) % 10**8
+    path_dir_target : str = os.path.abspath(os.path.join(os.path.abspath(__file__), ".."))
+    if not os.path.exists(f"{path_dir_target}/data"      ): os.makedirs(f"{path_dir_target}/data"      )
+    if not os.path.exists(f"{path_dir_target}/data_cache"): os.makedirs(f"{path_dir_target}/data_cache")
 
-    # 💊 Is alive
+
+    # 💊 Check if activity watch server is alive
     if not is_alive(url_buckets):
         raise Exception(f"Activity watch server coudln't be loaded. Check if the server is running or if the url '{url_buckets}' is correct")
+
 
     # 💊 We get the buckets
     buckets = get_bucket_window()
     if len(buckets) == 0:
         raise Exception("There are no 'aw-watcher-window' buckets in your activity watch!")
 
+    
     # 💊 Information extraction itself
     all_segments = []
     for bucket in buckets:
-        if not "BISH" in bucket["id"]: continue
+
         for day_ago in range(days_to_export):
             day      = datetime.datetime.now() - datetime.timedelta(days=day_ago)
-            l        = get_events_of_bucket_and_day(day, bucket["id"])
-            l        = list(reversed(l))
+            filename = f"{day.strftime('%Y-%m-%d')}_{bucket['hostname']}"
+
+            if day_ago > 0:
+                l_cached = get_cached_data_if_valid(
+                    f"{path_dir_target}/data_cache",
+                    hash_labels,
+                    filename,
+                )
+                if l_cached is None:
+                    l = get_events_of_bucket_and_day(day, bucket["id"])
+                    l = list(reversed(l))
+                    cache_events(f"{path_dir_target}/data_cache", hash_labels, l, filename)
+
+                else:
+                    l = l_cached
+            else:
+                l = get_events_of_bucket_and_day(day, bucket["id"])
+                l = list(reversed(l))
+
             segments = get_segments_from_list_of_events(labels, l)
             all_segments.extend(segments)
     
     for i in all_segments:
         i["start"] = i["start"].isoformat()
         i["end"]   = i["end"  ].isoformat()
+
 
     # 💊 We save it!
     with open(f"{path_dir_target}/data/activity_watch.json", "w", encoding="utf-8") as f:
