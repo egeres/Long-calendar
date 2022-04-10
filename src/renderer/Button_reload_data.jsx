@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Row_category from './Row_category';
 import * as eva from 'eva-icons';
-import './App_b.scss';
+import './App.scss';
 
 export default class Button_reload_data extends Component
 {

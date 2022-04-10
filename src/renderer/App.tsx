@@ -1,7 +1,6 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { Component } from 'react';
-import './App.css';
-import './App_b.scss';
+import './App.scss';
 import { HexColorPicker } from "react-colorful";
 import Container_categories from './Container_categories';
 import Container_graphs_time from './Container_graphs_time';
@@ -221,6 +220,8 @@ class Home extends Component
 
   refresh_data()
   {
+    console.log("Reloading data...")
+    
     fetch("http://localhost:17462/reload")
   }
 

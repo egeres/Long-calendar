@@ -12,7 +12,7 @@ import math
 
 
 # 💊 Configuration
-days_to_export  : int  = 2
+days_to_export  : int  = 120
 url_buckets     : str  = "http://localhost:5600/api/0/buckets"
 labels          : dict = {
     "gaming":{
@@ -132,15 +132,14 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                             "color"  : label_v["color"],
                         }
 
-                        p = 0
-
                     else:
                         
                         if current_segment["tooltip"] != event['data']['title']:
 
-                            if (current_segment["end"] - current_segment["start"]).total_seconds() > time_minimum_to_save_in_mins:
+                            if (current_segment["end"] - current_segment["start"]).total_seconds()/60.0 > time_minimum_to_save_in_mins:
                                 # all_segments.append(copy.copy(current_segment))
                                 all_segments.extend(split_event_in_day_events(current_segment))
+                                p = 0
                             
                             current_segment = {
                                 "start"  : parser.parse(event["timestamp"]),
@@ -149,11 +148,12 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                                 "color"  : label_v["color"],
                             }
 
-                        elif abs((parser.parse(event["timestamp"]) - current_segment["start"]).total_seconds())/60 > time_to_glue_in_mins:
+                        elif abs((parser.parse(event["timestamp"]) - current_segment["end"]).total_seconds())/60 > time_to_glue_in_mins:
 
-                            if (current_segment["end"] - current_segment["start"]).total_seconds() > time_minimum_to_save_in_mins:
+                            if (current_segment["end"] - current_segment["start"]).total_seconds()/60.0 > time_minimum_to_save_in_mins:
                                 # all_segments.append(copy.copy(current_segment))
                                 all_segments.extend(split_event_in_day_events(current_segment))
+                                p = 0
 
                             current_segment = {
                                 "start"  : parser.parse(event["timestamp"]),
@@ -166,9 +166,10 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                             current_segment["end"] = parser.parse(event["timestamp"]) + datetime.timedelta(minutes=event["duration"]/60.0)
 
         if current_segment != None:
-            if (current_segment["end"] - current_segment["start"]).total_seconds() > time_minimum_to_save_in_mins:
+            if (current_segment["end"] - current_segment["start"]).total_seconds()/60.0 > time_minimum_to_save_in_mins:
                 # all_segments.append(copy.copy(current_segment))
                 all_segments.extend(split_event_in_day_events(current_segment))
+                p = 0
 
         return all_segments
 
@@ -243,8 +244,6 @@ if __name__ == "__main__":
     # 💊 Information extraction itself
     all_segments = []
     for bucket in buckets:
-
-        # if "DESKTOP" in bucket["id"]: continue
 
         for day_ago in range(days_to_export):
             day      = datetime.datetime.now() - datetime.timedelta(days=day_ago)
