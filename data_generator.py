@@ -8,13 +8,13 @@ from dateutil import parser
 from typing import * # type: ignore
 import copy
 import hashlib
-
+import math
 
 
 
 
 # 💊 Configuration
-days_to_export  : int  = 5
+days_to_export  : int  = 2
 url_buckets     : str  = "http://localhost:5600/api/0/buckets"
 labels          : dict = {
     "gaming":{
@@ -82,6 +82,46 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
         all_segments : List[dict] = []
         current_segment           = None
 
+        def split_event_in_day_events(event) -> List[dict]:
+            """An event that starts on the 1st of january and ends on the 3rd should
+            be splitted into three different segments for the display to render"""
+
+            if (event["end"] - event["start"]).total_seconds() > (60  * 60 * 24):
+                
+                to_return : List[dict] = []
+
+                to_return.append({
+                    "start"  : event["start"],
+                    "end"    : event["start"].replace(hour=23, minute=59, second=59),
+                    "tooltip": event["tooltip"],
+                    "color"  : event["color"],
+                })
+                if "label" in event: to_return[-1]["label"] = event["label"]
+
+                for i in range(max(0, math.ceil((event["end"] - event["start"]).total_seconds() / (60  * 60 * 24)) - 2)):
+                    x = event["start"].replace(hour=0, minute=0, second=0)
+                    x = x + datetime.timedelta(days=i + 1)
+                    to_return.append({
+                        "start"  : x,
+                        "end"    : x.replace(hour=23, minute=59, second=59),
+                        "tooltip": event["tooltip"],
+                        "color"  : event["color"],
+                    })
+                    if "label" in event: to_return[-1]["label"] = event["label"]
+
+                to_return.append({
+                    "start"  : event["end"].replace(hour=0, minute=0, second=0),
+                    "end"    : event["end"],
+                    "tooltip": event["tooltip"],
+                    "color"  : event["color"],
+                })
+                if "label" in event: to_return[-1]["label"] = event["label"]
+
+                return to_return
+                
+            else:
+                return [event]
+
         for label_k, label_v in in_labels.items():
             for n, event in enumerate(events):
                 if (event["data"]["title"] in label_v["titles"]) or (event["data"]["app"] in label_v["apps"]):
@@ -101,7 +141,8 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                         if current_segment["tooltip"] != event['data']['title']:
 
                             if (current_segment["end"] - current_segment["start"]).total_seconds() > time_minimum_to_save_in_mins:
-                                all_segments.append(copy.copy(current_segment))
+                                # all_segments.append(copy.copy(current_segment))
+                                all_segments.extend(split_event_in_day_events(current_segment))
                             
                             current_segment = {
                                 "start"  : parser.parse(event["timestamp"]),
@@ -113,7 +154,8 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                         elif abs((parser.parse(event["timestamp"]) - current_segment["start"]).total_seconds())/60 > time_to_glue_in_mins:
 
                             if (current_segment["end"] - current_segment["start"]).total_seconds() > time_minimum_to_save_in_mins:
-                                all_segments.append(copy.copy(current_segment))
+                                # all_segments.append(copy.copy(current_segment))
+                                all_segments.extend(split_event_in_day_events(current_segment))
 
                             current_segment = {
                                 "start"  : parser.parse(event["timestamp"]),
@@ -127,7 +169,8 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
 
         if current_segment != None:
             if (current_segment["end"] - current_segment["start"]).total_seconds() > time_minimum_to_save_in_mins:
-                all_segments.append(copy.copy(current_segment))
+                # all_segments.append(copy.copy(current_segment))
+                all_segments.extend(split_event_in_day_events(current_segment))
 
         return all_segments
 
