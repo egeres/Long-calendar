@@ -22,10 +22,10 @@ export default class Clock_vertical extends Component
         <div style={{
             position       : "absolute",
             right          : 0,
-            top            : (this.props.height  - this.props.margin * 2) * this.state.position_y_tip,
+            top            : Math.ceil((this.props.height  - this.props.margin * 2) * this.state.position_y_tip),
             backgroundColor: "#fff",
             opacity        : 0.3,
-            height         : "1px",
+            height         : "1.5px",
             width          : this.props.margin,
         }}/>
         );

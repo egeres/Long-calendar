@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld('electron', {
 
     on(channel, func) {
 
-      console.log("......", channel)
+      // console.log("......", channel)
 
       const validChannels = ['ipc-example', "poll_update"];
       if (validChannels.includes(channel)) {
@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld('electron', {
 
     receive: (channel, func) => {
 
-      console.log("...1...", channel)
+      // console.log("...1...", channel)
       // let validChannels = ["fromMain"];
       // if (validChannels.includes(channel)) {
           // Deliberately strip event as it includes `sender` 

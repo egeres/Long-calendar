@@ -21,10 +21,12 @@ import { get_config }                 from "./long_calendar_functionality";
 import { override_config }            from "./long_calendar_functionality";
 import { override_config_singleprop } from "./long_calendar_functionality";
 
+import chalk from 'chalk';
 const electron = require('electron');
 const fs       = require('fs');
 const chokidar = require('chokidar')
-
+const util     = require('util');
+const exec     = util.promisify(require('child_process').exec);
 
 let path_directory_data : string = path.join(__dirname, "..", "..", "data");
 global.config = {}
@@ -106,6 +108,14 @@ app_express.post("/set_single_config_prop", (req: any, res: any) => {
   )
 
 })
+
+app_express.get("/reload", (req: any, res: any) => {
+  // console.log("👉🏻 Reloading data...")
+  console.log(chalk.green('-'), "Reloading data...");
+  let out = exec("python " + path.join(__dirname, "..", "..",) +"/"+ "data_generator.py")
+  .then(x => console.log(chalk.green('-'), "Finished..."))
+  res.send("Finished!");
+});
 
 app_express.listen(17462, () => { console.log("Listening") })
 
@@ -192,7 +202,7 @@ const createWindow = async () => {
     movable        : false,
     frame          : false, // Si es una ventana frameless
     fullscreen     : true ,
-    alwaysOnTop    : true ,
+    // alwaysOnTop    : true ,
     autoHideMenuBar: true ,
     transparent    : true ,
     width          : monitorWidth ,

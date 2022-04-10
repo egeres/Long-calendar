@@ -10,6 +10,7 @@ import Container_options_days from './Container_options_days';
 
 import Tooltip from './Tooltip';
 import Button_menu_main from './Button_menu_main';
+import Button_reload_data from './Button_reload_data';
 import Menu_main from './Menu_main';
 
 import ReactTooltip from 'react-tooltip';
@@ -44,6 +45,7 @@ class Home extends Component
     this.show_menu_main           = this.show_menu_main          .bind(this)
     this.hide_menu_main           = this.hide_menu_main          .bind(this)
     this.onSortEnd                = this.onSortEnd               .bind(this)
+    this.refresh_data             = this.refresh_data            .bind(this)
 
     // this.props.show_menu_main()
   }
@@ -217,6 +219,11 @@ class Home extends Component
       }));
   };
 
+  refresh_data()
+  {
+    fetch("http://localhost:17462/reload")
+  }
+
   render()
   {
     return <div className='centered'>
@@ -263,7 +270,9 @@ class Home extends Component
     effect    = "solid"
     />
 
-    <Button_menu_main show_menu_main={this.show_menu_main}/>
+    <Button_menu_main   show_menu_main={this.show_menu_main}/>
+    <Button_reload_data refresh_data  ={this.refresh_data  }/>
+
     {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
 
     <div className='centered_panel'>

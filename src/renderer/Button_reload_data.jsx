@@ -3,7 +3,7 @@ import Row_category from './Row_category';
 import * as eva from 'eva-icons';
 import './App_b.scss';
 
-export default class Button_menu_main extends Component
+export default class Button_reload_data extends Component
 {
     componentDidMount()
     {
@@ -12,8 +12,8 @@ export default class Button_menu_main extends Component
 
     render()
     {
-        return <div id="button_menu" onClick={() => this.props.show_menu_main()} >
-            <i data-eva="menu-outline" data-eva-fill="#FFF" />
+        return <div id="button_refresh" onClick={() => this.props.refresh_data()} >
+            <i data-eva="refresh-outline" data-eva-fill="#FFF" />
         </div>
     }
 }
