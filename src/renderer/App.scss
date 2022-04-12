@@ -197,6 +197,15 @@ body {
     border-top-right-radius: $corner_size;
 }
 
+.container_customhightlights {
+    background-color          : $color_1;
+    width                     : 300px;
+    border-bottom-left-radius : $corner_size;
+    border-bottom-right-radius: $corner_size;
+    display                   : flex;
+}
+
+
 #tooltip {
     position        : absolute;
     padding         : 10px;

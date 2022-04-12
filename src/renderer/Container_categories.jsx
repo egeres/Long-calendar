@@ -70,10 +70,10 @@ export default class Container_categories extends Component
             />
             )})}
             
-            <div className='spacer_10'/>
+            {/* <div className='spacer_10'/>
             <span style={{margin:"0 auto"}}>
                 <i data-eva="plus-circle-outline" data-eva-fill="#AAA"/>
-            </span>
+            </span> */}
         </div>
     }
       

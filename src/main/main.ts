@@ -110,11 +110,18 @@ app_express.post("/set_single_config_prop", (req: any, res: any) => {
 })
 
 app_express.get("/reload", (req: any, res: any) => {
-  // console.log("👉🏻 Reloading data...")
   console.log(chalk.green('-'), "Reloading data...");
   let out = exec("python " + path.join(__dirname, "..", "..",) +"/"+ "data_generator.py")
   .then(x => console.log(chalk.green('-'), "Finished..."))
   res.send("Finished!");
+});
+
+app_express.get("/set_fullscreen_off", (req: any, res: any) => {
+  mainWindow?.setFullScreen(false)
+});
+
+app_express.get("/set_fullscreen_on", (req: any, res: any) => {
+  mainWindow?.setFullScreen(true)
 });
 
 app_express.listen(17462, () => { console.log("Listening") })

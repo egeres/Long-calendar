@@ -18,9 +18,6 @@ export default class Menu_main extends Component
         this.wrapperRef              = React.createRef();
         this.handleClickOutside      = this.handleClickOutside.bind(this);
         this.set_property_fullscreen = this.set_property_fullscreen.bind(this);
-        
-
-
     }
     
     set_property_fullscreen(e)
@@ -29,6 +26,10 @@ export default class Menu_main extends Component
         //     e.target.checked
         // )
         
+        this.setState({
+            fullscreen:e.target.checked,
+        })
+
         fetch(
             "http://localhost:17462/set_single_config_prop?target=fullscreen",
             {
@@ -51,7 +52,7 @@ export default class Menu_main extends Component
         .then(x => 
             this.setState({
                 fullscreen:x.fullscreen,
-            })    
+            })
         )
     }
 
@@ -85,7 +86,7 @@ export default class Menu_main extends Component
                         <tr>
                             <td style={{textAlign:"right"}}>
                                 <Toggle
-                                defaultChecked={this.state.fullscreen}
+                                checked ={this.state.fullscreen}
                                 onChange={this.set_property_fullscreen}
                                 />
                             </td>
@@ -124,7 +125,7 @@ export default class Menu_main extends Component
 
                 </div>
                 <div style={{width:"50%", height:"100%", float:"right"}}>
-                    <p>This application is intended to be used as a quick overview of historical data, reminiscent of other tools such as cube.js, prometheus.io, netdata... but with a very minimal input of data via files.</p>
+                    <p>Current shortcut is alt+e</p>
                 </div>
             </div>
         }

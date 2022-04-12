@@ -7,28 +7,32 @@ from dateutil import parser
 from typing import * # type: ignore
 import hashlib
 import math
+import warnings
+
 
 
 
 
 # 💊 Configuration
-days_to_export  : int  = 120
-url_buckets     : str  = "http://localhost:5600/api/0/buckets"
-labels          : dict = {
+time_offset    : float = 2.0 # Because AW has a time shift
+filename_data  : str   = "activity_watch.json"
+days_to_export : int   = 150
+url_buckets    : str   = "http://localhost:5600/api/0/buckets"
+labels         : dict  = {
     "gaming":{
         "titles": ["Red Dead Redemption 2"],
         "apps"  : ["CivilizationVI.exe", "Deathloop.exe", "eldenring.exe"],
-        "color" : "#262626",
+        # "color" : "#262626",
     },
     "video":{
         "titles": [],
         "apps"  : ["vlc.exe"],
-        "color" : "#262626",
+        # "color" : "#262626",
     },
     "drawing":{
         "titles": [],
         "apps"  : ["krita.exe"],
-        "color" : "#262626",
+        # "color" : "#262626",
     },
 }
 
@@ -75,16 +79,23 @@ def get_events_of_bucket_and_day(day:datetime.datetime, bucket_id:str, url_base:
     else:
         raise Exception("The connection had a problem!")
 
-def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_in_mins:float=15.0, time_minimum_to_save_in_mins:float=3.0) -> List[dict]:
+def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_in_mins:float=15.0, time_minimum_to_save_in_mins:float=6.0, time_offset_in_hours:float=0.0) -> List[dict]:
 
         all_segments : List[dict] = []
         current_segment           = None
+
+        for e in events:
+            if not isinstance(e, datetime.datetime):
+                e["timestamp"] = parser.parse(e["timestamp"]).replace(tzinfo=None) + datetime.timedelta(hours=time_offset_in_hours)
 
         def split_event_in_day_events(event) -> List[dict]:
             """An event that starts on the 1st of january and ends on the 3rd should
             be splitted into three different segments for the display to render"""
 
-            if (event["end"] - event["start"]).total_seconds() > (60  * 60 * 24):
+            if (
+                (event["end"]     -  event["start"]).total_seconds() > (60  * 60 * 24) or
+                (event["end"].day != event["start"].day)
+            ):
                 
                 to_return : List[dict] = []
 
@@ -92,9 +103,9 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                     "start"  : event["start"],
                     "end"    : event["start"].replace(hour=23, minute=59, second=59),
                     "tooltip": event["tooltip"],
-                    "color"  : event["color"],
                 })
-                if "label" in event: to_return[-1]["label"] = event["label"]
+                if "color" in event: to_return[-1]["color"] = event["color"]
+                if "tag"   in event: to_return[-1]["tag"  ] = event["tag"  ]
 
                 for i in range(max(0, math.ceil((event["end"] - event["start"]).total_seconds() / (60  * 60 * 24)) - 2)):
                     x = event["start"].replace(hour=0, minute=0, second=0)
@@ -103,17 +114,17 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                         "start"  : x,
                         "end"    : x.replace(hour=23, minute=59, second=59),
                         "tooltip": event["tooltip"],
-                        "color"  : event["color"],
                     })
-                    if "label" in event: to_return[-1]["label"] = event["label"]
+                    if "color" in event: to_return[-1]["color"] = event["color"]
+                    if "tag"   in event: to_return[-1]["tag"  ] = event["tag"  ]
 
                 to_return.append({
                     "start"  : event["end"].replace(hour=0, minute=0, second=0),
                     "end"    : event["end"],
                     "tooltip": event["tooltip"],
-                    "color"  : event["color"],
                 })
-                if "label" in event: to_return[-1]["label"] = event["label"]
+                if "color" in event: to_return[-1]["color"] = event["color"]
+                if "tag"   in event: to_return[-1]["tag"  ] = event["tag"  ]
 
                 return to_return
                 
@@ -122,19 +133,22 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
 
         for label_k, label_v in in_labels.items():
             for n, event in enumerate(events):
+
                 if (event["data"]["title"] in label_v["titles"]) or (event["data"]["app"] in label_v["apps"]):
                     
                     if current_segment == None:
                         current_segment = {
-                            "start"  : parser.parse(event["timestamp"]),
-                            "end"    : parser.parse(event["timestamp"]) + datetime.timedelta(minutes=event["duration"]/60.0),
+                            "start"  : event["timestamp"],
+                            "end"    : event["timestamp"] + datetime.timedelta(minutes=event["duration"]/60.0),
                             "tooltip": f"{event['data']['title']}",
-                            "color"  : label_v["color"],
+                            "tag"    : label_k,
                         }
+                        if "color" in label_v: current_segment["color"] = label_v["color"]
 
                     else:
                         
-                        if current_segment["tooltip"] != event['data']['title']:
+                        # if current_segment["tooltip"] != event['data']['title']:
+                        if current_segment["tag"] != label_k:
 
                             if (current_segment["end"] - current_segment["start"]).total_seconds()/60.0 > time_minimum_to_save_in_mins:
                                 # all_segments.append(copy.copy(current_segment))
@@ -142,13 +156,14 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                                 p = 0
                             
                             current_segment = {
-                                "start"  : parser.parse(event["timestamp"]),
-                                "end"    : parser.parse(event["timestamp"]) + datetime.timedelta(minutes=event["duration"]/60.0),
+                                "start"  : event["timestamp"],
+                                "end"    : event["timestamp"] + datetime.timedelta(minutes=event["duration"]/60.0),
                                 "tooltip": f"{event['data']['title']}",
-                                "color"  : label_v["color"],
+                                "tag"    : label_k,
                             }
+                            if "color" in label_v: current_segment["color"] = label_v["color"]
 
-                        elif abs((parser.parse(event["timestamp"]) - current_segment["end"]).total_seconds())/60 > time_to_glue_in_mins:
+                        elif abs((event["timestamp"] - current_segment["end"]).total_seconds())/60 > time_to_glue_in_mins:
 
                             if (current_segment["end"] - current_segment["start"]).total_seconds()/60.0 > time_minimum_to_save_in_mins:
                                 # all_segments.append(copy.copy(current_segment))
@@ -156,14 +171,15 @@ def get_segments_from_list_of_events(in_labels:dict, events:list, time_to_glue_i
                                 p = 0
 
                             current_segment = {
-                                "start"  : parser.parse(event["timestamp"]),
-                                "end"    : parser.parse(event["timestamp"]) + datetime.timedelta(minutes=event["duration"]/60.0),
+                                "start"  : event["timestamp"],
+                                "end"    : event["timestamp"] + datetime.timedelta(minutes=event["duration"]/60.0),
                                 "tooltip": f"{event['data']['title']}",
-                                "color"  : label_v["color"],
+                                "tag"    : label_k,
                             }
+                            if "color" in label_v: current_segment["color"] = label_v["color"]
 
                         else:
-                            current_segment["end"] = parser.parse(event["timestamp"]) + datetime.timedelta(minutes=event["duration"]/60.0)
+                            current_segment["end"] = event["timestamp"] + datetime.timedelta(minutes=event["duration"]/60.0)
 
         if current_segment != None:
             if (current_segment["end"] - current_segment["start"]).total_seconds()/60.0 > time_minimum_to_save_in_mins:
@@ -177,17 +193,17 @@ def get_cached_data_if_valid(path_dir_cache:str, labels_hash:int, filename) -> O
 
     if not os.path.exists(path_dir_cache): os.makedirs(path_dir_cache)
 
-    if os.path.exists(f"{path_dir_cache}/{filename}.json"):
-        with open(    f"{path_dir_cache}/{filename}.json", "r") as f:
+    if os.path.exists(f"{path_dir_cache}/{filename}"):
+        with open(    f"{path_dir_cache}/{filename}", "r") as f:
             data = json.load(f)
-            if data["hash"] == labels_hash:
+            if data["hash"] == str(labels_hash):
                 return data["content"]
 
 def cache_events(path_dir_cache:str, labels_hash:int, list_of_events, filename:str) -> None:
 
     if not os.path.exists(path_dir_cache): os.makedirs(path_dir_cache)
 
-    with open(f"{path_dir_cache}/{filename}.json", "w") as f:
+    with open(f"{path_dir_cache}/{filename}", "w") as f:
         json.dump({
             "hash"   : str(labels_hash),
             "content": list_of_events,
@@ -199,35 +215,15 @@ def cache_events(path_dir_cache:str, labels_hash:int, list_of_events, filename:s
 
 if __name__ == "__main__":
 
-    # get_segments_from_list_of_events(
-    #     labels,[
-    #         {
-    #             'id'       : 314808,
-    #             'timestamp': '2022-04-10 01:10:00',
-    #             'duration' : 3 * 60,
-    #             'data'     : {'app': 'vlc.exe', 'title': ''}
-    #         },
-    #         {
-    #             'id'       : 314808,
-    #             'timestamp': '2022-04-10 01:15:00',
-    #             'duration' : 3 * 60,
-    #             'data'     : {'app': 'a.exe', 'title': ''}
-    #         },
-    #         {
-    #             'id'       : 314808,
-    #             'timestamp': '2022-04-10 01:20:00',
-    #             'duration' : 3 * 60,
-    #             'data'     : {'app': 'vlc.exe', 'title': ''}
-    #         }
-    #     ]
-    # )
-
 
     # 💊 Other stuff
     hash_labels     : int = int(hashlib.sha256(json.dumps(labels).encode('utf-8')).hexdigest(), 16) % 10**8
     path_dir_target : str = os.path.abspath(os.path.join(os.path.abspath(__file__), ".."))
     if not os.path.exists(f"{path_dir_target}/data"      ): os.makedirs(f"{path_dir_target}/data"      )
-    if not os.path.exists(f"{path_dir_target}/data_cache"): os.makedirs(f"{path_dir_target}/data_cache")
+    if not os.path.exists(f"{path_dir_target}/data_cache"):
+        os.makedirs(f"{path_dir_target}/data_cache")
+        if days_to_export > 5:
+            warnings.warn(f"Processing {days_to_export} days of the activity watch database without any previous cache might take some time!")
 
 
     # 💊 Check if activity watch server is alive
@@ -246,8 +242,11 @@ if __name__ == "__main__":
     for bucket in buckets:
 
         for day_ago in range(days_to_export):
+            
+            print (".", end="")
+
             day      = datetime.datetime.now() - datetime.timedelta(days=day_ago)
-            filename = f"{day.strftime('%Y-%m-%d')}_{bucket['hostname']}"
+            filename = f"{day.strftime('%Y-%m-%d')}_{bucket['hostname']}.json"
 
             if day_ago > 0:
                 l_cached = get_cached_data_if_valid(
@@ -265,8 +264,11 @@ if __name__ == "__main__":
             else:
                 l = get_events_of_bucket_and_day(day, bucket["id"])
                 l = list(reversed(l))
+            
+            segments = get_segments_from_list_of_events(labels, l, time_offset_in_hours=time_offset)
 
-            segments = get_segments_from_list_of_events(labels, l)
+            if segments != []:
+                p = 0
             all_segments.extend(segments)
     
     for i in all_segments:
@@ -275,6 +277,6 @@ if __name__ == "__main__":
 
 
     # 💊 We save it!
-    with open(f"{path_dir_target}/data/activity_watch.json", "w", encoding="utf-8") as f:
+    with open(f"{path_dir_target}/data/{filename_data}", "w", encoding="utf-8") as f:
         json.dump(all_segments, f, indent=4)
 

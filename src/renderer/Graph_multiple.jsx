@@ -101,8 +101,8 @@ export default class Graph_multiple extends Component
                 .attr("x2", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.end  ).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
                 .attr("y1", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
                 .attr("y2", i => { return thiz.props.margin + ((moment(i.end  ).hour()+moment(i.end  ).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
-                .style("stroke", i => sub_data.color)
                 .style("stroke-width", this.props.widthline) // Should we have something like .style("stroke-width", x => (x.size ?? this.props.widthline))
+                .style("stroke" , d => (d?.color   ?? sub_data.color   ?? "#FFF"))
                 .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
                 .attr("tooltip", i => i.tooltip)
                 .on("mouseover", function(e) {

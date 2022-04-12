@@ -6,6 +6,7 @@ import Container_categories from './Container_categories';
 import Container_graphs_time from './Container_graphs_time';
 import Container_colorpicker from './Container_colorpicker';
 import Container_options_days from './Container_options_days';
+import Container_customhighlights from './Container_customhighlights';
 
 import Tooltip from './Tooltip';
 import Button_menu_main from './Button_menu_main';
@@ -221,7 +222,7 @@ class Home extends Component
   refresh_data()
   {
     console.log("Reloading data...")
-    
+
     fetch("http://localhost:17462/reload")
   }
 
@@ -253,6 +254,10 @@ class Home extends Component
       set_color_by_id         = {this.colorpicking_open_picker}
       onSortEnd               = {this.onSortEnd}
       />
+
+      <div className='spacer_10'/>
+
+      {/* <Container_customhighlights/> */}
 
     </div>
 
