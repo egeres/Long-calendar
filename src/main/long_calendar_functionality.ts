@@ -112,7 +112,7 @@ export function get_sources_in_data_folder(path_directory:string)
             data     : [],
         }
 
-        console.log(x)
+        // console.log(x)
 
         if (x in global.config)
         {

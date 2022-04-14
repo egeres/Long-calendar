@@ -40,20 +40,24 @@ export default class Menu_main extends Component
                     'Content-Type': 'application/json',
                 },
             }
-        );
+        )
+        .catch();
     }
 
     componentDidMount()
     {
         document.addEventListener(   "mousedown", this.handleClickOutside);
 
-        let out = fetch("http://localhost:17462/get_config")
+        fetch("http://localhost:17462/get_config")
         .then(x => x.json())
         .then(x => 
             this.setState({
                 fullscreen:x.fullscreen,
+                // width : ...,
+                // height: ...,
             })
         )
+        .catch();
     }
 
     componentWillUnmount()

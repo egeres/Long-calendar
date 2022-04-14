@@ -27,12 +27,15 @@ const fs       = require('fs');
 const chokidar = require('chokidar')
 const util     = require('util');
 const exec     = util.promisify(require('child_process').exec);
+const hjson    = require('hjson');
 
 let path_directory_data : string = path.join(__dirname, "..", "..", "data");
 global.config = {}
 
-console.log("...")
-console.log(get_sources_in_data_folder(path_directory_data))
+directory_setup(path.join(__dirname, "..", ".."));
+
+// console.log("...")
+// console.log(get_sources_in_data_folder(path_directory_data))
 
 const express     = require('express');
 const bodyParser  = require('body-parser');
@@ -71,7 +74,9 @@ app_express.get("/get_file_data", (req: any, res: any) => {
       })
     }
 
-    let data    = JSON.parse(rawdata);
+    // let data = JSON.parse(rawdata);
+    // let data = hjson.parse("{a:0}")
+    let data = hjson.parse(rawdata.toString())
     res.json({
         "status": "success",
         "data"  : data
@@ -79,6 +84,7 @@ app_express.get("/get_file_data", (req: any, res: any) => {
   }
   catch (exception)
   {
+    console.log(exception)
     res.json({
       "status"     : "error",
       "description": exception.toString(),
@@ -143,7 +149,7 @@ let mainWindow_cantogglehidden_cooldown : boolean = true;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
+  // console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -188,8 +194,8 @@ const createWindow = async () => {
   let monitorWidth  = electron.screen.getPrimaryDisplay().size.width;
   let monitorHeight = electron.screen.getPrimaryDisplay().size.height;
 
-  console.log("Config:")
-  console.log(global.config)
+  // console.log("Config:")
+  // console.log(global.config)
 
 
   // let show_frame   = false;
@@ -324,7 +330,7 @@ app
 
     function update_front(path)
     {
-      console.log(path)
+      // console.log(path)
       mainWindow.webContents.send('poll_update'  , {'path': path});
       // mainWindow.webContents.send('poll_update_2', {'path': path});
     }

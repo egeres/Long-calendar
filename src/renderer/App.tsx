@@ -60,27 +60,40 @@ class Home extends Component
 
   async update_content()
   {
-    let out = await fetch("http://localhost:17462/sources_in_data_folder");
-    out = await out.json()
-    out = out.map(async (x) => {
+    // let out = await fetch("http://localhost:17462/sources_in_data_folder");
+    // out = await out.json()
+    // out = out.map(async (x) => {
+    //   let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
+    //   x.status = o.status
+    //   if (o.status === "success") { x.data              = o.data; }
+    //   else                        { x.error_description = o.description; }
+    //   return x
+    // })
+    // out = await Promise.all(out)
+    // // let out = await fetch("http://localhost:17462/get_file_data?file=" + "asd");
+    // // console.log("out 1 =", out)
+    // await this.setState({
+    //     categories:out,
+    // })
 
-      let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
-      x.status = o.status
 
-      if (o.status === "success") { x.data              = o.data; }
-      else                        { x.error_description = o.description; }
+    fetch("http://localhost:17462/sources_in_data_folder")
+    .then(out => out.json())
+    .then(out => {
 
-      return x
+      out = out.map(async (x) => {
+        let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
+        x.status = o.status
+        if (o.status === "success") { x.data              = o.data; }
+        else                        { x.error_description = o.description; }
+        return x
+      })
+
+      Promise.all(out).then(x => this.setState({categories:x,})).catch()
+    
     })
+    .catch()
 
-    out = await Promise.all(out)
-
-    // let out = await fetch("http://localhost:17462/get_file_data?file=" + "asd");
-    // console.log("out 1 =", out)
-
-    await this.setState({
-        categories:out,
-    })
   }
 
   async componentDidMount()
@@ -223,7 +236,7 @@ class Home extends Component
   {
     console.log("Reloading data...")
 
-    fetch("http://localhost:17462/reload")
+    fetch("http://localhost:17462/reload").catch()
   }
 
   render()
