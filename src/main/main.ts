@@ -330,9 +330,13 @@ app
 
     function update_front(path)
     {
-      // console.log(path)
-      mainWindow.webContents.send('poll_update'  , {'path': path});
-      // mainWindow.webContents.send('poll_update_2', {'path': path});
+      if (mainWindow && mainWindow?.webContents)
+      {
+
+        // console.log(path)
+        mainWindow.webContents.send('poll_update'  , {'path': path});
+        // mainWindow.webContents.send('poll_update_2', {'path': path});
+      }
     }
 
     let watcher = chokidar.watch(
