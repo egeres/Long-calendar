@@ -29,10 +29,18 @@ const util     = require('util');
 const exec     = util.promisify(require('child_process').exec);
 const hjson    = require('hjson');
 
-let path_directory_data : string = path.join(__dirname, "..", "..", "data");
+let path_dir_root : string = path.join(__dirname, "..", "..");
+
+let last = path.basename(path_dir_root)
+if (last == "app.asar")
+{
+  path_dir_root = path.dirname(app.getPath('exe'))
+}
+
+let path_directory_data : string = path.join(path_dir_root, "data");
 global.config = {}
 
-directory_setup(path.join(__dirname, "..", ".."));
+directory_setup(path_dir_root);
 
 // console.log("...")
 // console.log(get_sources_in_data_folder(path_directory_data))
@@ -55,7 +63,7 @@ app_express.get("/sources_in_data_folder", (_req: any, res: any) => {
 app_express.get("/get_config", (_req: any, res: any) => {
   res.json(
     get_config(
-      path.join(__dirname, "..", "..")
+      path_dir_root
     )
   )
 })
@@ -97,7 +105,7 @@ app_express.post("/set_config_prop", (req: any, res: any) => {
   // console.log(req.query.target,)
   // console.log(req.body,)
   override_config(
-    path.join(__dirname, "..", ".."),
+    path_dir_root,
     req.query.target,
     req.body,
   )
@@ -108,7 +116,7 @@ app_express.post("/set_single_config_prop", (req: any, res: any) => {
   // console.log(req.body,)
   // console.log(req)
   override_config_singleprop(
-    path.join(__dirname, "..", ".."),
+    path_dir_root,
     req.query.target,
     req.body.content,
   )
@@ -117,7 +125,7 @@ app_express.post("/set_single_config_prop", (req: any, res: any) => {
 
 app_express.get("/reload", (req: any, res: any) => {
   console.log(chalk.green('-'), "Reloading data...");
-  let out = exec("python " + path.join(__dirname, "..", "..",) +"/"+ "data_generator.py")
+  let out = exec("python " + path_dir_root +"/"+ "data_generator.py")
   .then(x => console.log(chalk.green('-'), "Finished..."))
   res.send("Finished!");
 });
@@ -320,13 +328,9 @@ app
   .whenReady()
   .then(() => {
 
-    directory_setup(
-      path.join(__dirname, "..", "..")
-    );
+    directory_setup(path_dir_root);
     
-    global.config = get_config(
-      path.join(__dirname, "..", "..")
-    )
+    global.config = get_config(path_dir_root)
 
     function update_front(path)
     {
@@ -340,7 +344,7 @@ app
     }
 
     let watcher = chokidar.watch(
-      path.join(__dirname, "..", "..", "data", "*.json"),
+      path.join(path_dir_root, "data", "*.json"),
       {
         ignored         : "config.json",
         persistent      : true,
