@@ -17,6 +17,17 @@ export default class Row_category extends Component
     constructor(props)
     {
         super(props);
+        this.handle_onmouseenter = this.handle_onmouseenter.bind(this)
+    }
+
+    handle_onmouseenter()
+    {
+        // console.log("......", this.props.last_visibility_state, this.props.id)
+
+        if(this.props.mouse_is_held_down)
+        {
+            this.props.set_visibility_by_id(this.props.id, this.props.last_visibility_state)
+        }
     }
 
     componentDidMount()
@@ -41,7 +52,10 @@ export default class Row_category extends Component
             <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>
             {/* <DragHandle/> */}
 
-            <span onClick={() => this.props.on_click_eye(this.props.id)}>
+            {/* <span onClick={() => this.props.on_click_eye(this.props.id)}> */}
+
+            <span onMouseDown={() => this.props.on_click_eye(this.props.id)} onMouseEnter={() => this.handle_onmouseenter()}>
+
                 <div className={this.props.visible ? 'empty':'hidden'}>
                     <i data-eva="eye-outline" data-eva-fill="#FFF"/>
                 </div>

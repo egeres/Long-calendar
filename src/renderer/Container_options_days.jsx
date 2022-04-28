@@ -35,7 +35,7 @@ export default class Container_options extends Component
             {return "none"}
         }
 
-        return <div className='container_options'>
+        return <div className='container_options noselect'>
             {/* <input type="radio" value={70} name="days"                /><label>L</label>
             <input type="radio" value={40} name="days" defaultChecked /><label>M</label>
             <input type="radio" value={10} name="days"                /><label>S</label><br/> */}

@@ -55,18 +55,23 @@ export default class Container_categories extends Component
 
     render()
     {
+        // console.log(this.props.last_visibility_state)
+
         return <div style={{display:"flex", flexDirection:"column"}}>
             {this.props.categories.map(x => {return (
             <Row_category
-                id                = {x.id}
-                key               = {x.id}
-                title             = {x.title}
-                color             = {x.color}
-                visible           = {x.visible}
-                error             = {x.status === "success"}
-                error_description = {x.error_description}
-                on_click_eye      = {this.props.toggle_visibility_by_id}
-                on_click_color    = {this.props.set_color_by_id}
+                id                    = {x.id}
+                key                   = {x.id}
+                title                 = {x.title}
+                color                 = {x.color}
+                visible               = {x.visible}
+                error                 = {x.status === "success"}
+                error_description     = {x.error_description}
+                on_click_eye          = {this.props.toggle_visibility_by_id}
+                set_visibility_by_id  = {this.props.set_visibility_by_id}
+                on_click_color        = {this.props.set_color_by_id}
+                mouse_is_held_down    = {this.props.mouse_is_held_down}
+                last_visibility_state = {this.props.last_visibility_state}
             />
             )})}
             

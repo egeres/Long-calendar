@@ -35,9 +35,13 @@ class Home extends Component
       widthline       : 10 ,
 
       menu_main_visible : false,
+      
+      mouse_is_held_down   : false,
+      last_visibility_state: false,
     }
 
     this.toggle_visibility_by_id  = this.toggle_visibility_by_id .bind(this)
+    this.set_visibility_by_id     = this.set_visibility_by_id    .bind(this)
     this.colorpicking_open_picker = this.colorpicking_open_picker.bind(this)
     this.set_color_by_id          = this.set_color_by_id         .bind(this)
     this.set_color_to_assign      = this.set_color_to_assign     .bind(this)
@@ -104,6 +108,10 @@ class Home extends Component
         await this.update_content();
       });
 
+      window.addEventListener('mouseup', (event) => {
+        this.setState({mouse_is_held_down:false})
+      });
+
       ReactTooltip.rebuild()
   }
 
@@ -155,7 +163,9 @@ class Home extends Component
     let objIndex       = categories_now.findIndex((obj => obj.id == id));
     categories_now[objIndex].visible = !categories_now[objIndex].visible
     this.setState({
-      categories:categories_now
+      categories           : categories_now,
+      mouse_is_held_down   : true,
+      last_visibility_state: categories_now[objIndex].visible,
     });
 
     fetch(
@@ -168,6 +178,30 @@ class Home extends Component
         },
         body: JSON.stringify({
           visible : categories_now[objIndex].visible
+        })
+      }
+    );
+  }
+
+  set_visibility_by_id(id, visibility_state)
+  {
+    let categories_now = this.state.categories
+    let objIndex       = categories_now.findIndex((obj => obj.id == id));
+    categories_now[objIndex].visible = visibility_state
+    this.setState({
+      categories: categories_now,
+    });
+
+    fetch(
+      "http://localhost:17462/set_config_prop?target=" + this.state.categories[objIndex].title,
+      {
+        method: 'POST',
+        headers: {
+          'Accept'      : 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          visible : visibility_state
         })
       }
     );
@@ -264,8 +298,11 @@ class Home extends Component
       <Container_categories
       categories              = {this.state.categories}
       toggle_visibility_by_id = {this.toggle_visibility_by_id}
+      set_visibility_by_id    = {this.set_visibility_by_id}
+      last_visibility_state   = {this.state.last_visibility_state}
       set_color_by_id         = {this.colorpicking_open_picker}
       onSortEnd               = {this.onSortEnd}
+      mouse_is_held_down      = {this.state.mouse_is_held_down}
       />
 
       <div className='spacer_10'/>
