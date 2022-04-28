@@ -52,15 +52,25 @@ export function directory_setup(path_directory:string)
         logger.info("Creating missing file...", path_file_config)
         fs.writeFileSync(
             path_file_config,
-            JSON.stringify({
-            }, null, 4)
+            JSON.stringify({}, null, 4)
         );
     }
 }
 
 export function get_config(path_directory:string)
 {
-    return JSON.parse(fs.readFileSync(path.join(path_directory, "data", "config.json"), 'utf8'));
+    let path_file_config : string = path.join(path_directory, "data", "config.json");
+
+    // Autocreate file if doesn't exist!
+    if (!fs.existsSync(path_file_config)) {
+        logger.info("Creating missing file...", path_file_config)
+        fs.writeFileSync(
+            path_file_config,
+            JSON.stringify({}, null, 4)
+        );
+    }
+
+    return JSON.parse(fs.readFileSync(path_file_config, 'utf8'));
 }
 
 export function override_config(path_directory, title, content)
@@ -127,13 +137,15 @@ export function get_sources_in_data_folder(path_directory:string)
         {
             for (let key in global.config[x])
             {
-                console.log("overwritting...", key, x, global.config[x][key])
+                // console.log("The property", key, "of", x, "will have a value of:", global.config[x][key])
                 sub_dict[key] = global.config[x][key]
             }
         }
 
         return sub_dict
     })
+
+    logger.info("Creating getting sources...")
 
     return to_return
 }

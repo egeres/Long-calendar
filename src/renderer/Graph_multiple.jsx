@@ -65,6 +65,9 @@ export default class Graph_multiple extends Component
         // console.log(this.props.data)
 
         // Single data is displated!
+
+        if (this.props.data.filter(x => x.visible))
+        {
         this.props.data
         .filter(x => x.visible)
         .forEach(sub_data => {
@@ -83,8 +86,15 @@ export default class Graph_multiple extends Component
                 .style("fill"   , d => (d?.color   ?? sub_data.color   ?? "#FFF"))
                 .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
         });
+        }
+        else
+        {
+            console.log("No data to display!")
+        }
 
         // Segment data is displated!
+        if (this.props.data.filter(x => x.visible))
+        {
         this.props.data
         .filter(x => x.visible)
         .forEach(sub_data => {
@@ -130,7 +140,11 @@ export default class Graph_multiple extends Component
                     .style("display", "none");
                 });
         });
-
+        }
+        else
+        {
+        console.log("No data to display!")
+        }
     }
 
     componentDidMount()

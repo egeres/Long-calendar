@@ -7,6 +7,9 @@ export default class Container_options extends Component
     constructor(props)
     {
         super(props);
+        this.state = {
+            selected_radio:1,
+        }
     }
 
     componentDidMount()
@@ -15,6 +18,12 @@ export default class Container_options extends Component
             height: 28,
             width : 28,
         });
+    }
+
+    changeRadio = (event) => {
+        let id_selected_radiobutton = parseInt(event.target.getAttribute("id_rad"))
+        this.setState({selected_radio:id_selected_radiobutton})
+        this.props.set_days_to_display(event)
     }
 
     render()
@@ -38,10 +47,10 @@ export default class Container_options extends Component
         <td>40 D</td>
         <td>10 D</td>
         </tr>
-        <tr onChange={this.props.set_days_to_display(event)}>
-        <td><input type="radio" value={120} v_daystodisplay={120} v_width={1200} v_height={500} v_widthline={8 }                name="days"/></td>
-        <td><input type="radio" value={40 } v_daystodisplay={40 } v_width={700 } v_height={500} v_widthline={10} defaultChecked name="days"/></td>
-        <td><input type="radio" value={10 } v_daystodisplay={10 } v_width={700 } v_height={500} v_widthline={20}                name="days"/></td>
+        <tr>
+            <td><input type="radio" value={120} v_daystodisplay={120} v_width={1200} v_height={500} v_widthline={8 } checked={this.state.selected_radio === 0} onChange={this.changeRadio.bind(this)} id_rad={0} name="days"/></td>
+            <td><input type="radio" value={40 } v_daystodisplay={40 } v_width={700 } v_height={500} v_widthline={10} checked={this.state.selected_radio === 1} onChange={this.changeRadio.bind(this)} id_rad={1} name="days"/></td>
+            <td><input type="radio" value={10 } v_daystodisplay={10 } v_width={700 } v_height={500} v_widthline={20} checked={this.state.selected_radio === 2} onChange={this.changeRadio.bind(this)} id_rad={2} name="days"/></td>
         </tr>
         </tbody>
         </table>

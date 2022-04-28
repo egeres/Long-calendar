@@ -132,7 +132,7 @@ class Home extends Component
 
             days_to_display: event.target.getAttribute("v_daystodisplay"),
             widthline      : event.target.getAttribute("v_widthline"),
-            graph_width          : event.target.getAttribute("v_width"),
+            graph_width    : event.target.getAttribute("v_width"),
           //   // height         : event.target.getAttribute("v_height"),
           });
 
