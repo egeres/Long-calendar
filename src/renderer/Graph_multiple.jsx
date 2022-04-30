@@ -58,55 +58,55 @@ export default class Graph_multiple extends Component
     {
         let thiz = this // I guess the better way to do it is by binding (?)
 
-        d3
-        .select(this.refs.group_main)
-        .selectAll("*")
-        .remove();
-        // console.log(this.props.data)
-
-        // Single data is displated!
-
-        if (this.props.data.filter(x => x.visible))
-        {
-        this.props.data
-        .filter(x => x.visible)
-        .forEach(sub_data => {
-            d3
-            .select(thiz.refs.group_main)
-            .selectAll('.type_circle')
-            .data(sub_data.data)
+        let this_groups = d3.select(thiz.refs.group_main)
+            .selectAll("g")
+            .data(this.props.data)
+            .join(
+                enter => enter
+                    .append("g")
+                    .style("visibility", d => {return d.visible ? "visible" : "hidden"}),
+                update => update
+                    .style("visibility", d => {return d.visible ? "visible" : "hidden"}),
+            )
+        
+        this_groups.selectAll("circle")
+            .data(d => {
+                return d.data.map(x => {
+                    let to_ret = x;
+                    to_ret.color   = x?.color   ?? d.color   ?? "#FFF";
+                    to_ret.size    = x?.size    ?? d.size    ?? 4.5   ;
+                    to_ret.opacity = x?.opacity ?? d.opacity ?? 1.0   ;
+                    return to_ret;
+                })
+            })
             .enter()
-            .append('circle')
-            .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < thiz.props.days_to_display)
-            .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) >= 0)
+            .append("circle")
             .filter(i => !i.end)
+            .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) <  thiz.props.days_to_display)
+            .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) >= 0)
                 .attr("cx", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
                 .attr("cy", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
-                .attr( "r"      , d => (d.size     ?? sub_data.size    ?? 4.5   ))
-                .style("fill"   , d => (d?.color   ?? sub_data.color   ?? "#FFF"))
-                .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
-        });
-        }
-        else
-        {
-            console.log("No data to display!")
-        }
-
-        // Segment data is displated!
-        if (this.props.data.filter(x => x.visible))
-        {
-        this.props.data
-        .filter(x => x.visible)
-        .forEach(sub_data => {
-            d3
-            .select(thiz.refs.group_main)
-            .selectAll('.type_line')
-            .data(sub_data.data)
+                .style("r"      , d => d.size   )
+                .style("fill"   , d => d.color  )
+                .style("opacity", d => d.opacity)
+     
+                
+        this_groups.selectAll("line")
+            .data(d => {
+                return d.data.map(x => {
+                    let to_ret = x;
+                    to_ret.color   = x?.color   ?? d.color   ?? "#FFF";
+                    to_ret.size    = x?.size    ?? d.size    ?? 4.5   ;
+                    to_ret.opacity = x?.opacity ?? d.opacity ?? 1.0   ;
+                    return to_ret;
+                })
+            })
             .enter()
             .append('line')
             .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < thiz.props.days_to_display)
             .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) >= 0)
             .filter(i => i.end)
+
                 .attr("x1", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
                 .attr("x2", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.end  ).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
                 .attr("y1", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
@@ -115,6 +115,7 @@ export default class Graph_multiple extends Component
                 .style("stroke" , d => (d?.color   ?? sub_data.color   ?? "#FFF"))
                 .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
                 .attr("tooltip", i => i.tooltip)
+
                 .on("mouseover", function(e) {
                     if (e.target.getAttribute("tooltip"))
                     {
@@ -139,16 +140,18 @@ export default class Graph_multiple extends Component
                     .style("opacity", 0)
                     .style("display", "none");
                 });
-        });
-        }
-        else
-        {
-        console.log("No data to display!")
-        }
+
+
     }
 
     componentDidMount()
     {
+
+        d3
+            .select(this.refs.group_main)
+            .selectAll("*")
+            .remove();
+            
     	this.draw();
 
         // ipcRenderer.on('asynchronous-message', function (evt, message) {
