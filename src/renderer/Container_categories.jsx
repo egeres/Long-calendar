@@ -69,7 +69,7 @@ export default class Container_categories extends Component
                 error_description     = {x.error_description}
                 on_click_eye          = {this.props.toggle_visibility_by_id}
                 set_visibility_by_id  = {this.props.set_visibility_by_id}
-                on_click_color        = {this.props.set_color_by_id}
+                on_click_color        = {this.props.on_click_color}
                 mouse_is_held_down    = {this.props.mouse_is_held_down}
                 last_visibility_state = {this.props.last_visibility_state}
             />

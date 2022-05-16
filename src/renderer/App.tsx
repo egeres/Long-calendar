@@ -81,11 +81,11 @@ class Home extends Component
     // })
 
 
-    fetch("http://localhost:17462/sources_in_data_folder")
-    .then(out => out.json())
-    .then(out => {
+    await fetch("http://localhost:17462/sources_in_data_folder")
+    .then(async out => out.json())
+    .then(async out => {
 
-      out = out.map(async (x) => {
+      let out_b = out.map(async (x) => {
         let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
         x.status = o.status
         if (o.status === "success") { x.data              = o.data; }
@@ -93,7 +93,7 @@ class Home extends Component
         return x
       })
 
-      Promise.all(out).then(x => this.setState({categories:x,})).catch()
+      await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
     
     })
     .catch()
@@ -151,7 +151,6 @@ class Home extends Component
 
   set_color_to_assign(input_value)
   {
-    // console.log(input_value)
     this.setState({
       color_to_assign : input_value,
     })
@@ -168,19 +167,20 @@ class Home extends Component
       last_visibility_state: categories_now[objIndex].visible,
     });
 
+    let target : string = this.state.categories[objIndex].title.slice(0, -5);
     fetch(
-      "http://localhost:17462/set_config_prop?target=" + this.state.categories[objIndex].title,
+      "http://localhost:17462/set_config_prop",
       {
-        method: 'POST',
+        method : 'POST',
         headers: {
           'Accept'      : 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          visible : categories_now[objIndex].visible
-        })
+        body: JSON.stringify({["data."+target+".visible"] : categories_now[objIndex].visible})
       }
-    );
+    )
+    .then( x     => console.log)
+    .catch(error => console.log);
   }
 
   set_visibility_by_id(id, visibility_state)
@@ -192,19 +192,21 @@ class Home extends Component
       categories: categories_now,
     });
 
+    let target : string = this.state.categories[objIndex].title.slice(0, -5);
     fetch(
-      "http://localhost:17462/set_config_prop?target=" + this.state.categories[objIndex].title,
+      "http://localhost:17462/set_config_prop",
       {
         method: 'POST',
         headers: {
-          'Accept'      : 'application/json',
-          'Content-Type': 'application/json'
+          'Accept'      :'application/json',
+          'Content-Type':'application/json',
         },
-        body: JSON.stringify({
-          visible : visibility_state
-        })
+        body: JSON.stringify({ ["data." + target + ".visible"] : visibility_state })
       }
-    );
+    )
+    .then( x     => console.log)
+    .catch(error => console.log);
+
   }
 
   colorpicking_open_picker(event, id)
@@ -235,19 +237,20 @@ class Home extends Component
         categories:categories_new
       })
 
+      let target : string = this.state.categories[objIndex].title.slice(0, -5);
       fetch(
-        "http://localhost:17462/set_config_prop?target=" + this.state.categories[objIndex].title,
+        "http://localhost:17462/set_config_prop",
         {
           method: 'POST',
           headers: {
-            'Accept'      : 'application/json',
-            'Content-Type': 'application/json'
+            'Accept'      :'application/json',
+            'Content-Type':'application/json',
           },
-          body: JSON.stringify({
-            color : this.state.color_to_assign
-          })
+          body: JSON.stringify({ ["data." + target + ".color"] : this.state.color_to_assign })
         }
-      );
+      )
+      .then( x     => console.log)
+      .catch(error => console.log);
 
     }
 
@@ -268,8 +271,6 @@ class Home extends Component
 
   refresh_data()
   {
-    console.log("Reloading data...")
-
     fetch("http://localhost:17462/reload").catch()
   }
 
@@ -300,7 +301,7 @@ class Home extends Component
       toggle_visibility_by_id = {this.toggle_visibility_by_id}
       set_visibility_by_id    = {this.set_visibility_by_id}
       last_visibility_state   = {this.state.last_visibility_state}
-      set_color_by_id         = {this.colorpicking_open_picker}
+      on_click_color          = {this.colorpicking_open_picker}
       onSortEnd               = {this.onSortEnd}
       mouse_is_held_down      = {this.state.mouse_is_held_down}
       />

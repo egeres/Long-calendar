@@ -2,6 +2,8 @@
 const fs      = require('fs')
 const moment  = require('moment');
 const winston = require('winston');
+const _       = require('lodash');
+import path from 'path';
 
 const logger  = winston.createLogger({
     transports: [
@@ -9,8 +11,6 @@ const logger  = winston.createLogger({
       new winston.transports.File({ filename: 'combined.log' })
     ]
 });
-
-import path from 'path';
 
 function isFile(path:String) {
     try {
@@ -35,6 +35,13 @@ function stringToColour(str:String) {
     return colour;
 }
 
+export function get_config_default() {
+    return {
+        "data"  : {},
+        "window": {},
+    }
+}
+
 export function directory_setup(path_directory:string)
 {
     // We create the directory for the data
@@ -52,7 +59,7 @@ export function directory_setup(path_directory:string)
         logger.info("Creating missing file...", path_file_config)
         fs.writeFileSync(
             path_file_config,
-            JSON.stringify({}, null, 4)
+            JSON.stringify(get_config_default(), null, 4)
         );
     }
 }
@@ -66,46 +73,37 @@ export function get_config(path_directory:string)
         logger.info("Creating missing file...", path_file_config)
         fs.writeFileSync(
             path_file_config,
-            JSON.stringify({}, null, 4)
+            JSON.stringify(get_config_default(), null, 4)
         );
     }
 
-    return JSON.parse(fs.readFileSync(path_file_config, 'utf8'));
+    let config = get_config_default()
+    try
+    {
+        config = JSON.parse(fs.readFileSync(path_file_config, 'utf8'));
+    }
+    catch { }
+
+    return config
 }
 
-export function override_config(path_directory, title, content)
+// export function set_config_prop(path_directory, title, content)
+export function set_config_prop(path_directory, content)
 {
     let path_file_config : string = path.join(path_directory, "data", "config.json");
-
-    // console.log(title)
-    // console.log(content)
-    // console.log(global.config)
 
     for (let key in content)
     {
-        if (!(title in global.config))
+        if (key.split(".")[0] == "data")
         {
-            global.config[title] = {}
+            if (!(key.split(".")[1] in global.config["data"]))
+            {
+                global.config["data"][key.split(".")[1]] = {}
+            }
         }
 
-        global.config[title][key] = content[key]
+        _.set(global.config, key, content[key]);
     }
-
-    // console.log("...")
-    // console.log(global.config)
-
-    fs.writeFileSync(
-        path_file_config,
-        JSON.stringify(global.config, null, 4)
-    );
-
-}
-
-export function override_config_singleprop(path_directory, key, value)
-{
-    let path_file_config : string = path.join(path_directory, "data", "config.json");
-
-    global.config[key] = value;
 
     fs.writeFileSync(
         path_file_config,
@@ -131,14 +129,11 @@ export function get_sources_in_data_folder(path_directory:string)
             data     : [],
         }
 
-        // console.log(x)
+        let just_filename : string = x.slice(0, -5)
 
-        if (x in global.config)
-        {
-            for (let key in global.config[x])
-            {
-                // console.log("The property", key, "of", x, "will have a value of:", global.config[x][key])
-                sub_dict[key] = global.config[x][key]
+        if (just_filename in global.config["data"]) {
+            for (let key in global.config["data"][just_filename]) {
+                sub_dict[key] = global.config["data"][just_filename][key]
             }
         }
 

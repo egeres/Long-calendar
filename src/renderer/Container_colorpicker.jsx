@@ -26,9 +26,8 @@ export default class Container_colorpicker extends Component
     
     handleClickOutside(event)
     {
-        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target))
+        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target) && this.props.visible)
         {
-            // console.log("You clicked outside of me!")
             this.props.set_color_by_id()
         }
     }
@@ -41,10 +40,10 @@ export default class Container_colorpicker extends Component
         style     = {{position:"absolute"}}
         ref       = {this.wrapperRef}
         >
-        <HexColorPicker
-        color    = {this.props.color}
-        onChange = {this.props.set_color_to_assign}
-        />
+            <HexColorPicker
+            color    = {this.props.color}
+            onChange = {this.props.set_color_to_assign}
+            />
       </div>
     }
 }

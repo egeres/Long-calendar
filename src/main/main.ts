@@ -18,8 +18,8 @@ import { globalShortcut } from 'electron';
 import { directory_setup }            from "./long_calendar_functionality";
 import { get_sources_in_data_folder } from "./long_calendar_functionality";
 import { get_config }                 from "./long_calendar_functionality";
-import { override_config }            from "./long_calendar_functionality";
-import { override_config_singleprop } from "./long_calendar_functionality";
+import { set_config_prop }            from "./long_calendar_functionality";
+import { get_config_default }         from "./long_calendar_functionality";
 
 import chalk from 'chalk';
 const electron = require('electron');
@@ -38,7 +38,7 @@ if (last == "app.asar")
 }
 
 let path_directory_data : string = path.join(path_dir_root, "data");
-global.config = {}
+global.config = get_config_default()
 
 directory_setup(path_dir_root);
 
@@ -102,32 +102,24 @@ app_express.get("/get_file_data", (req: any, res: any) => {
 });
 
 app_express.post("/set_config_prop", (req: any, res: any) => {
-  // console.log(req.query.target,)
-  // console.log(req.body,)
-  override_config(
+
+  set_config_prop(
     path_dir_root,
-    req.query.target,
     req.body,
   )
-})
 
-app_express.post("/set_single_config_prop", (req: any, res: any) => {
-  // console.log(req.query.target,)
-  // console.log(req.body,)
-  // console.log(req)
-  override_config_singleprop(
-    path_dir_root,
-    req.query.target,
-    req.body.content,
-  )
+  res.send("ok");
 
 })
+
 
 app_express.get("/reload", (req: any, res: any) => {
-  console.log(chalk.green('-'), "Reloading data...");
+
   let out = exec("python " + path_dir_root +"/"+ "data_generator.py")
   .then(x => console.log(chalk.green('-'), "Finished..."))
+  
   res.send("Finished!");
+  
 });
 
 app_express.get("/set_fullscreen_off", (req: any, res: any) => {
@@ -336,17 +328,16 @@ app
     {
       if (mainWindow && mainWindow?.webContents)
       {
-
-        // console.log(path)
-        mainWindow.webContents.send('poll_update'  , {'path': path});
-        // mainWindow.webContents.send('poll_update_2', {'path': path});
+        mainWindow.webContents.send('poll_update', {'path': path});
       }
     }
 
     let watcher = chokidar.watch(
       path.join(path_dir_root, "data", "*.json"),
       {
-        ignored         : "config.json",
+        ignored : [
+          path.join(path_directory_data, "config.json"),
+        ],
         persistent      : true,
         awaitWriteFinish: {
           stabilityThreshold: 2000,
