@@ -19,6 +19,7 @@ import { directory_setup }            from "./long_calendar_functionality";
 import { get_sources_in_data_folder } from "./long_calendar_functionality";
 import { get_config }                 from "./long_calendar_functionality";
 import { set_config_prop }            from "./long_calendar_functionality";
+import { get_config_prop }            from "./long_calendar_functionality";
 import { get_config_default }         from "./long_calendar_functionality";
 
 import chalk from 'chalk';
@@ -112,6 +113,20 @@ app_express.post("/set_config_prop", (req: any, res: any) => {
 
 })
 
+app_express.get("/get_config_prop", (req: any, res: any) => {
+
+  // console.log(req.body)
+  // res.json({
+  //   value: get_config_prop(req.body)
+  // });
+
+  console.log("/get_config_prop")
+  console.log(req.query.target)
+  res.json({
+    value: get_config_prop(req.query.target)
+  });
+
+})
 
 app_express.get("/reload", (req: any, res: any) => {
 
@@ -194,6 +209,9 @@ const createWindow = async () => {
   let monitorWidth  = electron.screen.getPrimaryDisplay().size.width;
   let monitorHeight = electron.screen.getPrimaryDisplay().size.height;
 
+  // monitorWidth  = 1000;
+  // monitorHeight =  500;
+
   // console.log("Config:")
   // console.log(global.config)
 
@@ -218,6 +236,7 @@ const createWindow = async () => {
     // alwaysOnTop    : true ,
     autoHideMenuBar: true ,
     transparent    : true ,
+
     width          : monitorWidth ,
     height         : monitorHeight,
     icon           : getAssetPath('icon.png'),

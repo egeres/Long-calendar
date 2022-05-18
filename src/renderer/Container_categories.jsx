@@ -57,24 +57,30 @@ export default class Container_categories extends Component
     {
         // console.log(this.props.last_visibility_state)
 
-        return <div style={{display:"flex", flexDirection:"column"}}>
+        return <div style={{display:"flex", flexDirection:"column"}} className="nodrag">
+            
+            <div className='decorative_category_up'/>
+
             {this.props.categories.map(x => {return (
             <Row_category
-                id                    = {x.id}
-                key                   = {x.id}
-                title                 = {x.title}
-                color                 = {x.color}
-                visible               = {x.visible}
-                error                 = {x.status === "success"}
-                error_description     = {x.error_description}
-                on_click_eye          = {this.props.toggle_visibility_by_id}
-                set_visibility_by_id  = {this.props.set_visibility_by_id}
-                on_click_color        = {this.props.on_click_color}
-                mouse_is_held_down    = {this.props.mouse_is_held_down}
-                last_visibility_state = {this.props.last_visibility_state}
+                id                      = {x.id}
+                key                     = {x.id}
+                title                   = {x.title}
+                color                   = {x.color}
+                visible                 = {x.visible}
+                error                   = {x.status === "success"}
+                error_description       = {x.error_description}
+                toggle_visibility_by_id = {this.props.toggle_visibility_by_id}
+                set_visibility_by_id    = {this.props.set_visibility_by_id}
+                on_click_color          = {this.props.on_click_color}
+                mouse_is_held_down      = {this.props.mouse_is_held_down}
+                ctrl_is_held_down       = {this.props.ctrl_is_held_down}
+                last_visibility_state   = {this.props.last_visibility_state}
             />
             )})}
             
+            <div className='decorative_category_bottom'/>
+
             {/* <div className='spacer_10'/>
             <span style={{margin:"0 auto"}}>
                 <i data-eva="plus-circle-outline" data-eva-fill="#AAA"/>

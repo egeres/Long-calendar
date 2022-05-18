@@ -22,6 +22,13 @@ class Home extends Component
   {
     super(props);
 
+    let width_line      : number = 8;
+    let spacing_lines   : number = 5;
+    let width_graph     : number = window.innerWidth  - 330;
+    let days_to_display : number = Math.floor(width_graph / (width_line + spacing_lines));
+
+    console.log(days_to_display)
+
     this.state = {
       categories      : [],
       color           : "#0F0",
@@ -29,14 +36,19 @@ class Home extends Component
       color_to_assign : "#000",
       id_to_assign    : null,
 
-      graph_width     : 700,
-      graph_height    : 700,
-      days_to_display : 40 ,
-      widthline       : 10 ,
+      // graph_width     : 700,
+      // graph_height    : 700,
+
+      graph_width     : width_graph,
+      graph_height    : Math.floor(window.innerHeight * 0.8),
+
+      days_to_display : days_to_display,
+      widthline       : width_line ,
 
       menu_main_visible : false,
       
       mouse_is_held_down   : false,
+       ctrl_is_held_down   : false,
       last_visibility_state: false,
     }
 
@@ -112,6 +124,14 @@ class Home extends Component
         this.setState({mouse_is_held_down:false})
       });
 
+      window.addEventListener('keydown', (event) => {
+        if (event.key == "Control" && !this.state.ctrl_is_held_down) this.setState({ctrl_is_held_down:true});
+      });
+
+      window.addEventListener('keyup', (event) => {
+        if (event.key == "Control") this.setState({ctrl_is_held_down:false});
+      });
+
       ReactTooltip.rebuild()
   }
 
@@ -160,12 +180,34 @@ class Home extends Component
   {
     let categories_now = this.state.categories
     let objIndex       = categories_now.findIndex((obj => obj.id == id));
-    categories_now[objIndex].visible = !categories_now[objIndex].visible
+    
+    if (!this.state.ctrl_is_held_down)
+    {
+      // Toggles the current "eye"
+      categories_now[objIndex].visible = !categories_now[objIndex].visible
+    }
+    else
+    {
+      if (categories_now.filter(x => x.visible).length == 1 && categories_now[objIndex].visible)
+      {
+        // Set all the "eyes" in visible mode
+        categories_now.forEach(element => {element.visible = true});
+      }
+      else
+      {
+        // Sets the current "eye" to be the only one visible
+        categories_now.forEach(element => {element.visible = false});
+        categories_now[objIndex].visible = true
+      }
+    }
+
     this.setState({
       categories           : categories_now,
       mouse_is_held_down   : true,
       last_visibility_state: categories_now[objIndex].visible,
     });
+
+    // this.state.ctrl_is_held_down
 
     let target : string = this.state.categories[objIndex].title.slice(0, -5);
     fetch(
@@ -290,25 +332,26 @@ class Home extends Component
 
     <div className='centered_column'>
 
-      <Container_options_days
-      set_days_to_display = {this.set_days_to_display}
-      />
-      
-      <div className='spacer_10'/>
+        {/* <Container_options_days
+        set_days_to_display = {this.set_days_to_display}
+        /> */}
+        
+        {/* <div className='spacer_10'/> */}
 
-      <Container_categories
-      categories              = {this.state.categories}
-      toggle_visibility_by_id = {this.toggle_visibility_by_id}
-      set_visibility_by_id    = {this.set_visibility_by_id}
-      last_visibility_state   = {this.state.last_visibility_state}
-      on_click_color          = {this.colorpicking_open_picker}
-      onSortEnd               = {this.onSortEnd}
-      mouse_is_held_down      = {this.state.mouse_is_held_down}
-      />
+        <Container_categories
+        categories              = {this.state.categories}
+        toggle_visibility_by_id = {this.toggle_visibility_by_id}
+        set_visibility_by_id    = {this.set_visibility_by_id}
+        last_visibility_state   = {this.state.last_visibility_state}
+        on_click_color          = {this.colorpicking_open_picker}
+        onSortEnd               = {this.onSortEnd}
+        mouse_is_held_down      = {this.state.mouse_is_held_down}
+        ctrl_is_held_down       = {this.state.ctrl_is_held_down}
+        />
 
-      <div className='spacer_10'/>
+        <div className='spacer_10'/>
 
-      {/* <Container_customhighlights/> */}
+        {/* <Container_customhighlights/> */}
 
     </div>
 
@@ -333,7 +376,10 @@ class Home extends Component
     {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
 
     <div className='centered_panel'>
-      <Menu_main menu_main_visible={this.state.menu_main_visible} hide_menu_main={this.hide_menu_main}/>
+      <Menu_main
+      menu_main_visible = {this.state.menu_main_visible}
+      hide_menu_main    = {this.hide_menu_main}
+      />
     </div>
 
     {/* <div> aaaa {this.state.menu_main_visible + "aa"}</div> */}

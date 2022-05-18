@@ -24,7 +24,7 @@ export default class Row_category extends Component
     {
         // console.log("......", this.props.last_visibility_state, this.props.id)
 
-        if(this.props.mouse_is_held_down)
+        if(this.props.mouse_is_held_down && !this.props.ctrl_is_held_down)
         {
             this.props.set_visibility_by_id(this.props.id, this.props.last_visibility_state)
         }
@@ -47,14 +47,25 @@ export default class Row_category extends Component
             {return "none"}
         }
 
-        return <div className='button_category noselect'>
+        return <div className='button_category noselect nodrag'>
 
             <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>
             {/* <DragHandle/> */}
 
             {/* <span onClick={() => this.props.on_click_eye(this.props.id)}> */}
+            {/* <span onClick={() => this.props.on_click_eye(this.props.id)} onMouseDown={() => {console.log("...")}}> */}
+            {/* <span onMouseDown={() => this.props.on_click_eye(this.props.id)}> */}
 
-            <span onMouseDown={() => this.props.on_click_eye(this.props.id)} onMouseEnter={() => this.handle_onmouseenter()}>
+            {/* mouse_is_held_down */}
+
+            {/* <span onMouseDown={() => this.props.on_click_eye(this.props.id)} onMouseEnter={() => console.log("...")}> */}
+
+
+            {/* <span onMouseDown={() => this.props.on_click_eye(this.props.id)} onMouseEnter={() => {if(this.props.mouse_is_held_down){console.log("...")}}}> */}
+
+            {/* <span onMouseDown={() => this.props.on_click_eye(this.props.id)} onMouseEnter={() => {this.handle_onmouseenter()}}></span> */}
+
+            <span onMouseDown={() => this.props.toggle_visibility_by_id(this.props.id)} onMouseEnter={() => this.handle_onmouseenter()}>
 
                 <div className={this.props.visible ? 'empty':'hidden'}>
                     <i data-eva="eye-outline" data-eva-fill="#FFF"/>

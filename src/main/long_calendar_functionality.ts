@@ -111,6 +111,14 @@ export function set_config_prop(path_directory, content)
     );
 }
 
+export function get_config_prop(path_config:string)
+{   
+    let to_return = _.get(global.config, path_config)
+
+    console.log(to_return)
+    return to_return
+}
+
 export function get_sources_in_data_folder(path_directory:string)
 {
     let filenames = fs.readdirSync(path_directory)

@@ -14,6 +14,16 @@ export default class Container_options extends Component
 
     componentDidMount()
     {
+        console.log("mounting...")
+        fetch("http://localhost:17462/get_config_prop?target="+"window.days_to_display")
+        .then(out => out.json())
+        .then(out => this.setState({
+            selected_radio : out.value
+
+        }));
+
+        this.props.set_days_to_display(event)
+
         eva.replace({
             height: 28,
             width : 28,
@@ -24,6 +34,20 @@ export default class Container_options extends Component
         let id_selected_radiobutton = parseInt(event.target.getAttribute("id_rad"))
         this.setState({selected_radio:id_selected_radiobutton})
         this.props.set_days_to_display(event)
+
+        fetch(
+          "http://localhost:17462/set_config_prop",
+          {
+            method: 'POST',
+            headers: {
+              'Accept'      :'application/json',
+              'Content-Type':'application/json',
+            },
+            body: JSON.stringify({ ["window.days_to_display"] : id_selected_radiobutton })
+          }
+        )
+        .then( x     => console.log)
+        .catch(error => console.log);
     }
 
     render()

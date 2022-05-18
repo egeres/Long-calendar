@@ -30,25 +30,40 @@ export default class Menu_main extends Component
             fullscreen:e.target.checked,
         })
 
+        // fetch(
+        //     "http://localhost:17462/set_single_config_prop?target=fullscreen",
+        //     {
+        //         method : 'POST',
+        //         body   : JSON.stringify({content:e.target.checked}),
+        //         headers: {
+        //             'Accept'      : 'application/json',
+        //             'Content-Type': 'application/json',
+        //         },
+        //     }
+        // )
+        // .catch();
+        
+        let path_target = ""
         fetch(
-            "http://localhost:17462/set_single_config_prop?target=fullscreen",
+            "http://localhost:17462/set_config_prop",
             {
-                method : 'POST',
-                body   : JSON.stringify({content:e.target.checked}),
+                method: 'POST',
                 headers: {
                     'Accept'      : 'application/json',
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
+                body: JSON.stringify({
+                    ["window.visible"] : e.target.checked,
+                })
             }
-        )
-        .catch();
+        ).catch();
     }
 
-    componentDidMount()
+    async componentDidMount()
     {
-        document.addEventListener(   "mousedown", this.handleClickOutside);
+        // document.addEventListener("mousedown", this.handleClickOutside);
 
-        fetch("http://localhost:17462/get_config")
+        await fetch("http://localhost:17462/get_config")
         .then(x => x.json())
         .then(x => 
             this.setState({
@@ -58,20 +73,33 @@ export default class Menu_main extends Component
             })
         )
         .catch();
+        
+
+        eva.replace({
+            height: 28,
+            width : 28,
+        });
+
     }
 
-    componentWillUnmount()
-    {
-        document.removeEventListener("mousedown", this.handleClickOutside);
-    }
+    // componentWillUnmount()
+    // {
+    //     document.removeEventListener("mousedown", this.handleClickOutside);
+    // }
 
     handleClickOutside(event)
     {
-        if (this.wrapperRef && this.wrapperRef.current && !this.wrapperRef.current.contains(event.target))
-        {
-            // console.log("out")
-            this.props.hide_menu_main()
-        }
+        // console.log(event)
+        // console.log(this.wrapperRef)
+        // console.log(this.wrapperRef.current)
+
+        // if (this.wrapperRef && this.wrapperRef.current && !this.wrapperRef.current.contains(event.target))
+        // {
+        //     // console.log("out")
+        //     this.props.hide_menu_main()
+        // }
+
+        this.props.hide_menu_main()
     }
 
     render()
@@ -81,9 +109,14 @@ export default class Menu_main extends Component
 
         if (this.props.menu_main_visible) {
             return <div
-            className = 'container_menu_main'
+            className = 'container_menu_main nodrag noselect'
             ref       = {this.wrapperRef}
             >
+
+                <span className='corner_top_right icon_circular_background' onClick={(e) => {this.handleClickOutside(e)}}>
+                    <i data-eva="close-outline" data-eva-fill="#FFF"/>
+                </span>
+
                 <div style={{width:"50%", height:"100%", float:"left"}}>
 
                     <table>

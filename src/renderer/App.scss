@@ -2,8 +2,9 @@
 $color_0:rgb(00, 00, 00);
 $color_1:rgb(29, 29, 29);
 $color_2:rgb(77, 77, 77);
-$color_4:rgb(175, 175, 175);
+$color_3:rgb(175, 175, 175);
 
+$width_categories:300px;
 $corner_size: 5px;
 $spacing_s  : 5px;
 $spacing_m  : 10px;
@@ -45,18 +46,18 @@ button:hover {
     transform: scale(1.05);
     opacity: 1;
 }
-  
+
 li {
     list-style: none;
 }
-  
+
 a {
     text-decoration: none;
     height: fit-content;
     width: fit-content;
     margin: 10px;
 }
-  
+
 a:hover {
     opacity: 1;
     text-decoration: none;
@@ -142,7 +143,16 @@ a:hover {
     user-select          : none; /* Non-prefixed version, currently
                                    supported by Chrome, Opera and Firefox */
 }
-  
+
+.nodrag {
+    user-drag          : none;
+    -webkit-user-drag  : none;
+    user-select        : none;
+    -moz-user-select   : none;
+    -webkit-user-select: none;
+    -ms-user-select    : none;
+}
+
 .empty {
 }
   
@@ -165,10 +175,22 @@ td {
     vertical-align: middle;
 }
 
+.corner_top_right {
+    position: absolute;
+    top     : $spacing_m;
+    right   : $spacing_m;
+}
 
+.icon_circular_background {
+    background-color: $color_2;
+    width           : 28px;
+    height          : 28px;
+    border-radius   : 50%;
+}
 
-
-
+.icon_circular_background:hover {
+    background-color: $color_3;
+}
 
 
 
@@ -179,7 +201,7 @@ td {
 
 body {
     position       : relative;
-    color          : $color_4;
+    color          : $color_3;
     height         : 100vh;
     background     : rgba(0, 0, 0, 0.664);
     font-family    : $font_family_0;
@@ -223,9 +245,25 @@ body {
     background-color: $color_1;
     display         : flex;
     align-items     : center;
-    padding-top     : 5px;
-    padding-bottom  : 5px;
-    width           : 300px;
+    padding-top     : 0px;
+    padding-bottom  : 0px;
+    width           : $width_categories;
+}
+
+.decorative_category_up {
+    background-color       : $color_1;
+    height                 : 10px;
+    width                  : $width_categories;
+    border-top-left-radius : $corner_size;
+    border-top-right-radius: $corner_size;
+}
+
+.decorative_category_bottom {
+    background-color       : $color_1;
+    height                 : 10px;
+    width                  : $width_categories;
+    border-bottom-left-radius : $corner_size;
+    border-bottom-right-radius: $corner_size;
 }
 
 .button_category:hover {
@@ -255,6 +293,7 @@ body {
 }
 
 .container_menu_main {
+    position          : relative;
     width             : 30%;
     height            : 30%;
     background-color  : $color_1;
