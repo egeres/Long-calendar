@@ -254,7 +254,7 @@ const createWindow = async () => {
     },
   }
 
-  if (global?.config?.fullscreen !== undefined && (!global?.config?.fullscreen))
+  if (global?.config?.window?.fullscreen !== undefined && (!global?.config?.window?.fullscreen))
   {
     // windows_configuration.frame       = true;
     // windows_configuration.resizeable  = true;
@@ -268,7 +268,7 @@ const createWindow = async () => {
       icon           : getAssetPath('icon.png'),
       webPreferences : {
         preload : path.join(__dirname, 'preload.js'),
-        // devTools: false,
+        devTools: true,
       },
     }
   }
@@ -279,7 +279,7 @@ const createWindow = async () => {
 
   mainWindow.on('ready-to-show', () => {
 
-    globalShortcut.register('Alt+E', () => {
+    globalShortcut.register(global?.config?.window?.shortcut ?? "Alt+E", () => {
 
       if (mainWindow_cantogglehidden_cooldown) {
 
@@ -367,7 +367,7 @@ app
         ],
         persistent      : true,
         awaitWriteFinish: {
-          stabilityThreshold: 2000,
+          stabilityThreshold: global.config?.window?.reload_interval ?? 2000,
           pollInterval      : 100
         },
       }

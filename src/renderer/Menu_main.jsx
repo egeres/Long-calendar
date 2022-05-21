@@ -134,6 +134,25 @@ export default class Menu_main extends Component
         // }
 
         this.props.hide_menu_main()
+
+        fetch(
+            "http://localhost:17462/set_config_prop",
+            {
+                method: 'POST',
+                headers: {
+                    'Accept'      :'application/json',
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify({
+                    ["window.fullscreen"]     :          this.state.fullscreen == true,
+                    ["window.reload_interval"]: parseInt(this.state.reload_interval),
+                    ["window.shortcut"]       :          this.state.shortcut,
+                })
+            }
+        )
+        .then( x     => console.log)
+        .catch(error => console.log);
+
     }
 
     render()
@@ -154,7 +173,11 @@ export default class Menu_main extends Component
                 <div style={{width:"50%", height:"100%", float:"left"}}>
 
                     <p>Fullscreen</p>
-                    <input type="checkbox" onChange={(e) => {this.setState({fullscreen:e.target.checked})}}/>
+                    <input
+                        type     = "checkbox"
+                        onChange = {(e) => {this.setState({fullscreen:e.target.checked})}}
+                        checked  = {this.state.fullscreen}
+                    />
 
                     <table>
                         {/* <tr>
@@ -201,20 +224,20 @@ export default class Menu_main extends Component
                 <div style={{width:"50%", height:"100%", float:"right"}}>
                     <p>Shortcut</p>
                     <input
-                    type        = "text"
-                    placeholder = {this.state.shortcut}
-                    spellCheck  = "false"
-                    onChange    = {(e) => {this.setState({shortcut:e.target.value})}}
+                    type       = "text"
+                    value      = {this.state.shortcut}
+                    spellCheck = "false"
+                    onChange   = {(e) => {this.setState({shortcut:e.target.value})}}
                     />
 
                     <br/><br/>
 
                     <p>Reload interval (ms)</p>
                     <input 
-                    type        = "text"
-                    placeholder = {this.state.reload_interval}
-                    spellCheck  = "false"
-                    onChange    = {(e) => {this.setState({shortcut:e.target.value})}}
+                    type       = "text"
+                    value      = {this.state.reload_interval}
+                    spellCheck = "false"
+                    onChange   = {(e) => {this.setState({reload_interval:e.target.value})}}
                     />
                 </div>
             </div>

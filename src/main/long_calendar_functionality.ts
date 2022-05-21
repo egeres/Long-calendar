@@ -41,7 +41,7 @@ export function get_config_default() {
         "window": {
             "fullscreen"     : true,
             "reload_interval": 2000,
-            "shortcut"       : "alt+e",
+            "shortcut"       : "Alt+E",
         },
     }
 }
