@@ -38,7 +38,11 @@ function stringToColour(str:String) {
 export function get_config_default() {
     return {
         "data"  : {},
-        "window": {},
+        "window": {
+            "fullscreen"     : true,
+            "reload_interval": 2000,
+            "shortcut"       : "alt+e",
+        },
     }
 }
 
@@ -88,7 +92,7 @@ export function get_config(path_directory:string)
 }
 
 // export function set_config_prop(path_directory, title, content)
-export function set_config_prop(path_directory, content)
+export function set_config_prop(path_directory:string, content)
 {
     let path_file_config : string = path.join(path_directory, "data", "config.json");
 
@@ -111,12 +115,25 @@ export function set_config_prop(path_directory, content)
     );
 }
 
-export function get_config_prop(path_config:string)
+export function get_config_prop(content)
 {   
-    let to_return = _.get(global.config, path_config)
 
-    console.log(to_return)
+    console.log("content:")
+    console.log(content)
+    // let to_return = _.get(global.config, path_config)
+
+    // console.log(to_return)
+    // return to_return
+
+    let to_return = {}
+
+    for (let key of content)
+    {
+        to_return[key] = _.get(global.config, key)
+    }
+
     return to_return
+
 }
 
 export function get_sources_in_data_folder(path_directory:string)

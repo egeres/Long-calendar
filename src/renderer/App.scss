@@ -186,6 +186,10 @@ td {
     width           : 28px;
     height          : 28px;
     border-radius   : 50%;
+
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
 }
 
 .icon_circular_background:hover {

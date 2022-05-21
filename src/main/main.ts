@@ -113,18 +113,26 @@ app_express.post("/set_config_prop", (req: any, res: any) => {
 
 })
 
-app_express.get("/get_config_prop", (req: any, res: any) => {
+app_express.post("/get_config_prop", (req: any, res: any) => {
+
+  global.config = get_config(path_dir_root)
 
   // console.log(req.body)
   // res.json({
   //   value: get_config_prop(req.body)
   // });
 
-  console.log("/get_config_prop")
-  console.log(req.query.target)
-  res.json({
-    value: get_config_prop(req.query.target)
-  });
+  // console.log("/get_config_prop")
+  // console.log(req.query.target)
+  // console.log(req.body)
+  // res.json({
+  //   value: get_config_prop(req.query.target)
+  // });
+
+  let out = get_config_prop(req.body,)
+  console.log(out)
+
+  res.json(out);
 
 })
 

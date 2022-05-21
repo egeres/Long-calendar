@@ -4,6 +4,7 @@ import * as eva from 'eva-icons';
 import './App.scss';
 import Toggle from 'react-toggle'
 import "react-toggle/style.css" // for ES6 modules
+import Button_close from './Button_close';
 
 export default class Menu_main extends Component
 {
@@ -12,7 +13,9 @@ export default class Menu_main extends Component
         super(props);
 
         this.state = {
-            fullscreen:true,
+            fullscreen     : true,
+            reload_interval: 2000,
+            shortcut       : "alt+e",
         }
 
         this.wrapperRef              = React.createRef();
@@ -27,7 +30,7 @@ export default class Menu_main extends Component
         // )
         
         this.setState({
-            fullscreen:e.target.checked,
+            fullscreen : e.target.checked,
         })
 
         // fetch(
@@ -63,16 +66,47 @@ export default class Menu_main extends Component
     {
         // document.addEventListener("mousedown", this.handleClickOutside);
 
-        await fetch("http://localhost:17462/get_config")
-        .then(x => x.json())
-        .then(x => 
-            this.setState({
-                fullscreen:x.fullscreen,
-                // width : ...,
-                // height: ...,
-            })
+        let collected_props = await fetch(
+            "http://localhost:17462/get_config_prop",
+            {
+                method: 'POST',
+                headers: {
+                    'Accept'      :'application/json',
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify([
+                    "window.fullscreen",
+                    "window.reload_interval",
+                    "window.shortcut",
+                ])
+            }
         )
-        .catch();
+        .then( out => out.json())
+        .catch(err => console.log);
+        
+        console.log(collected_props)
+
+        await this.setState({
+            fullscreen     : collected_props["window.fullscreen"     ] ?? true,
+            reload_interval: collected_props["window.reload_interval"] ?? 2000,
+            shortcut       : collected_props["window.shortcut"       ] ?? "alt+e",
+        })
+
+        console.log(this.state)
+
+        // console.log(props)
+
+
+        // await fetch("http://localhost:17462/get_config")
+        // .then(x => x.json())
+        // .then(x => 
+        //     this.setState({
+        //         fullscreen:x.fullscreen,
+        //         // width : ...,
+        //         // height: ...,
+        //     })
+        // )
+        // .catch();
         
 
         eva.replace({
@@ -113,14 +147,17 @@ export default class Menu_main extends Component
             ref       = {this.wrapperRef}
             >
 
-                <span className='corner_top_right icon_circular_background' onClick={(e) => {this.handleClickOutside(e)}}>
-                    <i data-eva="close-outline" data-eva-fill="#FFF"/>
+                <span className='corner_top_right'>
+                    <Button_close onClick={(e) => {this.handleClickOutside(e)}}/>
                 </span>
 
                 <div style={{width:"50%", height:"100%", float:"left"}}>
 
+                    <p>Fullscreen</p>
+                    <input type="checkbox" onChange={(e) => {this.setState({fullscreen:e.target.checked})}}/>
+
                     <table>
-                        <tr>
+                        {/* <tr>
                             <td style={{textAlign:"right"}}>
                                 <Toggle
                                 checked ={this.state.fullscreen}
@@ -130,7 +167,7 @@ export default class Menu_main extends Component
                             <td style={{textAlign:"left" }}>
                                 Fullscreen
                             </td>
-                        </tr>
+                        </tr> */}
                         {/* <tr>
                             <td style={{textAlign:"right"}}>
                                 <input
@@ -162,7 +199,23 @@ export default class Menu_main extends Component
 
                 </div>
                 <div style={{width:"50%", height:"100%", float:"right"}}>
-                    <p>Current shortcut is alt+e</p>
+                    <p>Shortcut</p>
+                    <input
+                    type        = "text"
+                    placeholder = {this.state.shortcut}
+                    spellCheck  = "false"
+                    onChange    = {(e) => {this.setState({shortcut:e.target.value})}}
+                    />
+
+                    <br/><br/>
+
+                    <p>Reload interval (ms)</p>
+                    <input 
+                    type        = "text"
+                    placeholder = {this.state.reload_interval}
+                    spellCheck  = "false"
+                    onChange    = {(e) => {this.setState({shortcut:e.target.value})}}
+                    />
                 </div>
             </div>
         }
