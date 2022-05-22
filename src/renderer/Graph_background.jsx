@@ -59,17 +59,21 @@ export default class Graph_background extends Component
         .select(this.refs.group_main)
         .selectAll('.line_vertical')
         .data(d3.range(this.props?.days_to_display))
+        // .data([0, 1, 3])
         .enter()
         .append('line')
-            .attr("x1", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1) })
-            .attr("x2", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1) })
+        // .attr("x1", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1) })
+        // .attr("x2", function(_d, _i) {return thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1) })
+            .attr("x1", function(_d, _i) {return Math.floor(thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1)) })
+            .attr("x2", function(_d, _i) {return Math.floor(thiz.props.margin + _i * (thiz.props.width - thiz.props.margin*2) / (thiz.props?.days_to_display - 1)) })
             .attr("y1", thiz.props.margin)
             .attr("y2", thiz.props.height - thiz.props.margin)
             .attr("class", "line_vertical")
             .style("stroke-dasharray", ("2, 2"))
-            .style("opacity", 0.3)
+            .style("opacity", 0.4)
             .style("stroke", "#fff")
-            .style("stroke-width", 1);
+            .style("shape-rendering", "crispEdges")
+            .style("stroke-width", 0.4);
     }
 
     componentDidMount()

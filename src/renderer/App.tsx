@@ -40,7 +40,8 @@ class Home extends Component
       // graph_height    : 700,
 
       graph_width     : width_graph,
-      graph_height    : Math.floor(window.innerHeight * 0.8),
+      // graph_height    : Math.floor(window.innerHeight * 0.8),
+      graph_height    : Math.floor(window.innerHeight - 50),
 
       days_to_display : days_to_display,
       widthline       : width_line ,
