@@ -13,9 +13,11 @@ export default class Menu_main extends Component
         super(props);
 
         this.state = {
-            fullscreen     : true,
-            reload_interval: 2000,
-            shortcut       : "alt+e",
+            fullscreen                : true,
+            reload_interval           : 2000,
+            shortcut                  : "Alt+E",
+            recalculate_data_command  : "python data_generator.py",
+            recalculate_data_on_launch: true,
         }
 
         this.wrapperRef              = React.createRef();
@@ -69,7 +71,7 @@ export default class Menu_main extends Component
         let collected_props = await fetch(
             "http://localhost:17462/get_config_prop",
             {
-                method: 'POST',
+                method : 'POST',
                 headers: {
                     'Accept'      :'application/json',
                     'Content-Type':'application/json',
@@ -144,9 +146,11 @@ export default class Menu_main extends Component
                     'Content-Type':'application/json',
                 },
                 body: JSON.stringify({
-                    ["window.fullscreen"]     :          this.state.fullscreen == true,
-                    ["window.reload_interval"]: parseInt(this.state.reload_interval),
-                    ["window.shortcut"]       :          this.state.shortcut,
+                    ["window.fullscreen"]                : this.state.fullscreen == true,
+                    ["window.reload_interval"]           : parseInt(this.state.reload_interval),
+                    ["window.shortcut"]                  : this.state.shortcut,
+                    ["window.recalculate_data_on_launch"]: this.state.recalculate_data_on_launch == true,
+                    ["window.recalculate_data_command"]  : this.state.recalculate_data_command,
                 })
             }
         )
@@ -178,6 +182,17 @@ export default class Menu_main extends Component
                         onChange = {(e) => {this.setState({fullscreen:e.target.checked})}}
                         checked  = {this.state.fullscreen}
                     />
+
+                    <br/><br/>
+
+                    <p>Shortcut</p>
+                    <input
+                    type       = "text"
+                    value      = {this.state.shortcut}
+                    spellCheck = "false"
+                    onChange   = {(e) => {this.setState({shortcut:e.target.value})}}
+                    />
+
 
                     <table>
                         {/* <tr>
@@ -222,15 +237,6 @@ export default class Menu_main extends Component
 
                 </div>
                 <div style={{width:"50%", height:"100%", float:"right"}}>
-                    <p>Shortcut</p>
-                    <input
-                    type       = "text"
-                    value      = {this.state.shortcut}
-                    spellCheck = "false"
-                    onChange   = {(e) => {this.setState({shortcut:e.target.value})}}
-                    />
-
-                    <br/><br/>
 
                     <p>Reload interval (ms)</p>
                     <input 
@@ -239,6 +245,26 @@ export default class Menu_main extends Component
                     spellCheck = "false"
                     onChange   = {(e) => {this.setState({reload_interval:e.target.value})}}
                     />
+
+                    <br/><br/>
+
+                    <p>Data recalculate command</p>
+                    <input 
+                    type       = "text"
+                    value      = {this.state.recalculate_data_command}
+                    spellCheck = "false"
+                    onChange   = {(e) => {this.setState({recalculate_data_command:e.target.value})}}
+                    />
+
+                    <br/><br/>
+
+                    <p>Recalculate data on launch</p>
+                    <input
+                        type     = "checkbox"
+                        onChange = {(e) => {this.setState({recalculate_data_on_launch:e.target.checked})}}
+                        checked  = {this.state.recalculate_data_on_launch}
+                    />
+
                 </div>
             </div>
         }

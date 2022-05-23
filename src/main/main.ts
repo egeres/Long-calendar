@@ -43,6 +43,23 @@ global.config = get_config_default()
 
 directory_setup(path_dir_root);
 
+
+
+if (global?.config?.window?.recalculate_data_on_launch)
+{
+  // WIP: This code needs to be refactored into a method to avoid duplication!
+  if (global?.config?.window?.recalculate_data_command)
+  {
+    let out = exec(
+      global?.config?.window?.recalculate_data_command,
+      {"cwd":path_dir_root}
+    )
+    .then( x   => console.log(chalk.green('-'), "Finished..."))
+    .catch(err => console.log)
+  }
+}
+
+
 // console.log("...")
 // console.log(get_sources_in_data_folder(path_directory_data))
 
@@ -138,11 +155,19 @@ app_express.post("/get_config_prop", (req: any, res: any) => {
 
 app_express.get("/reload", (req: any, res: any) => {
 
-  let out = exec("python " + path_dir_root +"/"+ "data_generator.py")
-  .then(x => console.log(chalk.green('-'), "Finished..."))
+  // WIP: This code needs to be refactored into a method to avoid duplication!
+  if (global?.config?.window?.recalculate_data_command)
+  {
+    let out = exec(
+      global?.config?.window?.recalculate_data_command,
+      {"cwd":path_dir_root}
+    )
+    .then( x   => console.log(chalk.green('-'), "Finished..."))
+    .catch(err => console.log)
+  }
   
   res.send("Finished!");
-  
+
 });
 
 app_express.get("/set_fullscreen_off", (req: any, res: any) => {

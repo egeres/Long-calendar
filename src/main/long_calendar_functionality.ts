@@ -22,7 +22,8 @@ function isFile(path:String) {
     }
 }
 
-function stringToColour(str:String) {
+function stringToColour(str:String)
+{
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -35,13 +36,16 @@ function stringToColour(str:String) {
     return colour;
 }
 
-export function get_config_default() {
+export function get_config_default()
+{
     return {
         "data"  : {},
         "window": {
-            "fullscreen"     : true,
-            "reload_interval": 2000,
-            "shortcut"       : "Alt+E",
+            "fullscreen"                : true,
+            "reload_interval"           : 2000,
+            "shortcut"                  : "Alt+E",
+            "recalculate_data_command"  : "python data_generator.py",
+            "recalculate_data_on_launch": true,
         },
     }
 }
@@ -117,9 +121,8 @@ export function set_config_prop(path_directory:string, content)
 
 export function get_config_prop(content)
 {   
-
-    console.log("content:")
-    console.log(content)
+    // console.log("content:")
+    // console.log(content)
     // let to_return = _.get(global.config, path_config)
 
     // console.log(to_return)
@@ -133,7 +136,6 @@ export function get_config_prop(content)
     }
 
     return to_return
-
 }
 
 export function get_sources_in_data_folder(path_directory:string)

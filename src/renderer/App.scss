@@ -202,7 +202,6 @@ td {
 
 
 
-
 body {
     position       : relative;
     color          : $color_3;
@@ -213,6 +212,7 @@ body {
     display        : flex;
     justify-content: center;
     align-items    : center;
+    margin         : 0;
 }
 
 
@@ -233,6 +233,19 @@ body {
 
 
 #tooltip {
+    position        : absolute;
+    padding         : 10px;
+    background-color: $color_1;
+    border-radius   : $corner_size;
+    align-items     : center;
+    align-content   : center;
+    text-align      : center;
+    font-size       : 17px;
+  
+    display: none;
+}
+
+#tooltip_date {
     position        : absolute;
     padding         : 10px;
     background-color: $color_1;
@@ -298,7 +311,7 @@ body {
 
 .container_menu_main {
     position          : relative;
-    width             : 30%;
+    width             : 40%;
     height            : 30%;
     background-color  : $color_1;
     pointer-events    : all;

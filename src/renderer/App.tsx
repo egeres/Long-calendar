@@ -9,6 +9,7 @@ import Container_options_days from './Container_options_days';
 import Container_customhighlights from './Container_customhighlights';
 
 import Tooltip from './Tooltip';
+import Tooltip_date from './Tooltip_date';
 import Button_menu_main from './Button_menu_main';
 import Button_reload_data from './Button_reload_data';
 import Menu_main from './Menu_main';
@@ -41,7 +42,7 @@ class Home extends Component
 
       graph_width     : width_graph,
       // graph_height    : Math.floor(window.innerHeight * 0.8),
-      graph_height    : Math.floor(window.innerHeight - 50),
+      graph_height    : Math.floor(window.innerHeight - 25),
 
       days_to_display : days_to_display,
       widthline       : width_line ,
@@ -364,6 +365,7 @@ class Home extends Component
     />
 
     <Tooltip/>
+    <Tooltip_date/>
 
     <ReactTooltip
     className = 'customeTheme'

@@ -23,19 +23,17 @@ export default class Graph_multiple extends Component
         super(props);
 
         // this.tooltip = d3.select("#tooltip").node();
-        this.tooltip = d3.select("#tooltip");
+        this.tooltip      = d3.select("#tooltip");
+        this.tooltip_date = d3.select("#tooltip_date");
 
         // console.log(this.tooltip)
 
-        setTimeout(
-            () => { this.tooltip = d3.select("#tooltip"); },
-            100
-        )
+        setTimeout(() => { this.tooltip      = d3.select("#tooltip"     ); }, 100)
+        setTimeout(() => { this.tooltip_date = d3.select("#tooltip_date"); }, 100)
 
         // ipcRenderer.on('asynchronous-message', function (evt, message) {
         //     console.log(message); // Returns: {'SAVED': 'File Saved'}
         // });
-
     }
 
     render()
@@ -121,7 +119,10 @@ export default class Graph_multiple extends Component
             // .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
             .style("stroke" , d => d.color  )
             .style("opacity", d => d.opacity)
-            .attr("tooltip", i => i.tooltip)
+            .attr("tooltip" , i => i.tooltip)
+            .attr("date"    , i => moment(i.start).format('YYYY-M-D'))
+            .attr("days_ago", i => moment().diff(moment(i.start).startOf('day'),"days"))
+            // .attr("date"    , i => "AAA")
 
             .on("mouseover", function(e) {
                 if (e.target.getAttribute("tooltip"))
@@ -129,15 +130,24 @@ export default class Graph_multiple extends Component
                     let rect = e.target.getBoundingClientRect()
                     let x    = rect.x
                     let y    = rect.y + rect.height / 2
+
                     thiz.tooltip
                     .style("opacity", 1.0)
                     .style("display", "block");
+                    
                     thiz.tooltip
                     // .transition()
                     // .duration(70)
                     .html ((d, i) => {return e.target.getAttribute("tooltip")})
                     .style("left", d => {return x + "px"})
-                    .style("top" , d => {return y + "px"})
+                    .style("top" , d => {return y + "px"});
+
+                    thiz.tooltip_date
+                    .html ((d, i) => {return e.target.getAttribute("date")+" ("+e.target.getAttribute("days_ago")+" days ago)"})
+                    .style("opacity", 1.0)
+                    .style("display", "block")
+                    .style("left", d => {return x + "px"})
+                    .style("top" , d => {return "10px"});
                 }
             })
             .on("mouseout", function(_d) {
@@ -146,6 +156,11 @@ export default class Graph_multiple extends Component
                 // .duration(70)
                 .style("opacity", 0)
                 .style("display", "none");
+
+                thiz.tooltip_date
+                .style("opacity", 0)
+                .style("display", "none");
+
             }),
         update => update
             .attr("x1", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
