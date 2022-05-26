@@ -60,8 +60,10 @@ if (global?.config?.window?.recalculate_data_on_launch)
 }
 
 
-// console.log("...")
-// console.log(get_sources_in_data_folder(path_directory_data))
+ipcMain.on('set_config_prop', async (event, arg) => {
+  set_config_prop(path_dir_root,arg,);
+});
+
 
 const express     = require('express');
 const bodyParser  = require('body-parser');

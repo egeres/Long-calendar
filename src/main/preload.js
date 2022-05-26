@@ -7,11 +7,19 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send('ipc-example', 'ping');
     },
 
+    set_config_prop(args) {
+      ipcRenderer.send('set_config_prop', args);
+    },
+
     on(channel, func) {
 
       // console.log("......", channel)
 
-      const validChannels = ['ipc-example', "poll_update"];
+      const validChannels = [
+        "ipc-example",
+        "poll_update",
+        "set_config_prop",
+      ];
       if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
         ipcRenderer.on(channel, (event, ...args) => func(...args));

@@ -212,19 +212,25 @@ class Home extends Component
     // this.state.ctrl_is_held_down
 
     let target : string = this.state.categories[objIndex].title.slice(0, -5);
-    fetch(
-      "http://localhost:17462/set_config_prop",
-      {
-        method : 'POST',
-        headers: {
-          'Accept'      : 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({["data."+target+".visible"] : categories_now[objIndex].visible})
-      }
-    )
-    .then( x     => console.log)
-    .catch(error => console.log);
+    
+    // fetch(
+    //   "http://localhost:17462/set_config_prop",
+    //   {
+    //     method : 'POST',
+    //     headers: {
+    //       'Accept'      : 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({["data."+target+".visible"] : categories_now[objIndex].visible})
+    //   }
+    // )
+    // .then( x     => console.log)
+    // .catch(error => console.log);
+
+    window.electron.ipcRenderer.set_config_prop({
+      ["data."+target+".visible"] : categories_now[objIndex].visible
+    })
+
   }
 
   set_visibility_by_id(id, visibility_state)
