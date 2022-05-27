@@ -59,11 +59,47 @@ if (global?.config?.window?.recalculate_data_on_launch)
   }
 }
 
+ipcMain.on('set_config_prop', async (event, arg) => {
+  set_config_prop(path_dir_root,arg,);
+});
+
+ipcMain.on(   'sources_in_data_folder', async (event, arg) => {
+  event.reply('sources_in_data_folder', get_sources_in_data_folder(path_directory_data));
+});
 
 ipcMain.on('set_config_prop', async (event, arg) => {
   set_config_prop(path_dir_root,arg,);
 });
 
+ipcMain.on('get_file_data', async (event, arg) => {
+
+  try
+  {
+    let rawdata = fs.readFileSync(req.query.path_file);
+
+    if (rawdata === "") { event.reply('sources_in_data_folder', "File is empty"); }
+
+    let data = hjson.parse(rawdata.toString())
+    
+    // res.json({
+    //     "status": "success",
+    //     "data"  : data
+    // });
+
+    event.reply('sources_in_data_folder', data);
+
+  }
+  catch (exception)
+  {
+    // console.log(exception)
+    // res.json({
+    //   "status"     : "error",
+    //   "description": exception.toString(),
+    // })
+    event.reply('sources_in_data_folder', exception.toString());
+  }
+
+});
 
 const express     = require('express');
 const bodyParser  = require('body-parser');

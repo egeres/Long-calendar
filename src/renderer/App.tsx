@@ -95,28 +95,30 @@ class Home extends Component
     // })
 
 
-    await fetch("http://localhost:17462/sources_in_data_folder")
-    .then(async out => out.json())
-    .then(async out => {
+    // await fetch("http://localhost:17462/sources_in_data_folder")
+    // .then(async out => out.json())
+    // .then(async out => {
 
-      let out_b = out.map(async (x) => {
-        let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
-        x.status = o.status
-        if (o.status === "success") { x.data              = o.data; }
-        else                        { x.error_description = o.description; }
-        return x
-      })
+    //   let out_b = out.map(async (x) => {
+    //     let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
+    //     x.status = o.status
+    //     if (o.status === "success") { x.data              = o.data; }
+    //     else                        { x.error_description = o.description; }
+    //     return x
+    //   })
 
-      await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
+    //   await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
     
-    })
-    .catch()
+    // })
+    // .catch()
 
   }
 
   async componentDidMount()
   {
-      await this.update_content();
+      // await this.update_content();
+
+      window.electron.ipcRenderer.sources_in_data_folder("...")
 
       window.electron.ipcRenderer.on("poll_update", async (data) => {
         await this.update_content();
@@ -132,6 +134,25 @@ class Home extends Component
 
       window.addEventListener('keyup', (event) => {
         if (event.key == "Control") this.setState({ctrl_is_held_down:false});
+      });
+
+      
+
+      window.electron.ipcRenderer.on('sources_in_data_folder', async (arg) => {
+        // console.log("out 2 =", event);
+        // console.log("out 2 =", arg);
+  
+        let out_b = arg.map(async (x) => {
+          let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
+          x.status = o.status
+          if (o.status === "success") { x.data              = o.data; }
+          else                        { x.error_description = o.description; }
+          return x
+        })
+  
+        await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
+  
+  
       });
 
       ReactTooltip.rebuild()

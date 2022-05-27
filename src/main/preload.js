@@ -11,19 +11,24 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send('set_config_prop', args);
     },
 
+    sources_in_data_folder(args) {
+      ipcRenderer.send('sources_in_data_folder', args);
+    },
+
     on(channel, func) {
 
       // console.log("......", channel)
 
-      const validChannels = [
-        "ipc-example",
-        "poll_update",
-        "set_config_prop",
-      ];
-      if (validChannels.includes(channel)) {
+      // const validChannels = [
+      //   "ipc-example",
+      //   "poll_update",
+      //   "set_config_prop",
+      //   "sources_in_data_folder",
+      // ];
+      // if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
         ipcRenderer.on(channel, (event, ...args) => func(...args));
-      }
+      // }
     },
 
     once(channel, func) {
