@@ -11,8 +11,12 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send('set_config_prop', args);
     },
 
-    sources_in_data_folder(args) {
-      ipcRenderer.send('sources_in_data_folder', args);
+    sources_in_data_folder() {
+      return ipcRenderer.sendSync('sources_in_data_folder');
+    },
+
+    get_file_data(args) {
+      return ipcRenderer.sendSync('get_file_data', args);
     },
 
     on(channel, func) {

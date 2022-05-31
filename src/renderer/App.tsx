@@ -112,17 +112,31 @@ class Home extends Component
     // })
     // .catch()
 
+
+
+    let sources_in_data_folder = window.electron.ipcRenderer.sources_in_data_folder()
+
+    let out_b = sources_in_data_folder.map(async (x) => {
+      let o = window.electron.ipcRenderer.get_file_data(x.path_file)
+      x.status = o.status
+      if (o.status === "success") { x.data              = o.data; }
+      else                        { x.error_description = o.description; }
+      return x
+    })
+    await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
+
+
   }
 
   async componentDidMount()
   {
-      // await this.update_content();
+      await this.update_content();
 
-      window.electron.ipcRenderer.sources_in_data_folder("...")
+      // window.electron.ipcRenderer.sources_in_data_folder("...")
 
-      window.electron.ipcRenderer.on("poll_update", async (data) => {
-        await this.update_content();
-      });
+      // window.electron.ipcRenderer.on("poll_update", async (data) => {
+      //   await this.update_content();
+      // });
 
       window.addEventListener('mouseup', (event) => {
         this.setState({mouse_is_held_down:false})

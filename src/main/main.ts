@@ -64,7 +64,9 @@ ipcMain.on('set_config_prop', async (event, arg) => {
 });
 
 ipcMain.on(   'sources_in_data_folder', async (event, arg) => {
-  event.reply('sources_in_data_folder', get_sources_in_data_folder(path_directory_data));
+  // event.reply('sources_in_data_folder', get_sources_in_data_folder(path_directory_data));
+  event.returnValue = get_sources_in_data_folder(path_directory_data)
+});
 });
 
 ipcMain.on('set_config_prop', async (event, arg) => {
@@ -75,7 +77,7 @@ ipcMain.on('get_file_data', async (event, arg) => {
 
   try
   {
-    let rawdata = fs.readFileSync(req.query.path_file);
+    let rawdata = fs.readFileSync(arg);
 
     if (rawdata === "") { event.reply('sources_in_data_folder', "File is empty"); }
 
@@ -86,7 +88,12 @@ ipcMain.on('get_file_data', async (event, arg) => {
     //     "data"  : data
     // });
 
-    event.reply('sources_in_data_folder', data);
+    // event.reply('sources_in_data_folder', data);
+
+    event.returnValue = ({
+        "status": "success",
+        "data"  : data,
+    });
 
   }
   catch (exception)
@@ -96,7 +103,13 @@ ipcMain.on('get_file_data', async (event, arg) => {
     //   "status"     : "error",
     //   "description": exception.toString(),
     // })
-    event.reply('sources_in_data_folder', exception.toString());
+    // event.reply('sources_in_data_folder', exception.toString());
+
+    event.returnValue = ({
+      "status": "error",
+      "data"  : exception.toString(),
+    });
+
   }
 
 });
