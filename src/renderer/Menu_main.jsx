@@ -48,43 +48,54 @@ export default class Menu_main extends Component
         // )
         // .catch();
         
-        let path_target = ""
-        fetch(
-            "http://localhost:17462/set_config_prop",
-            {
-                method: 'POST',
-                headers: {
-                    'Accept'      : 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    ["window.visible"] : e.target.checked,
-                })
-            }
-        ).catch();
+        // let path_target = ""
+        // fetch(
+        //     "http://localhost:17462/set_config_prop",
+        //     {
+        //         method: 'POST',
+        //         headers: {
+        //             'Accept'      : 'application/json',
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({
+        //             ["window.visible"] : e.target.checked,
+        //         })
+        //     }
+        // ).catch();
+
+        window.electron.ipcRenderer.set_config_prop({
+            ["window.visible"] : e.target.checked,
+        })
+
     }
 
     async componentDidMount()
     {
         // document.addEventListener("mousedown", this.handleClickOutside);
 
-        let collected_props = await fetch(
-            "http://localhost:17462/get_config_prop",
-            {
-                method : 'POST',
-                headers: {
-                    'Accept'      :'application/json',
-                    'Content-Type':'application/json',
-                },
-                body: JSON.stringify([
-                    "window.fullscreen",
-                    "window.reload_interval",
-                    "window.shortcut",
-                ])
-            }
-        )
-        .then( out => out.json())
-        .catch(err => console.log);
+        // let collected_props = await fetch(
+        //     "http://localhost:17462/get_config_prop",
+        //     {
+        //         method : 'POST',
+        //         headers: {
+        //             'Accept'      :'application/json',
+        //             'Content-Type':'application/json',
+        //         },
+        //         body: JSON.stringify([
+        //             "window.fullscreen",
+        //             "window.reload_interval",
+        //             "window.shortcut",
+        //         ])
+        //     }
+        // )
+        // .then( out => out.json())
+        // .catch(err => console.log);
+
+        let collected_props = window.electron.ipcRenderer.get_config_prop([
+            "window.fullscreen",
+            "window.reload_interval",
+            "window.shortcut",
+        ])
         
         console.log(collected_props)
 
@@ -137,25 +148,33 @@ export default class Menu_main extends Component
 
         this.props.hide_menu_main()
 
-        fetch(
-            "http://localhost:17462/set_config_prop",
-            {
-                method: 'POST',
-                headers: {
-                    'Accept'      :'application/json',
-                    'Content-Type':'application/json',
-                },
-                body: JSON.stringify({
-                    ["window.fullscreen"]                : this.state.fullscreen == true,
-                    ["window.reload_interval"]           : parseInt(this.state.reload_interval),
-                    ["window.shortcut"]                  : this.state.shortcut,
-                    ["window.recalculate_data_on_launch"]: this.state.recalculate_data_on_launch == true,
-                    ["window.recalculate_data_command"]  : this.state.recalculate_data_command,
-                })
-            }
-        )
-        .then( x     => console.log)
-        .catch(error => console.log);
+        // fetch(
+        //     "http://localhost:17462/set_config_prop",
+        //     {
+        //         method: 'POST',
+        //         headers: {
+        //             'Accept'      :'application/json',
+        //             'Content-Type':'application/json',
+        //         },
+        //         body: JSON.stringify({
+        //             ["window.fullscreen"]                : this.state.fullscreen == true,
+        //             ["window.reload_interval"]           : parseInt(this.state.reload_interval),
+        //             ["window.shortcut"]                  : this.state.shortcut,
+        //             ["window.recalculate_data_on_launch"]: this.state.recalculate_data_on_launch == true,
+        //             ["window.recalculate_data_command"]  : this.state.recalculate_data_command,
+        //         })
+        //     }
+        // )
+        // .then( x     => console.log)
+        // .catch(error => console.log);
+
+        window.electron.ipcRenderer.set_config_prop({
+            ["window.fullscreen"]                : this.state.fullscreen == true,
+            ["window.reload_interval"]           : parseInt(this.state.reload_interval),
+            ["window.shortcut"]                  : this.state.shortcut,
+            ["window.recalculate_data_on_launch"]: this.state.recalculate_data_on_launch == true,
+            ["window.recalculate_data_command"]  : this.state.recalculate_data_command,
+        })
 
     }
 
