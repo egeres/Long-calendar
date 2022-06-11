@@ -45,19 +45,7 @@ directory_setup(path_dir_root);
 
 
 
-if (global?.config?.window?.recalculate_data_on_launch)
-{
-  // WIP: This code needs to be refactored into a method to avoid duplication!
-  if (global?.config?.window?.recalculate_data_command)
-  {
-    let out = exec(
-      global?.config?.window?.recalculate_data_command,
-      {"cwd":path_dir_root}
-    )
-    .then( x   => console.log(chalk.green('-'), "Finished..."))
-    .catch(err => console.log)
-  }
-}
+
 
 
 // console.log("...")
@@ -156,16 +144,32 @@ app_express.post("/get_config_prop", (req: any, res: any) => {
 app_express.get("/reload", (req: any, res: any) => {
 
   // WIP: This code needs to be refactored into a method to avoid duplication!
-  if (global?.config?.window?.recalculate_data_command)
-  {
-    let out = exec(
-      global?.config?.window?.recalculate_data_command,
-      {"cwd":path_dir_root}
-    )
-    .then( x   => console.log(chalk.green('-'), "Finished..."))
-    .catch(err => console.log)
-  }
+  // if (global?.config?.window?.recalculate_data_command)
+  // {
+  //   let out = exec(
+  //     global?.config?.window?.recalculate_data_command,
+  //     {"cwd":path_dir_root}
+  //   )
+  //   .then( x   => console.log(chalk.green('-'), "Finished..."))
+  //   .catch(err => console.log)
+  // }
   
+  global.config = get_config(path_dir_root)
+
+  if (global?.config?.window?.recalculate_data_on_launch)
+  {
+    // WIP: This code needs to be refactored into a method to avoid duplication!
+    if (global?.config?.window?.recalculate_data_command)
+    {
+      let out = exec(
+        global?.config?.window?.recalculate_data_command,
+        {"cwd":path_dir_root}
+      )
+      .then( x   => console.log(chalk.green('-'), "Finished..."))
+      .catch(err => console.log)
+    }
+  }
+
   res.send("Finished!");
 
 });
@@ -375,6 +379,22 @@ app
     directory_setup(path_dir_root);
     
     global.config = get_config(path_dir_root)
+
+
+    if (global?.config?.window?.recalculate_data_on_launch)
+    {
+      // WIP: This code needs to be refactored into a method to avoid duplication!
+      if (global?.config?.window?.recalculate_data_command)
+      {
+        let out = exec(
+          global?.config?.window?.recalculate_data_command,
+          {"cwd":path_dir_root}
+        )
+        .then( x   => console.log(chalk.green('-'), "Finished..."))
+        .catch(err => console.log)
+      }
+    }
+
 
     function update_front(path)
     {

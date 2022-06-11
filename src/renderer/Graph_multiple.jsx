@@ -117,11 +117,12 @@ export default class Graph_multiple extends Component
             .style("stroke-width", this.props.widthline) // Should we have something like .style("stroke-width", x => (x.size ?? this.props.widthline))
             // .style("stroke" , d => (d?.color   ?? sub_data.color   ?? "#FFF"))
             // .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
-            .style("stroke" , d => d.color  )
-            .style("opacity", d => d.opacity)
-            .attr("tooltip" , i => i.tooltip)
-            .attr("date"    , i => moment(i.start).format('YYYY-M-D'))
-            .attr("days_ago", i => moment().diff(moment(i.start).startOf('day'),"days"))
+            .style("stroke"       , d => d.color  )
+            .style("opacity"      , d => d.opacity)
+            .attr("tooltip"       , i => i.tooltip)
+            .attr("date"          , i => moment(i.start).format('YYYY-M-D'))
+            .attr("date_dayofweek", i => ["", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"][moment(i.start).isoWeekday()])
+            .attr("days_ago"      , i => moment().diff(moment(i.start).startOf('day'),"days"))
             // .attr("date"    , i => "AAA")
 
             .on("mouseover", function(e) {
@@ -143,7 +144,7 @@ export default class Graph_multiple extends Component
                     .style("top" , d => {return y + "px"});
 
                     thiz.tooltip_date
-                    .html ((d, i) => {return e.target.getAttribute("date")+" ("+e.target.getAttribute("days_ago")+" days ago)"})
+                    .html ((d, i) => {return e.target.getAttribute("date")+" ("+e.target.getAttribute("days_ago")+" days ago)" + " ("+e.target.getAttribute("date_dayofweek")+")"})                         
                     .style("opacity", 1.0)
                     .style("display", "block")
                     .style("left", d => {return x + "px"})

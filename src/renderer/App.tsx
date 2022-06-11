@@ -315,6 +315,7 @@ class Home extends Component
 
   refresh_data()
   {
+    console.log("Reloading...")
     fetch("http://localhost:17462/reload").catch()
   }
 
