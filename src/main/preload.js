@@ -7,15 +7,40 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send('ipc-example', 'ping');
     },
 
+    set_config_prop(args) {
+      ipcRenderer.send('set_config_prop', args);
+    },
+
+    reload() {
+      ipcRenderer.send('reload');
+    },
+
+    sources_in_data_folder() {
+      return ipcRenderer.sendSync('sources_in_data_folder');
+    },
+
+    get_file_data(args) {
+      return ipcRenderer.sendSync('get_file_data', args);
+    },
+
+    get_config_prop(args) {
+      return ipcRenderer.sendSync('get_config_prop', args);
+    },
+
     on(channel, func) {
 
       // console.log("......", channel)
 
-      const validChannels = ['ipc-example', "poll_update"];
-      if (validChannels.includes(channel)) {
+      // const validChannels = [
+      //   "ipc-example",
+      //   "poll_update",
+      //   "set_config_prop",
+      //   "sources_in_data_folder",
+      // ];
+      // if (validChannels.includes(channel)) {
         // Deliberately strip event as it includes `sender`
         ipcRenderer.on(channel, (event, ...args) => func(...args));
-      }
+      // }
     },
 
     once(channel, func) {
