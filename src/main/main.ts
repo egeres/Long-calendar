@@ -130,108 +130,13 @@ ipcMain.on('reload', async (event) => {
 
 });
 
-const express     = require('express');
-const bodyParser  = require('body-parser');
-const cors        = require('cors')
-const app_express = express();
-
-app_express.use(bodyParser.urlencoded({extended:false}));
-app_express.use(bodyParser.json());
-app_express.use(cors())
-
-// app_express.get("/sources_in_data_folder", (_req: any, res: any) => {
-//   res.json(
-//     get_sources_in_data_folder(path_directory_data)
-//   )
-// })
-
-// app_express.get("/get_config", (_req: any, res: any) => {
-//   res.json(
-//     get_config(
-//       path_dir_root
-//     )
-//   )
-// })
-
-// app_express.get("/get_file_data", (req: any, res: any) => {
-//   try
-//   {
-//     let rawdata = fs.readFileSync(req.query.path_file);
-//     if (rawdata === "")
-//     {
-//       res.json({
-//         "status"     : "error",
-//         "description": "File is empty",
-//       })
-//     }
-//     // let data = JSON.parse(rawdata);
-//     // let data = hjson.parse("{a:0}")
-//     let data = hjson.parse(rawdata.toString())
-//     res.json({
-//         "status": "success",
-//         "data"  : data
-//     });
-//   }
-//   catch (exception)
-//   {
-//     console.log(exception)
-//     res.json({
-//       "status"     : "error",
-//       "description": exception.toString(),
-//     })
-//   }
-// });
-
-// app_express.post("/set_config_prop", (req: any, res: any) => {
-//   set_config_prop(
-//     path_dir_root,
-//     req.body,
-//   )
-//   res.send("ok");
-// })
-
-// app_express.post("/get_config_prop", (req: any, res: any) => {
-//   global.config = get_config(path_dir_root)
-//   // console.log(req.body)
-//   // res.json({
-//   //   value: get_config_prop(req.body)
-//   // });
-//   // console.log("/get_config_prop")
-//   // console.log(req.query.target)
-//   // console.log(req.body)
-//   // res.json({
-//   //   value: get_config_prop(req.query.target)
-//   // });
-//   let out = get_config_prop(req.body,)
-//   console.log(out)
-//   res.json(out);
-// })
-
-// app_express.get("/reload", (req: any, res: any) => {
-//   // WIP: This code needs to be refactored into a method to avoid duplication!
-//   if (global?.config?.window?.recalculate_data_command)
-//   {
-//     let out = exec(
-//       global?.config?.window?.recalculate_data_command,
-//       {"cwd":path_dir_root}
-//     )
-//     .then( x   => console.log(chalk.green('-'), "Finished..."))
-//     .catch(err => console.log)
-//   }
-//   res.send("Finished!");
-// });
-
-app_express.get("/set_fullscreen_off", (req: any, res: any) => {
+ipcMain.on('set_fullscreen_off', async (event) => {
   mainWindow?.setFullScreen(false)
 });
 
-app_express.get("/set_fullscreen_on", (req: any, res: any) => {
+ipcMain.on('set_fullscreen_on' , async (event) => {
   mainWindow?.setFullScreen(true)
 });
-
-app_express.listen(17462, () => { console.log("Listening") })
-
-
 
 export default class AppUpdater {
   constructor() {
@@ -240,7 +145,6 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
-
 
 let mainWindow: BrowserWindow | null = null;
 let mainWindow_ishidden : boolean                 = false;
@@ -343,10 +247,8 @@ const createWindow = async () => {
       // transparent    : true ,
       icon           : getAssetPath('icon.png'),
       webPreferences : {
-        // nodeIntegration : true,
-        // contextIsolation: false,
-        preload         : path.join(__dirname, 'preload.js'),
-        devTools        : true,
+        preload : path.join(__dirname, 'preload.js'),
+        devTools: true,
       },
     }
   }

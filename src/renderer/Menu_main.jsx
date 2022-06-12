@@ -27,70 +27,17 @@ export default class Menu_main extends Component
     
     set_property_fullscreen(e)
     {
-        // console.log(
-        //     e.target.checked
-        // )
-        
         this.setState({
             fullscreen : e.target.checked,
         })
 
-        // fetch(
-        //     "http://localhost:17462/set_single_config_prop?target=fullscreen",
-        //     {
-        //         method : 'POST',
-        //         body   : JSON.stringify({content:e.target.checked}),
-        //         headers: {
-        //             'Accept'      : 'application/json',
-        //             'Content-Type': 'application/json',
-        //         },
-        //     }
-        // )
-        // .catch();
-        
-        // let path_target = ""
-        // fetch(
-        //     "http://localhost:17462/set_config_prop",
-        //     {
-        //         method: 'POST',
-        //         headers: {
-        //             'Accept'      : 'application/json',
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             ["window.visible"] : e.target.checked,
-        //         })
-        //     }
-        // ).catch();
-
         window.electron.ipcRenderer.set_config_prop({
             ["window.visible"] : e.target.checked,
         })
-
     }
 
     async componentDidMount()
     {
-        // document.addEventListener("mousedown", this.handleClickOutside);
-
-        // let collected_props = await fetch(
-        //     "http://localhost:17462/get_config_prop",
-        //     {
-        //         method : 'POST',
-        //         headers: {
-        //             'Accept'      :'application/json',
-        //             'Content-Type':'application/json',
-        //         },
-        //         body: JSON.stringify([
-        //             "window.fullscreen",
-        //             "window.reload_interval",
-        //             "window.shortcut",
-        //         ])
-        //     }
-        // )
-        // .then( out => out.json())
-        // .catch(err => console.log);
-
         let collected_props = window.electron.ipcRenderer.get_config_prop([
             "window.fullscreen",
             "window.reload_interval",
@@ -105,68 +52,15 @@ export default class Menu_main extends Component
             shortcut       : collected_props["window.shortcut"       ] ?? "alt+e",
         })
 
-        console.log(this.state)
-
-        // console.log(props)
-
-
-        // await fetch("http://localhost:17462/get_config")
-        // .then(x => x.json())
-        // .then(x => 
-        //     this.setState({
-        //         fullscreen:x.fullscreen,
-        //         // width : ...,
-        //         // height: ...,
-        //     })
-        // )
-        // .catch();
-        
-
         eva.replace({
             height: 28,
             width : 28,
         });
-
     }
-
-    // componentWillUnmount()
-    // {
-    //     document.removeEventListener("mousedown", this.handleClickOutside);
-    // }
 
     handleClickOutside(event)
     {
-        // console.log(event)
-        // console.log(this.wrapperRef)
-        // console.log(this.wrapperRef.current)
-
-        // if (this.wrapperRef && this.wrapperRef.current && !this.wrapperRef.current.contains(event.target))
-        // {
-        //     // console.log("out")
-        //     this.props.hide_menu_main()
-        // }
-
         this.props.hide_menu_main()
-
-        // fetch(
-        //     "http://localhost:17462/set_config_prop",
-        //     {
-        //         method: 'POST',
-        //         headers: {
-        //             'Accept'      :'application/json',
-        //             'Content-Type':'application/json',
-        //         },
-        //         body: JSON.stringify({
-        //             ["window.fullscreen"]                : this.state.fullscreen == true,
-        //             ["window.reload_interval"]           : parseInt(this.state.reload_interval),
-        //             ["window.shortcut"]                  : this.state.shortcut,
-        //             ["window.recalculate_data_on_launch"]: this.state.recalculate_data_on_launch == true,
-        //             ["window.recalculate_data_command"]  : this.state.recalculate_data_command,
-        //         })
-        //     }
-        // )
-        // .then( x     => console.log)
-        // .catch(error => console.log);
 
         window.electron.ipcRenderer.set_config_prop({
             ["window.fullscreen"]                : this.state.fullscreen == true,
@@ -175,7 +69,6 @@ export default class Menu_main extends Component
             ["window.recalculate_data_on_launch"]: this.state.recalculate_data_on_launch == true,
             ["window.recalculate_data_command"]  : this.state.recalculate_data_command,
         })
-
     }
 
     render()

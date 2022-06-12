@@ -78,42 +78,6 @@ class Home extends Component
 
   async update_content()
   {
-    // let out = await fetch("http://localhost:17462/sources_in_data_folder");
-    // out = await out.json()
-    // out = out.map(async (x) => {
-    //   let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
-    //   x.status = o.status
-    //   if (o.status === "success") { x.data              = o.data; }
-    //   else                        { x.error_description = o.description; }
-    //   return x
-    // })
-    // out = await Promise.all(out)
-    // // let out = await fetch("http://localhost:17462/get_file_data?file=" + "asd");
-    // // console.log("out 1 =", out)
-    // await this.setState({
-    //     categories:out,
-    // })
-
-
-    // await fetch("http://localhost:17462/sources_in_data_folder")
-    // .then(async out => out.json())
-    // .then(async out => {
-
-    //   let out_b = out.map(async (x) => {
-    //     let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
-    //     x.status = o.status
-    //     if (o.status === "success") { x.data              = o.data; }
-    //     else                        { x.error_description = o.description; }
-    //     return x
-    //   })
-
-    //   await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
-    
-    // })
-    // .catch()
-
-
-
     let sources_in_data_folder = window.electron.ipcRenderer.sources_in_data_folder()
 
     let out_b = sources_in_data_folder.map(async (x) => {
@@ -124,19 +88,11 @@ class Home extends Component
       return x
     })
     await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
-
-
   }
 
   async componentDidMount()
   {
       await this.update_content();
-
-      // window.electron.ipcRenderer.sources_in_data_folder("...")
-
-      // window.electron.ipcRenderer.on("poll_update", async (data) => {
-      //   await this.update_content();
-      // });
 
       window.addEventListener('mouseup', (event) => {
         this.setState({mouse_is_held_down:false})
@@ -146,38 +102,11 @@ class Home extends Component
         if (event.key == "Control" && !this.state.ctrl_is_held_down) this.setState({ctrl_is_held_down:true});
       });
 
-      window.addEventListener('keyup', (event) => {
+      window.addEventListener('keyup',   (event) => {
         if (event.key == "Control") this.setState({ctrl_is_held_down:false});
       });
 
-      // let out = window.electron.ipcRenderer.aaa([0, 1, 2, false])
-      // console.log("......LLL", out)
-
-      // window.electron.ipcRenderer.on('sources_in_data_folder', async (arg) => {
-      //   // console.log("out 2 =", event);
-      //   // console.log("out 2 =", arg);
-      //   let out_b = arg.map(async (x) => {
-      //     let o    = await (await fetch("http://localhost:17462/get_file_data?path_file=" + x.path_file)).json();
-      //     x.status = o.status
-      //     if (o.status === "success") { x.data              = o.data; }
-      //     else                        { x.error_description = o.description; }
-      //     return x
-      //   })
-      //   await Promise.all(out_b).then(x => this.setState({categories:x,})).catch()
-      // });
-
       ReactTooltip.rebuild()
-
-      // window.electron.ipcRenderer.sendMessage('ipc-example', ['ping']);
-      
-      // console.log("...")
-      // console.log(window?.electron)
-      // console.log(window?.electron?.ipcRenderer)
-      // console.log(window?.electron?.ipcRenderer?.set_config_prop())
-
-      // let out = window.electron.ipcRenderer.set_config_prop("asdasdasd")
-      // console.log(out)
-      
   }
 
   set_days_to_display(event)
@@ -256,20 +185,6 @@ class Home extends Component
 
     let target : string = this.state.categories[objIndex].title.slice(0, -5);
     
-    // fetch(
-    //   "http://localhost:17462/set_config_prop",
-    //   {
-    //     method : 'POST',
-    //     headers: {
-    //       'Accept'      : 'application/json',
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({["data."+target+".visible"] : categories_now[objIndex].visible})
-    //   }
-    // )
-    // .then( x     => console.log)
-    // .catch(error => console.log);
-
     window.electron.ipcRenderer.set_config_prop({
       ["data."+target+".visible"] : categories_now[objIndex].visible
     })
@@ -286,19 +201,6 @@ class Home extends Component
     });
 
     let target : string = this.state.categories[objIndex].title.slice(0, -5);
-    // fetch(
-    //   "http://localhost:17462/set_config_prop",
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Accept'      :'application/json',
-    //       'Content-Type':'application/json',
-    //     },
-    //     body: JSON.stringify({ ["data." + target + ".visible"] : visibility_state })
-    //   }
-    // )
-    // .then( x     => console.log)
-    // .catch(error => console.log);
 
     window.electron.ipcRenderer.set_config_prop({
       ["data."+target+".visible"] : visibility_state,
@@ -335,19 +237,6 @@ class Home extends Component
       })
 
       let target : string = this.state.categories[objIndex].title.slice(0, -5);
-      // fetch(
-      //   "http://localhost:17462/set_config_prop",
-      //   {
-      //     method: 'POST',
-      //     headers: {
-      //       'Accept'      :'application/json',
-      //       'Content-Type':'application/json',
-      //     },
-      //     body: JSON.stringify({ ["data." + target + ".color"] : this.state.color_to_assign })
-      //   }
-      // )
-      // .then( x     => console.log)
-      // .catch(error => console.log);
 
       window.electron.ipcRenderer.set_config_prop({
         ["data."+target+".color"] : this.state.color_to_assign,
@@ -372,8 +261,6 @@ class Home extends Component
 
   refresh_data()
   {
-    // fetch("http://localhost:17462/reload").catch()
-
     window.electron.ipcRenderer.reload();
   }
 
