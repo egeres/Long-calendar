@@ -68,8 +68,8 @@ export default class Graph_multiple extends Component
         
         this_groups.selectAll("circle")
         .data(d => {
-            return d.data.map(x => {
-                let to_ret = x;
+            return d.data.map((x, i) => {
+                let to_ret     = {...x};
                 to_ret.color   = x?.color   ?? d.color   ?? "#FFF";
                 to_ret.size    = x?.size    ?? d.size    ?? 4.5   ;
                 to_ret.opacity = x?.opacity ?? d.opacity ?? 1.0   ;
@@ -87,17 +87,21 @@ export default class Graph_multiple extends Component
             .style("r"      , d => d.size   )
             .style("fill"   , d => d.color  )
             .style("opacity", d => d.opacity),
-        update => update
+            update => update
             .attr("cx", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
-            .attr("cy", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) }),
+            .attr("cy", i => { return thiz.props.margin + (      (moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
+            .style("r"      , d => d.size   )
+            .style("fill"   , d => d.color  )
+            .style("opacity", d => d.opacity),
         exit   => exit
             .remove(),
         )
+        
 
         this_groups.selectAll("line")
         .data(d => {
-            return d.data.map(x => {
-                let to_ret = x;
+            return d.data.map((x, i) => {
+                let to_ret     = {...x};
                 to_ret.color   = x?.color   ?? d.color   ?? "#FFF";
                 to_ret.size    = x?.size    ?? d.size    ?? 4.5   ;
                 to_ret.opacity = x?.opacity ?? d.opacity ?? 1.0   ;
@@ -164,6 +168,9 @@ export default class Graph_multiple extends Component
 
             }),
         update => update
+            // .style("r"      , d => d.size   )
+            .style("stroke"   , d => d.color  )
+            .style("opacity", d => d.opacity)
             .attr("x1", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
             .attr("x2", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.end  ).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
             .attr("y1", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
