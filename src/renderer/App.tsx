@@ -145,9 +145,11 @@ class Home extends Component
 
   set_color_to_assign(input_value)
   {
-    this.setState({
-      color_to_assign : input_value,
-    })
+    // this.setState({
+    //   color_to_assign : input_value,
+    // })
+    
+    window.color_to_assign = input_value;
   }
 
   toggle_visibility_by_id(id)
@@ -159,6 +161,12 @@ class Home extends Component
     {
       // Toggles the current "eye"
       categories_now[objIndex].visible = !categories_now[objIndex].visible
+
+      let target : string = this.state.categories[objIndex].title.slice(0, -5);
+      window.electron.ipcRenderer.set_config_prop({
+        ["data."+target+".visible"] : categories_now[objIndex].visible
+      })
+
     }
     else
     {
@@ -166,12 +174,31 @@ class Home extends Component
       {
         // Set all the "eyes" in visible mode
         categories_now.forEach(element => {element.visible = true});
+
+        categories_now.forEach(element => {
+          window.electron.ipcRenderer.set_config_prop({
+            ["data."+element.title.slice(0, -5)+".visible"] : true
+          })
+        });
       }
       else
       {
         // Sets the current "eye" to be the only one visible
         categories_now.forEach(element => {element.visible = false});
         categories_now[objIndex].visible = true
+        
+        // We set all the visibility of the properties to false
+        categories_now.forEach(element => {
+          window.electron.ipcRenderer.set_config_prop({
+            ["data."+element.title.slice(0, -5)+".visible"] : false
+          })
+        });
+        
+        // We just set the current one to be visible
+        let target : string = this.state.categories[objIndex].title.slice(0, -5);
+        window.electron.ipcRenderer.set_config_prop({
+          ["data."+target+".visible"] : true
+        })
       }
     }
 
@@ -183,11 +210,10 @@ class Home extends Component
 
     // this.state.ctrl_is_held_down
 
-    let target : string = this.state.categories[objIndex].title.slice(0, -5);
-    
-    window.electron.ipcRenderer.set_config_prop({
-      ["data."+target+".visible"] : categories_now[objIndex].visible
-    })
+    // let target : string = this.state.categories[objIndex].title.slice(0, -5);
+    // window.electron.ipcRenderer.set_config_prop({
+    //   ["data."+target+".visible"] : categories_now[objIndex].visible
+    // })
 
   }
 
@@ -231,7 +257,8 @@ class Home extends Component
     {
       let objIndex = this.state.categories.findIndex((obj => obj.id == this.state.id_to_assign));
       let categories_new = this.state.categories
-      categories_new[objIndex].color = this.state.color_to_assign;
+      // categories_new[objIndex].color = this.state.color_to_assign;
+      categories_new[objIndex].color = window.color_to_assign;
       this.setState({
         categories:categories_new
       })
@@ -239,7 +266,8 @@ class Home extends Component
       let target : string = this.state.categories[objIndex].title.slice(0, -5);
 
       window.electron.ipcRenderer.set_config_prop({
-        ["data."+target+".color"] : this.state.color_to_assign,
+        // ["data."+target+".color"] : this.state.color_to_assign,
+        ["data."+target+".color"] : window.color_to_assign,
       })
 
     }

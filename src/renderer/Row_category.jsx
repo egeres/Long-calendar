@@ -71,7 +71,7 @@ export default class Row_category extends Component
                     <i data-eva="eye-outline" data-eva-fill="#FFF"/>
                 </div>
                 <div className={this.props.visible ? 'hidden':'empty'}>
-                    <i data-eva="eye-off-outline" data-eva-fill="#FFF"/>
+                    <i data-eva="eye-off-outline" data-eva-fill="#555"/>
                 </div>
             </span>
 

@@ -1,7 +1,9 @@
 
 import React, { Component } from 'react';
 import Row_category from './Row_category';
-import { HexColorPicker } from "react-colorful";
+// import { HexColorPicker } from "react-colorful";
+import { RgbaStringColorPicker } from "react-colorful";
+
 import * as eva from 'eva-icons';
 
 export default class Container_colorpicker extends Component
@@ -40,7 +42,7 @@ export default class Container_colorpicker extends Component
         style     = {{position:"absolute"}}
         ref       = {this.wrapperRef}
         >
-            <HexColorPicker
+            <RgbaStringColorPicker
             color    = {this.props.color}
             onChange = {this.props.set_color_to_assign}
             />
