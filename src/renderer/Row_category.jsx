@@ -24,7 +24,9 @@ export default class Row_category extends Component
     {
         // console.log("......", this.props.last_visibility_state, this.props.id)
 
-        if(this.props.mouse_is_held_down && !this.props.ctrl_is_held_down)
+        
+        // if(this.props.mouse_is_held_down && !this.props.ctrl_is_held_down)
+        if(window.mouse_is_held_down && !window.ctrl_is_held_down)
         {
             this.props.set_visibility_by_id(this.props.id, this.props.last_visibility_state)
         }

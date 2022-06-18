@@ -191,7 +191,7 @@ export default class Graph_multiple extends Component
     	this.draw();
     }
 
-    componentDidUpdate(prevProps, nextProps)
+    componentDidUpdate(prevProps, prevState)
     {
         this.draw();
     }

@@ -30,6 +30,9 @@ class Home extends Component
 
     console.log(days_to_display)
 
+    window.mouse_is_held_down = false;
+    window. ctrl_is_held_down = false;
+
     this.state = {
       categories      : [],
       color           : "#0F0",
@@ -48,9 +51,6 @@ class Home extends Component
       widthline       : width_line ,
 
       menu_main_visible : false,
-      
-      mouse_is_held_down   : false,
-       ctrl_is_held_down   : false,
       last_visibility_state: false,
     }
 
@@ -95,15 +95,15 @@ class Home extends Component
       await this.update_content();
 
       window.addEventListener('mouseup', (event) => {
-        this.setState({mouse_is_held_down:false})
+        window.mouse_is_held_down = false;
       });
 
       window.addEventListener('keydown', (event) => {
-        if (event.key == "Control" && !this.state.ctrl_is_held_down) this.setState({ctrl_is_held_down:true});
+        if (event.key == "Control" && !window.ctrl_is_held_down) window.ctrl_is_held_down = true;
       });
 
       window.addEventListener('keyup',   (event) => {
-        if (event.key == "Control") this.setState({ctrl_is_held_down:false});
+        if (event.key == "Control") window.ctrl_is_held_down = false;
       });
 
       ReactTooltip.rebuild()
@@ -157,7 +157,7 @@ class Home extends Component
     let categories_now = this.state.categories
     let objIndex       = categories_now.findIndex((obj => obj.id == id));
     
-    if (!this.state.ctrl_is_held_down)
+    if (!window.ctrl_is_held_down)
     {
       // Toggles the current "eye"
       categories_now[objIndex].visible = !categories_now[objIndex].visible
@@ -204,9 +204,10 @@ class Home extends Component
 
     this.setState({
       categories           : categories_now,
-      mouse_is_held_down   : true,
       last_visibility_state: categories_now[objIndex].visible,
     });
+
+    window.mouse_is_held_down = true;
 
     // this.state.ctrl_is_held_down
 
@@ -322,8 +323,8 @@ class Home extends Component
         last_visibility_state   = {this.state.last_visibility_state}
         on_click_color          = {this.colorpicking_open_picker}
         onSortEnd               = {this.onSortEnd}
-        mouse_is_held_down      = {this.state.mouse_is_held_down}
-        ctrl_is_held_down       = {this.state.ctrl_is_held_down}
+        // mouse_is_held_down      = {this.state.mouse_is_held_down}
+        // ctrl_is_held_down       = {this.state.ctrl_is_held_down}
         />
 
         <div className='spacer_10'/>
