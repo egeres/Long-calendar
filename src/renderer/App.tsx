@@ -92,6 +92,11 @@ class Home extends Component
 
   async componentDidMount()
   {
+
+      window.electron.ipcRenderer.on('poll_update', (arg) => {
+        this.update_content();
+      });
+
       await this.update_content();
 
       window.addEventListener('mouseup', (event) => {
