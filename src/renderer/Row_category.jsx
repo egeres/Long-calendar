@@ -68,7 +68,6 @@ export default class Row_category extends Component
             {/* <span onMouseDown={() => this.props.on_click_eye(this.props.id)} onMouseEnter={() => {this.handle_onmouseenter()}}></span> */}
 
             <span onMouseDown={() => this.props.toggle_visibility_by_id(this.props.id)} onMouseEnter={() => this.handle_onmouseenter()}>
-
                 <div className={this.props.visible ? 'empty':'hidden'}>
                     <i data-eva="eye-outline" data-eva-fill="#FFF"/>
                 </div>

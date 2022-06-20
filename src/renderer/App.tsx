@@ -23,7 +23,7 @@ class Home extends Component
   {
     super(props);
 
-    let width_line      : number = 8;
+    let width_line      : number = 12;
     let spacing_lines   : number = 5;
     let width_graph     : number = window.innerWidth  - 330;
     let days_to_display : number = Math.floor(width_graph / (width_line + spacing_lines));
@@ -36,7 +36,7 @@ class Home extends Component
     this.state = {
       categories      : [],
       color           : "#0F0",
-      picking_color   : false,
+      is_picking_color   : false,
       color_to_assign : "#000",
       id_to_assign    : null,
 
@@ -74,6 +74,19 @@ class Home extends Component
 
   hide_menu_main() {
     this.setState({menu_main_visible:false,})
+  }
+
+  hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+    }
+    throw new Error('Bad Hex');
   }
 
   async update_content()
@@ -243,12 +256,36 @@ class Home extends Component
   colorpicking_open_picker(event, id)
   {
     let objIndex = this.state.categories.findIndex((obj => obj.id == id));
+
+    console.log(
+      this.state.categories[objIndex].color,
+      // this.hexToRgbA(this.state.categories[objIndex].color)
+    )
+
+      let the_color : string = this.state.categories[objIndex].color;
+      if (the_color.startsWith("rgba"))
+      {
+
+      }
+      else
+      {
+        the_color = this.hexToRgbA(this.state.categories[objIndex].color);
+      }
+
+
     this.setState({
-      color          : this.state.categories[objIndex].color,
-      color_to_assign: this.state.categories[objIndex].color,
-      picking_color  : true,
+      // color          : this.state.categories[objIndex].color,
+      // color          : this.hexToRgbA(this.state.categories[objIndex].color),
+      // color: "rgba(255, 0, 0, 1)",
+      color: the_color,
+
+      // color_to_assign: this.state.categories[objIndex].color,
+      is_picking_color  : true,
       id_to_assign   : id,
     })
+
+
+    window.color_to_assign = this.state.categories[objIndex].color;
 
     let rect = event.target.getBoundingClientRect()
     let x    = rect.x - (document.getElementById("colorpicker").getBoundingClientRect().width  / 2)
@@ -279,7 +316,7 @@ class Home extends Component
     }
 
     this.setState({
-      picking_color: false,
+      is_picking_color: false,
     })
 
   }
@@ -339,7 +376,7 @@ class Home extends Component
     </div>
 
     <Container_colorpicker
-    visible             = {this.state.picking_color}
+    visible             = {this.state.is_picking_color}
     color               = {this.state.color}
     set_color_to_assign = {this.set_color_to_assign}
     set_color_by_id     = {this.set_color_by_id}
