@@ -7,6 +7,7 @@ import Container_graphs_time from './Container_graphs_time';
 import Container_colorpicker from './Container_colorpicker';
 import Container_options_days from './Container_options_days';
 import Container_customhighlights from './Container_customhighlights';
+import Graph_singleday from './Graph_singleday';
 
 import Tooltip from './Tooltip';
 import Tooltip_date from './Tooltip_date';
