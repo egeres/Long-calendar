@@ -13,6 +13,10 @@ export default class Graph_singleday extends Component
     constructor(props)
     {
         super(props);
+        this.tooltip      = d3.select("#tooltip");
+        this.tooltip_date = d3.select("#tooltip_date");
+        setTimeout(() => { this.tooltip      = d3.select("#tooltip"     ); }, 100)
+        setTimeout(() => { this.tooltip_date = d3.select("#tooltip_date"); }, 100)
     }
 
     render()
@@ -134,13 +138,14 @@ export default class Graph_singleday extends Component
                 .attr('d', arc_generator);
         }
 
+
+        let arc_generator = d3.arc()
+        .innerRadius((this.props.height/2) - 100)
+        .outerRadius((this.props.height/2));
+
         if (true)
         {
-            console.log(this.props.categories)
-
-            let arc_generator = d3.arc()
-            .innerRadius((this.props.height/2) - 100)
-            .outerRadius((this.props.height/2));
+            // console.log(this.props.categories)
 
             this.props.categories.forEach(element => {
                 
@@ -154,11 +159,13 @@ export default class Graph_singleday extends Component
                 let new_data = sub_data.map(x => {
                   
                     return {
-                        "startAngle": ((moment(x.start).hour()+moment(x.start).minutes()/60.0)/24.0) * Math.PI,
-                          "endAngle": ((moment(x.end  ).hour()+moment(x.end  ).minutes()/60.0)/24.0) * Math.PI,
+                        "startAngle": ((moment(x.start).hour()+moment(x.start).minutes()/60.0)/24.0) * Math.PI * 2,
+                          "endAngle": ((moment(x.end  ).hour()+moment(x.end  ).minutes()/60.0)/24.0) * Math.PI * 2,
+                        "color"     : x.color ?? element.color ?? "#FFF",
+                        "tooltip"   : x.tooltip ?? "",
                     }
                 })
-                console.log(new_data)
+                // console.log(new_data)
 
                 this.g = d3
                     .select(this.refs.group_main)
@@ -166,11 +173,118 @@ export default class Graph_singleday extends Component
                     .attr("transform", "translate("+this.props.width/2+", "+this.props.height/2+")");
                 this.g.selectAll('path').data(new_data).enter()
                     .append('path')
-                    .style("fill", function(d, i) {
-                        // return "#fff";
-                        return element.color;
+                    .style("fill", function(d, i) { return d.color; })
+                    .attr("tooltip"       , i => i.tooltip)
+                    .attr('d', arc_generator)
+                    .on("mouseover", function(e) {
+
+                        console.log(e.target)
+
+                        if (e.target.getAttribute("tooltip"))
+                        {
+                            let rect = e.target.getBoundingClientRect()
+                            let x    = rect.x
+                            let y    = rect.y + rect.height / 2
+        
+                            thiz.tooltip
+                            .style("opacity", 1.0)
+                            .style("display", "block");
+                            
+                            thiz.tooltip
+                            // .transition()
+                            // .duration(70)
+                            .html ((d, i) => {return e.target.getAttribute("tooltip")})
+                            .style("left", d => {return x + "px"})
+                            .style("top" , d => {return y + "px"});
+        
+                            thiz.tooltip_date
+                            .html ((d, i) => {return e.target.getAttribute("date")+" ("+e.target.getAttribute("days_ago")+" days ago)" + " ("+e.target.getAttribute("date_dayofweek")+")"})                         
+                            .style("opacity", 1.0)
+                            .style("display", "block")
+                            .style("left", d => {return x + "px"})
+                            .style("top" , d => {return "10px"});
+                        }
                     })
-                    .attr('d', arc_generator);
+                    .on("mouseout", function(_d) {
+                        thiz.tooltip
+                        // .transition()
+                        // .duration(70)
+                        .style("opacity", 0)
+                        .style("display", "none");
+                        thiz.tooltip_date
+                        .style("opacity", 0)
+                        .style("display", "none");
+                    });
+            });
+        }
+
+        if (true)
+        {
+            // console.log(this.props.categories)
+
+            // let arc_generator = d3.arc()
+            // .innerRadius((this.props.height/2) - 100)
+            // .outerRadius((this.props.height/2));
+
+            this.props.categories.forEach(element => {
+                
+                // console.log(element)
+                if (!element.visible) { return null; }
+
+                let sub_data = element.data
+                .filter(i => !i.end)
+                .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < 1)
+                
+                let new_data = sub_data.map(x => {
+                    
+                    let sssss = ((moment(x.start).hour()+moment(x.start).minutes()/60.0)/24.0) * Math.PI * 2;
+                    
+                    // console.log(x)
+                    // console.log(
+                    //     sssss,
+                    //     Math.cos(sssss),
+                    //     Math.sin(sssss),
+                    // )
+
+                    // sssss = 0
+                    // sssss = Math.PI * 0.5
+                    // sssss = Math.PI
+
+                    return {
+                        "cx"     :  Math.sin(sssss) * 500,
+                        "cy"     :- Math.cos(sssss) * 500,
+                        "r"      : (x.size  ?? 4.5) * 1,
+                        "fill"   : x.color ?? element.color ?? "#FFF",
+                        "opacity": 1.0,
+                    }
+                })
+                // console.log(new_data)
+
+                this.g = d3
+                    .select(this.refs.group_main)
+                    .append("g")
+                    .attr("transform", "translate("+this.props.width/2+", "+this.props.height/2+")");
+
+                this.g.selectAll('circle').data(new_data)
+                .join(
+                    enter => enter
+                        .append("circle")
+                        .attr("cx"      , d => d.cx     )
+                        .attr("cy"      , d => d.cy     )
+                        .style("r"      , d => d.r      )
+                        .style("fill"   , d => d.fill   )
+                        .style("opacity", d => d.opacity),
+                    update => update
+                        .append("circle")
+                        .attr("cx"      , d => d.cx     )
+                        .attr("cy"      , d => d.cy     )
+                        .style("r"      , d => d.r      )
+                        .style("fill"   , d => d.color  )
+                        .style("opacity", d => d.opacity),
+                    exit => exit
+                        .remove(),
+                )
+
             });
         }
     }

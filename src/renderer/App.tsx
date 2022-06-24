@@ -8,6 +8,7 @@ import Container_colorpicker from './Container_colorpicker';
 import Container_options_days from './Container_options_days';
 import Container_customhighlights from './Container_customhighlights';
 import Graph_singleday from './Graph_singleday';
+import Container_graphs_circular from './Container_graphs_circular';
 
 import Tooltip from './Tooltip';
 import Tooltip_date from './Tooltip_date';
@@ -341,13 +342,25 @@ class Home extends Component
   {
     return <div className='centered'>
     
-    <Container_graphs_time
+    {/* <Container_graphs_time
     categories      = {this.state.categories     }
     width           = {this.state.graph_width    }
     height          = {this.state.graph_height   }
     days_to_display = {this.state.days_to_display}
     widthline       = {this.state.widthline      }
+    /> */}
+
+    <Container_graphs_circular
+    categories      = {this.state.categories     }
+    width           = {1100}
+    height          = {1100}
+    days_to_display = {this.state.days_to_display}
+    widthline       = {this.state.widthline      }
     />
+    
+    {/* <Graph_singleday
+    categories      = {this.state.categories}
+    /> */}
 
     <div className='spacer_10'/>
 
@@ -356,7 +369,6 @@ class Home extends Component
         {/* <Container_options_days
         set_days_to_display = {this.set_days_to_display}
         /> */}
-        
         {/* <div className='spacer_10'/> */}
 
         <Container_categories
@@ -370,8 +382,7 @@ class Home extends Component
         // ctrl_is_held_down       = {this.state.ctrl_is_held_down}
         />
 
-        <div className='spacer_10'/>
-
+        {/* <div className='spacer_10'/> */}
         {/* <Container_customhighlights/> */}
 
     </div>
