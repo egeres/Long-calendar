@@ -17,7 +17,10 @@
     "prepare": "husky install"
   },
   "electronmon": {
-    "patterns": ["!data", "!data/*"]
+    "patterns": [
+      "!data",
+      "!data/*"
+    ]
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -236,6 +239,8 @@
     "chokidar": "^3.5.3",
     "cors": "^2.8.5",
     "d3": "^7.4.4",
+    "d3-scale-chromatic": "^3.0.0",
+    "d3-shape": "^3.1.0",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.6",
     "electron-updater": "^4.6.5",

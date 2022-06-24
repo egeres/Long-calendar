@@ -7,6 +7,9 @@ import Container_graphs_time from './Container_graphs_time';
 import Container_colorpicker from './Container_colorpicker';
 import Container_options_days from './Container_options_days';
 import Container_customhighlights from './Container_customhighlights';
+import Graph_singleday from './Graph_singleday';
+import Container_graphs_circular from './Container_graphs_circular';
+import Container_options_display from './Container_options_display';
 
 import Tooltip from './Tooltip';
 import Tooltip_date from './Tooltip_date';
@@ -25,7 +28,7 @@ class Home extends Component
 
     let width_line      : number = 12;
     let spacing_lines   : number = 5;
-    let width_graph     : number = window.innerWidth  - 330;
+    let width_graph     : number = window.innerWidth  - 330 - 15;
     let days_to_display : number = Math.floor(width_graph / (width_line + spacing_lines));
 
     console.log(days_to_display)
@@ -36,7 +39,7 @@ class Home extends Component
     this.state = {
       categories      : [],
       color           : "#0F0",
-      is_picking_color   : false,
+      is_picking_color: false,
       color_to_assign : "#000",
       id_to_assign    : null,
 
@@ -47,10 +50,11 @@ class Home extends Component
       // graph_height    : Math.floor(window.innerHeight * 0.8),
       graph_height    : Math.floor(window.innerHeight - 25),
 
+      display_mode    : 0,
       days_to_display : days_to_display,
       widthline       : width_line ,
 
-      menu_main_visible : false,
+      menu_main_visible    : false,
       last_visibility_state: false,
     }
 
@@ -60,6 +64,7 @@ class Home extends Component
     this.set_color_by_id          = this.set_color_by_id         .bind(this)
     this.set_color_to_assign      = this.set_color_to_assign     .bind(this)
     this.set_days_to_display      = this.set_days_to_display     .bind(this)
+    this.set_display_mode         = this.set_display_mode        .bind(this)
     this.show_menu_main           = this.show_menu_main          .bind(this)
     this.hide_menu_main           = this.hide_menu_main          .bind(this)
     this.onSortEnd                = this.onSortEnd               .bind(this)
@@ -105,6 +110,16 @@ class Home extends Component
 
   async componentDidMount()
   {
+
+      let collected_props = window.electron.ipcRenderer.get_config_prop([
+          "window.display_mode",
+      ])
+
+      console.log(collected_props);
+
+      this.setState({
+        display_mode:collected_props["window.display_mode"] ?? 0,
+      })
 
       window.electron.ipcRenderer.on('poll_update', (arg) => {
         this.update_content();
@@ -158,6 +173,18 @@ class Home extends Component
 
         }
       }
+    }
+  }
+
+  set_display_mode(event)
+  {
+    if (event)
+    {
+      // console.log(event.target.getAttribute("id"))
+
+      this.setState({
+        display_mode:event.target.getAttribute("id")
+      })
     }
   }
 
@@ -338,25 +365,42 @@ class Home extends Component
 
   render()
   {
+
+
+    let graph;
+
+    if (this.state.display_mode == 0)
+    {
+      graph      = <Container_graphs_time
+      categories      = {this.state.categories     }
+      width           = {this.state.graph_width    }
+      height          = {this.state.graph_height   }
+      days_to_display = {this.state.days_to_display}
+      widthline       = {this.state.widthline      }
+      />
+    }
+
+    if (this.state.display_mode == 1)
+    {
+      graph      = <Container_graphs_circular
+      categories = {this.state.categories}
+      width      = {1100}
+      height     = {1100}
+      />
+    }
+
     return <div className='centered'>
     
-    <Container_graphs_time
-    categories      = {this.state.categories     }
-    width           = {this.state.graph_width    }
-    height          = {this.state.graph_height   }
-    days_to_display = {this.state.days_to_display}
-    widthline       = {this.state.widthline      }
-    />
+    {graph}
+    
+    {/* <div className='spacer_10'/> */}
 
-    <div className='spacer_10'/>
+    <div className='centered_column' style={{position:"absolute", right:15}}>
 
-    <div className='centered_column'>
-
-        {/* <Container_options_days
-        set_days_to_display = {this.set_days_to_display}
-        /> */}
-        
-        {/* <div className='spacer_10'/> */}
+        <Container_options_display
+        set_display_mode = {this.set_display_mode}
+        />
+        <div className='spacer_10'/>
 
         <Container_categories
         categories              = {this.state.categories}
@@ -365,12 +409,9 @@ class Home extends Component
         last_visibility_state   = {this.state.last_visibility_state}
         on_click_color          = {this.colorpicking_open_picker}
         onSortEnd               = {this.onSortEnd}
-        // mouse_is_held_down      = {this.state.mouse_is_held_down}
-        // ctrl_is_held_down       = {this.state.ctrl_is_held_down}
         />
 
-        <div className='spacer_10'/>
-
+        {/* <div className='spacer_10'/> */}
         {/* <Container_customhighlights/> */}
 
     </div>
