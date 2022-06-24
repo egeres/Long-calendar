@@ -15,12 +15,25 @@ export default class Container_options_display extends Component
     }
 
     changeRadio = (event) => {
-        let id_selected_radiobutton = parseInt(event.target.getAttribute("id_rad"))
+        let id_selected_radiobutton = parseInt(event.target.getAttribute("id"))
         this.setState({selected_radio:id_selected_radiobutton})
         // this.props.set_days_to_display(event)
 
+        this.props.set_display_mode(event)
+
         window.electron.ipcRenderer.set_config_prop({
-            ["window.days_to_display"] : id_selected_radiobutton,
+            ["window.display_mode"] : id_selected_radiobutton,
+        })
+    }
+
+    componentDidMount()
+    {
+        let collected_props = window.electron.ipcRenderer.get_config_prop([
+            "window.display_mode",
+        ])
+
+        this.setState({
+            selected_radio:collected_props["window.display_mode"] ?? 0
         })
     }
 
@@ -36,28 +49,18 @@ export default class Container_options_display extends Component
         </tr>
         <tr>
             <td><input
-            type            = "radio"
-            value           = {120}
-            v_daystodisplay = {120}
-            v_width         = {1200}
-            v_height        = {500}
-            v_widthline     = {8 }
-            checked         = {this.state.selected_radio === 0}
-            onChange        = {this.changeRadio.bind(this)}
-            id_rad          = {0}
-            name            = "days"
+            type     = "radio"
+            name     = "days"
+            checked  = {this.state.selected_radio === 0}
+            onChange = {this.changeRadio.bind(this)}
+            id       = {0}
             /></td>
             <td><input
-            type            = "radio"
-            value           = {10}
-            v_daystodisplay = {10}
-            v_width         = {700}
-            v_height        = {500}
-            v_widthline     = {20}
-            checked         = {this.state.selected_radio === 1}
-            onChange        = {this.changeRadio.bind(this)}
-            id_rad          = {1}
-            name            = "days"
+            type     = "radio"
+            name     = "days"
+            checked  = {this.state.selected_radio === 1}
+            onChange = {this.changeRadio.bind(this)}
+            id       = {1}
             /></td>
         </tr>
         </tbody>

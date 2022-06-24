@@ -11,9 +11,10 @@ export default class Container_graphs_time extends Component
     render()
     {
         return <div style={{
-            position: "relative",
+            position: "absolute",
             width   : this.props.width  + "px",
             height  : this.props.height + "px",
+            left:15,
         }}>
 
             <Graph_background

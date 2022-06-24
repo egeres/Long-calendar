@@ -178,7 +178,7 @@ export default class Graph_singleday extends Component
                     .attr('d', arc_generator)
                     .on("mouseover", function(e) {
 
-                        console.log(e.target)
+                        // console.log(e.target)
 
                         if (e.target.getAttribute("tooltip"))
                         {

@@ -110,7 +110,8 @@ export default class Clock_circular extends Component
                 angle_p: ((moment().hour()+moment().minutes()/60.0 - 25/60.0)/24.0) * Math.PI * 2,
             })
         }, 10 * 1000)
-
+        
+        this.draw();
     }
     componentDidUpdate() {this.draw();}
 }
