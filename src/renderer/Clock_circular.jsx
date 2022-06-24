@@ -106,9 +106,10 @@ export default class Clock_circular extends Component
 
         setInterval(async () => {
             this.setState({
-                position_y_tip: (moment().hour() + moment().minutes() / 60.0) / 24.0,
+                angle  : ((moment().hour()+moment().minutes()/60.0          )/24.0) * Math.PI * 2,
+                angle_p: ((moment().hour()+moment().minutes()/60.0 - 25/60.0)/24.0) * Math.PI * 2,
             })
-        }, 1000)
+        }, 10 * 1000)
 
     }
     componentDidUpdate() {this.draw();}

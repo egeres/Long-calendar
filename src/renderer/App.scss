@@ -168,6 +168,7 @@ a:hover {
 table {
     table-layout: fixed;
     width       : 100%;
+    padding     : 5px;
 }
   
 td {
@@ -221,6 +222,8 @@ body {
     width                  : 300px;
     border-top-left-radius : $corner_size;
     border-top-right-radius: $corner_size;
+    border-bottom-left-radius : $corner_size;
+    border-bottom-right-radius: $corner_size;
 }
 
 .container_customhightlights {
@@ -340,4 +343,22 @@ body {
 
     // background-color: red !important;
     font-family     : $font_family_0 !important;
+}
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance        : none;
+
+  background-color: transparent;
+  margin          : 0;
+  color           : $color_3;
+  width           : 1.55em;
+  height          : 1.55em;
+  border          : 0.15em solid currentColor;
+  border-radius   : 50%;
+
+}
+
+input[type="radio"]:checked {
+    background-color: $color_3;
 }

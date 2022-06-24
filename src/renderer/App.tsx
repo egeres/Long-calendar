@@ -9,6 +9,7 @@ import Container_options_days from './Container_options_days';
 import Container_customhighlights from './Container_customhighlights';
 import Graph_singleday from './Graph_singleday';
 import Container_graphs_circular from './Container_graphs_circular';
+import Container_options_display from './Container_options_display';
 
 import Tooltip from './Tooltip';
 import Tooltip_date from './Tooltip_date';
@@ -370,6 +371,11 @@ class Home extends Component
         set_days_to_display = {this.set_days_to_display}
         /> */}
         {/* <div className='spacer_10'/> */}
+
+        <Container_options_display
+        />
+        
+        <div className='spacer_10'/>
 
         <Container_categories
         categories              = {this.state.categories}
