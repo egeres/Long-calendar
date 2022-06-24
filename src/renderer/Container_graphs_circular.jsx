@@ -11,9 +11,6 @@ export default class Container_graphs_circular extends Component
     {
         return <div style={{
             position: "relative",
-            // width   : this.props.width  + "px",
-            // height  : this.props.height + "px",
-            // backgroundColor:"green",
         }}>
 
             <Clock_circular

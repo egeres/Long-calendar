@@ -6,8 +6,9 @@ import * as d3 from 'd3';
 export default class Graph_singleday extends Component
 {
     static defaultProps = {
-        width : 1100,
-        height: 1100,
+        width    : 1100,
+        height   : 1100,
+        thickness: 60,
     };
 
     constructor(props)
@@ -59,7 +60,7 @@ export default class Graph_singleday extends Component
         // .style("opacity", 0.7);
 
         var arcGenerator = d3.arc()
-            .innerRadius((this.props.height/2) - 100)
+            .innerRadius((this.props.height/2) - this.props.thickness)
             .outerRadius((this.props.height/2));
         
         this.g = d3.select(this.refs.group_main).append("g").attr("transform", "translate("+this.props.width/2+", "+this.props.height/2+")");
@@ -114,7 +115,7 @@ export default class Graph_singleday extends Component
         if (false)
         {
             let arc_generator = d3.arc()
-            .innerRadius((this.props.height/2) - 100)
+            .innerRadius((this.props.height/2) - this.props.thickness)
             .outerRadius((this.props.height/2));
                 
             let arc_data = [
@@ -140,7 +141,7 @@ export default class Graph_singleday extends Component
 
 
         let arc_generator = d3.arc()
-        .innerRadius((this.props.height/2) - 100)
+        .innerRadius((this.props.height/2) - this.props.thickness)
         .outerRadius((this.props.height/2));
 
         if (true)
@@ -251,8 +252,8 @@ export default class Graph_singleday extends Component
                     // sssss = Math.PI
 
                     return {
-                        "cx"     :  Math.sin(sssss) * 500,
-                        "cy"     :- Math.cos(sssss) * 500,
+                        "cx"     :  Math.sin(sssss) * ((this.props.width/2) - this.props.thickness/2),
+                        "cy"     :- Math.cos(sssss) * ((this.props.width/2) - this.props.thickness/2),
                         "r"      : (x.size  ?? 4.5) * 1,
                         "fill"   : x.color ?? element.color ?? "#FFF",
                         "opacity": 1.0,

@@ -18,6 +18,7 @@ export default class Clock_circular extends Component
         this.state = {
             angle  : ((moment().hour()+moment().minutes()/60.0          )/24.0) * Math.PI * 2,
             angle_p: ((moment().hour()+moment().minutes()/60.0 - 25/60.0)/24.0) * Math.PI * 2,
+            angle_s: ((moment().hour()+moment().minutes()/60.0 + 25/60.0)/24.0) * Math.PI * 2,
         };
     }
 
@@ -40,36 +41,21 @@ export default class Clock_circular extends Component
     {
         let thiz = this;
 
-        // let angle   = ((moment().hour()+moment().minutes()/60.0)/24.0) * Math.PI * 2;
-        // let angle_p = ((moment().hour()+moment().minutes()/60.0 - 25/60.0)/24.0) * Math.PI * 2;
-
         d3
         .select(this.refs.group_main)
         .selectAll("*")
         .remove();
 
-        // d3
-        // .select(this.refs.group_main)
-        // .append("rect")
-        // .attr("width" , this.props.width )
-        // .attr("height", this.props.height)
-        // .attr("x", 0)
-        // .attr("y", 0)
-        // .attr("fill", "#D00")
-        // .style("opacity", 0.7);
-
-        d3
-        .select(this.refs.group_main)
-        .append('line')
+        d3.select(this.refs.group_main)
+            .append('line')
             .style("opacity", 0.2)
             .style("stroke", "#FFF")
             .style("stroke-width", 1)
             .attr("x1", (0) )
             .attr("y1", (this.props.height / 2) )
-            .attr("x2", (this.props.width) )
+            .attr("x2", (200) )
             .attr("y2", (this.props.height / 2) );
-        d3
-        .select(this.refs.group_main)
+        d3.select(this.refs.group_main)
             .append('line')
             .style("opacity", 0.2)
             .style("stroke", "#FFF")
@@ -77,17 +63,37 @@ export default class Clock_circular extends Component
             .attr("x1", (this.props.width / 2))
             .attr("y1", (0))
             .attr("x2", (this.props.width / 2))
-            .attr("y2", (this.props.height)); 
+            .attr("y2", (200)); 
+        d3.select(this.refs.group_main)
+            .append('line')
+            .style("opacity", 0.2)
+            .style("stroke", "#FFF")
+            .style("stroke-width", 1)
+            .attr("x1", (this.props.width / 2))
+            .attr("y1", (this.props.height))
+            .attr("x2", (this.props.width / 2))
+            .attr("y2", (this.props.height - 200)); 
+        d3.select(this.refs.group_main)
+            .append('line')
+            .style("opacity", 0.2)
+            .style("stroke", "#FFF")
+            .style("stroke-width", 1)
+            .attr("x1", (this.props.width) )
+            .attr("y1", (this.props.height / 2) )
+            .attr("x2", (this.props.width - 200) )
+            .attr("y2", (this.props.height / 2) );
+
+
 
         d3
         .select(this.refs.group_main)
             .append('line')
             .style("stroke", "#FFF")
             .style("stroke-width", 1)
-            .attr("x1", (this.props.width  / 2) +  (  Math.sin(thiz.state.angle)) * (this.props.width/2 - 100))
-            .attr("y1", (this.props.height / 2) +  (- Math.cos(thiz.state.angle)) * (this.props.width/2 - 100))
-            .attr("x2", (this.props.width  / 2) +  (  Math.sin(thiz.state.angle)) * (this.props.width/2 - 120))
-            .attr("y2", (this.props.height / 2) +  (- Math.cos(thiz.state.angle)) * (this.props.width/2 - 120));
+            .attr("x1", (this.props.width  / 2) + (  Math.sin(thiz.state.angle  )) * (this.props.width/2 - 70))
+            .attr("y1", (this.props.height / 2) + (- Math.cos(thiz.state.angle  )) * (this.props.width/2 - 70))
+            .attr("x2", (this.props.width  / 2) + (  Math.sin(thiz.state.angle  )) * (this.props.width/2 - 90))
+            .attr("y2", (this.props.height / 2) + (- Math.cos(thiz.state.angle  )) * (this.props.width/2 - 90));
 
         d3
         .select(this.refs.group_main)
@@ -95,11 +101,22 @@ export default class Clock_circular extends Component
             .style("stroke", "#FFF")
             .style("opacity", 0.1)
             .style("stroke-width", 1)
-            .attr("x1", (this.props.width  / 2) +  (  Math.sin(thiz.state.angle_p)) * (this.props.width/2 - 100))
-            .attr("y1", (this.props.height / 2) +  (- Math.cos(thiz.state.angle_p)) * (this.props.width/2 - 100))
-            .attr("x2", (this.props.width  / 2) +  (  Math.sin(thiz.state.angle_p)) * (this.props.width/2 - 120))
-            .attr("y2", (this.props.height / 2) +  (- Math.cos(thiz.state.angle_p)) * (this.props.width/2 - 120)); 
+            .attr("x1", (this.props.width  / 2) + (  Math.sin(thiz.state.angle_p)) * (this.props.width/2 - 70))
+            .attr("y1", (this.props.height / 2) + (- Math.cos(thiz.state.angle_p)) * (this.props.width/2 - 70))
+            .attr("x2", (this.props.width  / 2) + (  Math.sin(thiz.state.angle_p)) * (this.props.width/2 - 90))
+            .attr("y2", (this.props.height / 2) + (- Math.cos(thiz.state.angle_p)) * (this.props.width/2 - 90)); 
 
+        d3
+        .select(this.refs.group_main)
+            .append('line')
+            .style("stroke", "#FFF")
+            .style("opacity", 0.1)
+            .style("stroke-width", 1)
+            .attr("x1", (this.props.width  / 2) + (  Math.sin(thiz.state.angle_s)) * (this.props.width/2 - 70))
+            .attr("y1", (this.props.height / 2) + (- Math.cos(thiz.state.angle_s)) * (this.props.width/2 - 70))
+            .attr("x2", (this.props.width  / 2) + (  Math.sin(thiz.state.angle_s)) * (this.props.width/2 - 90))
+            .attr("y2", (this.props.height / 2) + (- Math.cos(thiz.state.angle_s)) * (this.props.width/2 - 90)); 
+    
     }
 
     componentDidMount() {
@@ -108,6 +125,7 @@ export default class Clock_circular extends Component
             this.setState({
                 angle  : ((moment().hour()+moment().minutes()/60.0          )/24.0) * Math.PI * 2,
                 angle_p: ((moment().hour()+moment().minutes()/60.0 - 25/60.0)/24.0) * Math.PI * 2,
+                angle_s: ((moment().hour()+moment().minutes()/60.0 + 25/60.0)/24.0) * Math.PI * 2,
             })
         }, 10 * 1000)
         
