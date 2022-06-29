@@ -19,6 +19,8 @@ export default class Container_graphs_circular extends Component
             />
 
             <Graph_singleday
+            height     = {this.props.height}
+            width      = {this.props.width }
             categories = {this.props.categories}
             />
 

@@ -14,7 +14,8 @@ export default class Container_graphs_time extends Component
             position: "absolute",
             width   : this.props.width  + "px",
             height  : this.props.height + "px",
-            left:15,
+            left    : 15,
+            top     : 15,
         }}>
 
             <Graph_background

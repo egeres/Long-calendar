@@ -29,7 +29,7 @@ class Home extends Component
     let width_line      : number = 12;
     let spacing_lines   : number = 5;
     let width_graph     : number = window.innerWidth  - 330 - 15;
-    let days_to_display : number = Math.floor(width_graph / (width_line + spacing_lines));
+    let days_to_display : number = Math.floor((width_graph  - (40 * 2)) / (width_line + spacing_lines));
 
     console.log(days_to_display)
 
@@ -48,7 +48,10 @@ class Home extends Component
 
       graph_width     : width_graph,
       // graph_height    : Math.floor(window.innerHeight * 0.8),
-      graph_height    : Math.floor(window.innerHeight - 25),
+      graph_height    : Math.floor(window.innerHeight - 15 * 2),
+
+      graph_circle_width : Math.floor(window.innerHeight - 25),
+      graph_circle_height: Math.floor(window.innerHeight - 25),
 
       display_mode    : 0,
       days_to_display : days_to_display,
@@ -384,8 +387,8 @@ class Home extends Component
     {
       graph      = <Container_graphs_circular
       categories = {this.state.categories}
-      width      = {1100}
-      height     = {1100}
+      width      = {this.state.graph_circle_width }
+      height     = {this.state.graph_circle_height}
       />
     }
 
