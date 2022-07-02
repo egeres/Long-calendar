@@ -97,7 +97,7 @@ export default class Graph_background extends Component
         //     this.props.width / this.props.days_to_display
         // )
 
-        window.addEventListener("mousemove", (e) => {
+        window.addEventListener("mousemove_", (e) => {
 
             d3.selectAll(this.lines_drawn).style("opacity", 0.4)
 

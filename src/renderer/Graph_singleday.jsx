@@ -156,6 +156,7 @@ export default class Graph_singleday extends Component
                 let sub_data = element.data
                 .filter(i => i.end)
                 .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < 1)
+                // .filter(i => (moment().diff(moment(i.start),"days")) < 1)
                 
                 let new_data = sub_data.map(x => {
                   
@@ -235,6 +236,7 @@ export default class Graph_singleday extends Component
                 let sub_data = element.data
                 .filter(i => !i.end)
                 .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < 1)
+                // .filter(i => (moment().diff(moment(i.start),"days")) < 1)
                 
                 let new_data = sub_data.map(x => {
                     

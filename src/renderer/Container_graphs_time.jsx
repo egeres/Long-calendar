@@ -24,6 +24,15 @@ export default class Container_graphs_time extends Component
             days_to_display = {this.props.days_to_display}
             />
 
+            <div id="tooltip_linehighlight" style={{
+                display        : "none",
+                opacity        : 1.0,
+                backgroundColor: "#FFF",
+                width          : "1px",
+                height         : "1330px",
+                position       : "absolute",
+            }}/>
+
             {/* {this.props.categories.map(x => {return (
                 <Graph_time
                 key     = {x.id}
@@ -48,6 +57,8 @@ export default class Container_graphs_time extends Component
             height          = {this.props.height}
             margin          = {40}
             />
+
+
 
         </div>
     }

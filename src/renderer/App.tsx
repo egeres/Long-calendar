@@ -50,8 +50,8 @@ class Home extends Component
       // graph_height    : Math.floor(window.innerHeight * 0.8),
       graph_height    : Math.floor(window.innerHeight - 15 * 2),
 
-      graph_circle_width : Math.floor(window.innerHeight - 25),
-      graph_circle_height: Math.floor(window.innerHeight - 25),
+      graph_circle_width : Math.floor(window.innerHeight * 0.8),
+      graph_circle_height: Math.floor(window.innerHeight * 0.8),
 
       display_mode    : 0,
       days_to_display : days_to_display,
