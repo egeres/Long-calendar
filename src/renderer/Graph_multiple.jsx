@@ -136,9 +136,11 @@ export default class Graph_multiple extends Component
                 if (e.target.getAttribute("tooltip"))
                 {
 
-                    // console.log(
-                    //     e.target.getAttribute("index")
-                    // )
+                    console.log(
+                        // e.target
+                        // e.target.getAttribute("days_ago")
+                        // e.target.getAttribute("days_ago") - thiz.props.days_to_display + 1
+                    )
 
                     let ooooo = document.querySelectorAll(".button_category").forEach(x => {
                         // console.log(x)
@@ -171,11 +173,12 @@ export default class Graph_multiple extends Component
                     .style("display", "block")
                     .style("left", d => {return x + "px"})
                     .style("top" , d => {return "10px"});
-
+                    
+                    let left_index      = thiz.props.days_to_display - e.target.getAttribute("days_ago") - 1;
+                    let x_position_line = thiz.props.margin + (left_index / (thiz.props.days_to_display - 1)) * (thiz.props.width - (thiz.props.margin * 2));
                     thiz.tooltip_linehighlight
                     .style("display", "block")
-                    .style("left", d => {return (x - 15) + "px"})
-                    .style("top" , d => {return "40px"});
+                    .style("left", d => {return x_position_line + "px"})
                 }
             })
             .on("mouseout", function(_d) {
