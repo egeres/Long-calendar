@@ -55,7 +55,7 @@ export default class Graph_background extends Component
         .attr("fill", "#000")
         .style("opacity", 0.7);
 
-        d3
+        this.lines_drawn = d3
         .select(this.refs.group_main)
         .selectAll('.line_vertical')
         .data(d3.range(this.props?.days_to_display))
@@ -74,11 +74,65 @@ export default class Graph_background extends Component
             .style("stroke", "#fff")
             .style("shape-rendering", "crispEdges")
             .style("stroke-width", 0.4);
+        
+        // d3.select(lines.nodes()[3]).style("opacity", 1.0)
+        // d3.select(lines).style("opacity", 0.4)
+        d3.selectAll(this.lines_drawn).style("opacity", 0.4)
+
+        // console.log(
+        //     // d3.select(this.refs.group_main).selectAll('.line_vertical')
+        //     // lines,
+        //     lines.nodes(),
+        //     // lines[0][3],
+        // )
     }
 
     componentDidMount()
     {
     	this.draw();
+
+        // console.log(
+        //     this.props.width,
+        //     this.props.days_to_display,
+        //     this.props.width / this.props.days_to_display
+        // )
+
+        window.addEventListener("mousemove_", (e) => {
+
+            d3.selectAll(this.lines_drawn).style("opacity", 0.4)
+
+            if (e.clientX > 0)
+            {
+                // let i = math.floor(
+                //     (this.props.width - (this.props.margin * 2))
+                //     /
+                //     (this.props.width / this.props.days_to_display)
+                // )
+
+                // let i = Math.floor(
+                //     this.props.days_to_display * (
+                //     // 1 * (
+                //         e.clientX / this.props.width
+                //     )
+                // )
+                
+                let i = (e.clientX - 55 + 10) / (this.props.width - (this.props.margin * 2))
+
+                if (i < 1.0)
+                {
+                    let j = Math.floor(
+                        (this.props.days_to_display - 1) * i
+                    )
+                    d3.select(this.lines_drawn.nodes()[j]).style("opacity", 1.0)
+                }
+
+                // console.log("i",i)
+            }
+
+            // console.log("...", e.clientX - this.props.margin - 15 )
+
+        }); 
+
     }
 
     componentDidUpdate()

@@ -22,14 +22,21 @@ import {arrayMoveImmutable} from 'array-move';
 
 class Home extends Component
 {
+
+  static defaultProps = {
+    graph_timebars_margin : 40,
+  };
+
   constructor(props)
   {
     super(props);
 
+    let graph_timebars_margin : number = 15;
+
     let width_line      : number = 12;
     let spacing_lines   : number = 5;
-    let width_graph     : number = window.innerWidth  - 330 - 15;
-    let days_to_display : number = Math.floor(width_graph / (width_line + spacing_lines));
+    let width_graph     : number = window.innerWidth  - 340 - (this.props.graph_timebars_margin * 2);
+    let days_to_display : number = Math.floor((width_graph  - (40 * 2)) / (width_line + spacing_lines));
 
     console.log(days_to_display)
 
@@ -48,7 +55,10 @@ class Home extends Component
 
       graph_width     : width_graph,
       // graph_height    : Math.floor(window.innerHeight * 0.8),
-      graph_height    : Math.floor(window.innerHeight - 25),
+      graph_height    : Math.floor(window.innerHeight - this.props.graph_timebars_margin * 2),
+
+      graph_circle_width : Math.floor(window.innerHeight * 0.8),
+      graph_circle_height: Math.floor(window.innerHeight * 0.8),
 
       display_mode    : 0,
       days_to_display : days_to_display,
@@ -371,7 +381,9 @@ class Home extends Component
 
     if (this.state.display_mode == 0)
     {
-      graph      = <Container_graphs_time
+      graph = <Container_graphs_time
+
+      graph_timebars_margin = {this.props.graph_timebars_margin}
       categories      = {this.state.categories     }
       width           = {this.state.graph_width    }
       height          = {this.state.graph_height   }
@@ -382,10 +394,10 @@ class Home extends Component
 
     if (this.state.display_mode == 1)
     {
-      graph      = <Container_graphs_circular
+      graph = <Container_graphs_circular
       categories = {this.state.categories}
-      width      = {1100}
-      height     = {1100}
+      width      = {this.state.graph_circle_width }
+      height     = {this.state.graph_circle_height}
       />
     }
 
@@ -395,7 +407,7 @@ class Home extends Component
     
     {/* <div className='spacer_10'/> */}
 
-    <div className='centered_column' style={{position:"absolute", right:15}}>
+    <div className='centered_column' style={{position:"absolute", right:this.props.graph_timebars_margin}}>
 
         <Container_options_display
         set_display_mode = {this.set_display_mode}

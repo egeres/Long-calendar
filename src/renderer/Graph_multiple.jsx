@@ -28,8 +28,9 @@ export default class Graph_multiple extends Component
 
         // console.log(this.tooltip)
 
-        setTimeout(() => { this.tooltip      = d3.select("#tooltip"     ); }, 100)
-        setTimeout(() => { this.tooltip_date = d3.select("#tooltip_date"); }, 100)
+        setTimeout(() => { this.tooltip               = d3.select("#tooltip"              ); }, 100)
+        setTimeout(() => { this.tooltip_date          = d3.select("#tooltip_date"         ); }, 100)
+        setTimeout(() => { this.tooltip_linehighlight = d3.select("#tooltip_linehighlight"); }, 100)
 
         // ipcRenderer.on('asynchronous-message', function (evt, message) {
         //     console.log(message); // Returns: {'SAVED': 'File Saved'}
@@ -67,7 +68,7 @@ export default class Graph_multiple extends Component
         )
         
         this_groups.selectAll("circle")
-        .data(d => {
+        .data((d, i_) => {
             return d.data.map((x, i) => {
                 let to_ret     = {...x};
                 to_ret.color   = x?.color   ?? d.color   ?? "#FFF";
@@ -99,12 +100,13 @@ export default class Graph_multiple extends Component
         
 
         this_groups.selectAll("line")
-        .data(d => {
+        .data((d, i_) => {
             return d.data.map((x, i) => {
                 let to_ret     = {...x};
                 to_ret.color   = x?.color   ?? d.color   ?? "#FFF";
                 to_ret.size    = x?.size    ?? d.size    ?? 4.5   ;
                 to_ret.opacity = x?.opacity ?? d.opacity ?? 1.0   ;
+                to_ret.index   = i_;
                 return to_ret;
             })
             .filter(i => i.end)
@@ -123,15 +125,33 @@ export default class Graph_multiple extends Component
             // .style("opacity", d => (d?.opacity ?? sub_data.opacity ?? 1.0   ))
             .style("stroke"       , d => d.color  )
             .style("opacity"      , d => d.opacity)
-            .attr("tooltip"       , i => i.tooltip)
-            .attr("date"          , i => moment(i.start).format('YYYY-M-D'))
-            .attr("date_dayofweek", i => ["", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"][moment(i.start).isoWeekday()])
-            .attr("days_ago"      , i => moment().diff(moment(i.start).startOf('day'),"days"))
+            .attr("index"         , d => d.index)
+            .attr("tooltip"       , d => d.tooltip)
+            .attr("date"          , d => moment(d.start).format('YYYY-M-D'))
+            .attr("date_dayofweek", d => ["", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"][moment(d.start).isoWeekday()])
+            .attr("days_ago"      , d => moment().diff(moment(d.start).startOf('day'),"days"))
             // .attr("date"    , i => "AAA")
 
             .on("mouseover", function(e) {
                 if (e.target.getAttribute("tooltip"))
                 {
+
+                    console.log(
+                        // e.target
+                        // e.target.getAttribute("days_ago")
+                        // e.target.getAttribute("days_ago") - thiz.props.days_to_display + 1
+                    )
+
+                    let ooooo = document.querySelectorAll(".button_category").forEach(x => {
+                        // console.log(x)
+                        x.style["color"] = "rgb(175, 175, 175)"
+                    })
+
+                    document.querySelectorAll(".button_category")[
+                        e.target.getAttribute("index")
+                    ].style["color"] = "rgb(240, 240, 240)";
+
+
                     let rect = e.target.getBoundingClientRect()
                     let x    = rect.x
                     let y    = rect.y + rect.height / 2
@@ -153,9 +173,20 @@ export default class Graph_multiple extends Component
                     .style("display", "block")
                     .style("left", d => {return x + "px"})
                     .style("top" , d => {return "10px"});
+                    
+                    let left_index      = thiz.props.days_to_display - e.target.getAttribute("days_ago") - 1;
+                    let x_position_line = thiz.props.margin + (left_index / (thiz.props.days_to_display - 1)) * (thiz.props.width - (thiz.props.margin * 2));
+                    thiz.tooltip_linehighlight
+                    .style("display", "block")
+                    .style("left", d => {return x_position_line + "px"})
                 }
             })
             .on("mouseout", function(_d) {
+
+                let ooooo = document.querySelectorAll(".button_category").forEach(x => {
+                    x.style["color"] = "rgb(175, 175, 175)"
+                })
+
                 thiz.tooltip
                 // .transition()
                 // .duration(70)
@@ -166,6 +197,8 @@ export default class Graph_multiple extends Component
                 .style("opacity", 0)
                 .style("display", "none");
 
+                thiz.tooltip_linehighlight
+                .style("display", "none")
             }),
         update => update
             // .style("r"      , d => d.size   )
