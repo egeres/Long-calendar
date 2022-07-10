@@ -136,11 +136,11 @@ export default class Graph_multiple extends Component
                 if (e.target.getAttribute("tooltip"))
                 {
 
-                    console.log(
-                        // e.target
-                        // e.target.getAttribute("days_ago")
-                        // e.target.getAttribute("days_ago") - thiz.props.days_to_display + 1
-                    )
+                    // console.log(
+                    //     // e.target
+                    //     // e.target.getAttribute("days_ago")
+                    //     // e.target.getAttribute("days_ago") - thiz.props.days_to_display + 1
+                    // )
 
                     let ooooo = document.querySelectorAll(".button_category").forEach(x => {
                         // console.log(x)

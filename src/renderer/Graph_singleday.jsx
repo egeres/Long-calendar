@@ -140,7 +140,6 @@ export default class Graph_singleday extends Component
                 .attr('d', arc_generator);
         }
 
-
         let arc_generator = d3.arc()
         .innerRadius((this.props.height/2) - this.props.thickness)
         .outerRadius((this.props.height/2));
@@ -149,7 +148,7 @@ export default class Graph_singleday extends Component
         {
             // console.log(this.props.categories)
 
-            this.props.categories.forEach(element => {
+            this.props.categories.forEach((element, index_el) => {
                 
                 // console.log(element)
                 if (!element.visible) { return null; }
@@ -189,9 +188,10 @@ export default class Graph_singleday extends Component
                   
                     return {
                         "startAngle": ((moment(x.start).hour()+moment(x.start).minutes()/60.0)/24.0) * Math.PI * 2,
-                          "endAngle": ((moment(x.end  ).hour()+moment(x.end  ).minutes()/60.0)/24.0) * Math.PI * 2,
+                        "endAngle"  : ((moment(x.end  ).hour()+moment(x.end  ).minutes()/60.0)/24.0) * Math.PI * 2,
                         "color"     : x.color ?? element.color ?? "#FFF",
                         "tooltip"   : x.tooltip ?? "",
+                        "index"     : index_el,
                     }
                 })
                 // console.log(new_data)
@@ -202,12 +202,26 @@ export default class Graph_singleday extends Component
                     .attr("transform", "translate("+this.props.width/2+", "+this.props.height/2+")");
                 this.g.selectAll('path').data(new_data).enter()
                     .append('path')
-                    .style("fill", function(d, i) { return d.color; })
-                    .attr("tooltip"       , i => i.tooltip)
+                    .style("fill", d => d.color)
+                    .attr("index", d => d.index)
+                    .attr("tooltip", d => d.tooltip)
                     .attr('d', arc_generator)
                     .on("mouseover", function(e) {
 
                         // console.log(e.target)
+
+                        let ooooo = document.querySelectorAll(".button_category").forEach(x => {
+                            x.style["color"] = "rgb(175, 175, 175)"
+                        })
+
+                        // console.log(
+                        //     e.target
+                        // )
+                        
+                        document.querySelectorAll(".button_category")[
+                            e.target.getAttribute("index")
+                            // 0
+                        ].style["color"] = "rgb(240, 240, 240)";
 
                         if (e.target.getAttribute("tooltip"))
                         {
@@ -226,15 +240,20 @@ export default class Graph_singleday extends Component
                             .style("left", d => {return x + "px"})
                             .style("top" , d => {return y + "px"});
         
-                            thiz.tooltip_date
-                            .html ((d, i) => {return e.target.getAttribute("date")+" ("+e.target.getAttribute("days_ago")+" days ago)" + " ("+e.target.getAttribute("date_dayofweek")+")"})                         
-                            .style("opacity", 1.0)
-                            .style("display", "block")
-                            .style("left", d => {return x + "px"})
-                            .style("top" , d => {return "10px"});
+                            // thiz.tooltip_date
+                            // .html ((d, i) => {return e.target.getAttribute("date")+" ("+e.target.getAttribute("days_ago")+" days ago)" + " ("+e.target.getAttribute("date_dayofweek")+")"})                         
+                            // .style("opacity", 1.0)
+                            // .style("display", "block")
+                            // .style("left", d => {return x + "px"})
+                            // .style("top" , d => {return "10px"});
                         }
                     })
                     .on("mouseout", function(_d) {
+
+                        let ooooo = document.querySelectorAll(".button_category").forEach(x => {
+                            x.style["color"] = "rgb(175, 175, 175)"
+                        })
+                        
                         thiz.tooltip
                         // .transition()
                         // .duration(70)
