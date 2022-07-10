@@ -6,9 +6,10 @@ import * as d3 from 'd3';
 export default class Graph_singleday extends Component
 {
     static defaultProps = {
-        width    : 1100,
-        height   : 1100,
-        thickness: 60,
+        width     : 1100,
+        height    : 1100,
+        thickness : 60,
+        day_offset: 0,
     };
 
     constructor(props)
@@ -80,7 +81,7 @@ export default class Graph_singleday extends Component
             }
         ]
 
-        console.log(arcData)
+        // console.log(arcData)
 
         this.scale_color = d3.scaleLinear().domain([Math.min(...this.data), Math.max(...this.data)]).range([1, 0]);
 
@@ -155,8 +156,34 @@ export default class Graph_singleday extends Component
 
                 let sub_data = element.data
                 .filter(i => i.end)
-                .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < 1)
+                // .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < 1)
                 // .filter(i => (moment().diff(moment(i.start),"days")) < 1)
+                // .filter(i => ((moment().subtract(- this.props.day_offset, "days")).diff(moment(i.start).startOf('day'),"days")) < 1)
+                .filter(i => {
+                    return moment().subtract(- this.props.day_offset, "days").dayOfYear() === moment(i.start).dayOfYear()
+                })
+
+                // element.data.forEach(x => {
+
+                //     // console.log(x.start)
+
+                //     // console.log(
+                //     //     ((moment().subtract(- this.props.day_offset, "days")).diff(moment(x.start).startOf('day'),"days"))
+                //     // )
+
+                //     // console.log(
+                //     //     moment()
+                //     //     .diff(
+                //     //         moment(x.start).startOf('day'),
+                //     //         "days"
+                //     //     )
+                //     // )
+
+                //     console.log(
+                //         moment(x.start).dayOfYear()
+                //     )
+
+                // })
                 
                 let new_data = sub_data.map(x => {
                   
@@ -230,14 +257,20 @@ export default class Graph_singleday extends Component
 
             this.props.categories.forEach(element => {
                 
+                // console.log(
+                //     moment().subtract(- this.props.day_offset, "days").dayOfYear()
+                // )
+
                 // console.log(element)
                 if (!element.visible) { return null; }
 
                 let sub_data = element.data
                 .filter(i => !i.end)
-                .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < 1)
+                // .filter(i => (moment().diff(moment(i.start).startOf('day'),"days")) < 1)
                 // .filter(i => (moment().diff(moment(i.start),"days")) < 1)
-                
+                .filter(i => {
+                    return moment().subtract(- this.props.day_offset, "days").dayOfYear() === moment(i.start).dayOfYear()
+                })
                 let new_data = sub_data.map(x => {
                     
                     let sssss = ((moment(x.start).hour()+moment(x.start).minutes()/60.0)/24.0) * Math.PI * 2;
