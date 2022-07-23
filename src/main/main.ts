@@ -104,29 +104,19 @@ ipcMain.on('get_file_data', async (event, arg) => {
 
 ipcMain.on('reload', async (event) => {
 
-  // WIP: This code needs to be refactored into a method to avoid duplication!
-  // if (global?.config?.window?.recalculate_data_command)
-  // {
-  //   let out = exec(
-  //     global?.config?.window?.recalculate_data_command,
-  //     {"cwd":path_dir_root}
-  //   )
-  //   .then( x   => console.log(chalk.green('-'), "Finished..."))
-  //   .catch(err => console.log)
-  // }
-  
-  global.config = get_config(path_dir_root)
+  // WIP: This code needs to be refactored into a method to avoid duplication!  
+  global.config       = get_config(path_dir_root)
+  let default_command = "python " + path.join(path_dir_root, "data_generator.py")
+  let final_command   = global?.config?.window?.recalculate_data_command || default_command
 
-  if (global?.config?.window?.recalculate_data_on_launch)
-  {
-    let out = exec(
-      global?.config?.window?.recalculate_data_command,
-      {"cwd":path_dir_root}
-    )
-    .then( x   => console.log(chalk.green('-'), "Finished executing script..."))
-    .catch(err => console.log)
-  }
+  console.log("Executing...", final_command)
 
+  let out = exec(
+    final_command,
+    {"cwd":path_dir_root}
+  )
+  .then( x   => console.log(chalk.green('-'), "Finished executing script..."))
+  .catch(err => console.log)
 });
 
 ipcMain.on('set_fullscreen_off', async (event) => {
@@ -326,23 +316,23 @@ app
   .whenReady()
   .then(() => {
 
-    directory_setup(path_dir_root);
+    directory_setup(path_dir_root)
     
-    global.config = get_config(path_dir_root)
-
-
     if (global?.config?.window?.recalculate_data_on_launch)
     {
       // WIP: This code needs to be refactored into a method to avoid duplication!
-      if (global?.config?.window?.recalculate_data_command)
-      {
-        let out = exec(
-          global?.config?.window?.recalculate_data_command,
-          {"cwd":path_dir_root}
-        )
-        .then( x   => console.log(chalk.green('-'), "Finished..."))
-        .catch(err => console.log)
-      }
+      global.config       = get_config(path_dir_root)
+      let default_command = "python " + path.join(path_dir_root, "data_generator.py")
+      let final_command   = global?.config?.window?.recalculate_data_command || default_command
+
+      console.log("Executing...", final_command)
+
+      let out = exec(
+        final_command,
+        {"cwd":path_dir_root}
+      )
+      .then( x   => console.log(chalk.green('-'), "Finished..."))
+      .catch(err => console.log)
     }
 
 
