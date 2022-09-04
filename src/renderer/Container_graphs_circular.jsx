@@ -5,13 +5,10 @@ import Clock_vertical  from "./Clock_vertical";
 import Clock_circular  from './Clock_circular';
 import Container_graphs_time from './Container_graphs_time';
 import Control_panel_graph_circular from './Control_panel_graph_circular';
+import Background_circular_clock from './Background_circular_clock';
 
 export default class Container_graphs_circular extends Component
 {
-    // static defaultProps = {
-    //     day_offset: 0,
-    // };
-
     constructor(props)
     {
         super(props);
@@ -61,19 +58,26 @@ export default class Container_graphs_circular extends Component
         })
     }
 
-
     render()
     {
-        return <div style={{
-            // backgroundColor:"green",
-            position: "relative",
-        }}>
-
-            <Clock_circular
-            height = {this.props.height}
-            width  = {this.props.width }
+        // return <div style={{position: "relative",}}>
+        return <div className='centered'>
+            
+            {/* The background with lines */}
+            <Background_circular_clock
+                height={this.props.height}
+                width={this.props.width}
             />
+            
+            {/* The handle of the clock */}
+            {this.state.day_offset === 0 &&
+                <Clock_circular
+                height = {this.props.height}
+                width  = {this.props.width }
+                />
+            }
 
+            {/* The graph itself */}
             <Graph_singleday
             height     = {this.props.height}
             width      = {this.props.width }
@@ -81,6 +85,7 @@ export default class Container_graphs_circular extends Component
             day_offset = {this.state.day_offset}
             />
 
+            {/* The control panel located at the bottom */}
             <Control_panel_graph_circular
                 day_offset      = {this.state.day_offset}
                 day_offset_up   = {this.day_offset_up  }

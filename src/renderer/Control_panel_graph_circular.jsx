@@ -12,17 +12,15 @@ export default class Control_panel_graph_circular extends Component
     render()
     {
         return <div
-        // onClick={() => console.log("....")}
         style={{
-            width          : "100px",
-            height         : "100px",
-            // backgroundColor: "red",
-            marginLeft     : "auto",
-            marginRight    : "auto",
-
+            position      : "absolute",
+            bottom        : "10px",
+            width         : "100px",
+            height        : "100px",
             display       : "flex",
             alignItems    : "center",
             justifyContent: "center",
+
         }}>
             <span onClick = {() => this.props.day_offset_down()}>
                 <i
@@ -37,13 +35,11 @@ export default class Control_panel_graph_circular extends Component
             <div
             className = 'noselect'
             style     = {{
-                // backgroundColor: "red",
                 textAlign : "center",
                 minWidth  : "50px",
                 fontSize  : "26px",
                 color     : "#FFF",
                 opacity   : 0.2,
-                // fontWeight: "100",
             }}>
                 {this.props.day_offset}
             </div>
