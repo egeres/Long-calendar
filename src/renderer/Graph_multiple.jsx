@@ -132,7 +132,6 @@ export default class Graph_multiple extends Component
             .attr("date"          , d => moment(d.start).format('YYYY-M-D'))
             .attr("date_dayofweek", d => ["", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"][moment(d.start).isoWeekday()])
             .attr("days_ago"      , d => moment().diff(moment(d.start).startOf('day'),"days"))
-            // .attr("date"    , i => "AAA")
 
             .on("mouseover", function(e) {
                 if (e.target.getAttribute("tooltip"))
@@ -155,12 +154,7 @@ export default class Graph_multiple extends Component
                     {
                     thiz.tooltip
                     .style("opacity", 1.0)
-                    .style("display", "block");
-                    }
-                    
-                    if (thiz.tooltip)
-                    {
-                    thiz.tooltip
+                    .style("display", "block")
                     .html ((d, i) => {return e.target.getAttribute("tooltip")})
                     .style("left", d => {return x + "px"})
                     .style("top" , d => {return y + "px"});
@@ -213,21 +207,21 @@ export default class Graph_multiple extends Component
                 }
             }),
         update => update
-            // .style("r"      , d => d.size   )
-            // WIP what properties need to be updated?
-            .attr("tooltip", d => d.tooltip)
-            .style("stroke", d => d.color)
-            .style("opacity", d => d.opacity)
-            .style("stroke-width", this.props.widthline) // Should we have something like .style("stroke-width", x => (x.size ?? this.props.widthline))
             .attr("x1", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
             .attr("x2", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.end  ).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
             .attr("y1", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
             .attr("y2", i => { return thiz.props.margin + ((moment(i.end  ).hour()+moment(i.end  ).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
+            .style("stroke-width", this.props.widthline) // Should we have something like .style("stroke-width", x => (x.size ?? this.props.widthline))
+            .style("stroke", d => d.color)
+            .style("opacity", d => d.opacity)
+            .attr("index", d => d.index)
+            .attr("tooltip", d => d.tooltip)
+            .attr("date", d => moment(d.start).format('YYYY-M-D'))
+            .attr("date_dayofweek", d => ["", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"][moment(d.start).isoWeekday()])
             .attr("days_ago", d => moment().diff(moment(d.start).startOf('day'),"days")),
             exit   => exit
             .remove(),
         )
-
     }
 
     componentDidMount()
@@ -236,7 +230,6 @@ export default class Graph_multiple extends Component
         .select(this.refs.group_main)
         .selectAll("*")
         .remove();
-
     	this.draw();
     }
 

@@ -35,7 +35,7 @@ class Home extends Component
     let width_graph           : number = window.innerWidth  - 340 - (this.props.graph_timebars_margin * 2);
 
     let width_line      : number = 13;
-    let spacing_lines   : number = 7;
+    let spacing_lines   : number = 9;
     let days_to_display : number = Math.floor((width_graph  - (40 * 2)) / (width_line + spacing_lines));
     // console.log("days_to_display:", days_to_display)
 
