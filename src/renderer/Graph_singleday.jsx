@@ -23,6 +23,8 @@ export default class Graph_singleday extends Component
 
     render()
     {
+        // console.log(this.props)
+
         return (
         <svg
             viewBox = {"0 0 "+this.props?.width+" "+this.props?.height}
@@ -144,13 +146,12 @@ export default class Graph_singleday extends Component
         .innerRadius((this.props.height/2) - this.props.thickness)
         .outerRadius((this.props.height/2));
 
+        // Display of arc events
         if (true)
         {
-            // console.log(this.props.categories)
 
             this.props.categories.forEach((element, index_el) => {
                 
-                // console.log(element)
                 if (!element.visible) { return null; }
 
                 let sub_data = element.data
@@ -185,8 +186,26 @@ export default class Graph_singleday extends Component
                 // })
                 
                 let new_data = sub_data.map(x => {
-                  
+
+                    let start_hour                          = moment(x.start).hour();
+                    let start_hour_with_0_padding_on_left   = ("0" + start_hour).slice(-2);
+                    let start_minute                        = moment(x.start).minute();
+                    let start_minute_with_0_padding_on_left = ("0" + start_minute).slice(-2);
+
+                    let end_hour                          = moment(x.end).hour();
+                    let end_hour_with_0_padding_on_left   = ("0" + end_hour).slice(-2);
+                    let end_minute                        = moment(x.end).minute();
+                    let end_minute_with_0_padding_on_left = ("0" + end_minute).slice(-2);
+
+                    let to_display = (
+                        start_hour_with_0_padding_on_left   + ":" +
+                        start_minute_with_0_padding_on_left + " - " +
+                        end_hour_with_0_padding_on_left     + ":" +
+                        end_minute_with_0_padding_on_left
+                    )
+
                     return {
+                        "start_time": to_display,
                         "startAngle": ((moment(x.start).hour()+moment(x.start).minutes()/60.0)/24.0) * Math.PI * 2,
                         "endAngle"  : ((moment(x.end  ).hour()+moment(x.end  ).minutes()/60.0)/24.0) * Math.PI * 2,
                         "color"     : x.color ?? element.color ?? "#FFF",
@@ -194,7 +213,8 @@ export default class Graph_singleday extends Component
                         "index"     : index_el,
                     }
                 })
-                // console.log(new_data)
+
+                // console.log(this.props)
 
                 this.g = d3
                     .select(this.refs.group_main)
@@ -205,23 +225,17 @@ export default class Graph_singleday extends Component
                     .style("fill", d => d.color)
                     .attr("index", d => d.index)
                     .attr("tooltip", d => d.tooltip)
+                    .attr("start_time", d => d.start_time)
                     .attr('d', arc_generator)
                     .on("mouseover", function(e) {
-
-                        // console.log(e.target)
 
                         let ooooo = document.querySelectorAll(".button_category").forEach(x => {
                             x.style["color"] = "rgb(175, 175, 175)"
                         })
 
-                        // console.log(
-                        //     e.target
-                        // )
-                        
-                        document.querySelectorAll(".button_category")[
-                            e.target.getAttribute("index")
-                            // 0
-                        ].style["color"] = "rgb(240, 240, 240)";
+                        document.getElementById("circular_clock_text").innerHTML = e.target.getAttribute("start_time")
+
+                        document.querySelectorAll(".button_category")[e.target.getAttribute("index")].style["color"] = "rgb(240, 240, 240)";
 
                         if (e.target.getAttribute("tooltip"))
                         {
@@ -250,13 +264,13 @@ export default class Graph_singleday extends Component
                     })
                     .on("mouseout", function(_d) {
 
-                        let ooooo = document.querySelectorAll(".button_category").forEach(x => {
+                        document.querySelectorAll(".button_category").forEach(x => {
                             x.style["color"] = "rgb(175, 175, 175)"
                         })
+
+                        document.getElementById("circular_clock_text").innerHTML = ""
                         
                         thiz.tooltip
-                        // .transition()
-                        // .duration(70)
                         .style("opacity", 0)
                         .style("display", "none");
                         thiz.tooltip_date
@@ -265,7 +279,8 @@ export default class Graph_singleday extends Component
                     });
             });
         }
-
+        
+        // Display of single events as circles
         if (true)
         {
             // console.log(this.props.categories)

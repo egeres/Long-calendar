@@ -14,11 +14,13 @@ export default class Container_graphs_circular extends Component
         super(props);
 
         this.state = {
-            day_offset: 0,
+            day_offset  : 0,
+            display_text: "",
         }
 
-        this.day_offset_up   = this.day_offset_up  .bind(this)
-        this.day_offset_down = this.day_offset_down.bind(this)
+        this.day_offset_up    = this.day_offset_up   .bind(this)
+        this.day_offset_down  = this.day_offset_down .bind(this)
+        // this.set_display_text = this.set_display_text.bind(this)
     }
 
     componentDidMount()
@@ -58,6 +60,14 @@ export default class Container_graphs_circular extends Component
         })
     }
 
+    // Triggers a redraw every time...
+    // set_display_text(text: string)
+    // {
+    //     this.setState({
+    //         display_text: text,
+    //     })
+    // }
+
     render()
     {
         // return <div style={{position: "relative",}}>
@@ -79,17 +89,23 @@ export default class Container_graphs_circular extends Component
 
             {/* The graph itself */}
             <Graph_singleday
-            height     = {this.props.height}
-            width      = {this.props.width }
-            categories = {this.props.categories}
-            day_offset = {this.state.day_offset}
+            height           = {this.props.height    }
+            width            = {this.props.width     }
+            categories       = {this.props.categories}
+            day_offset       = {this.state.day_offset}
+            // set_display_text = {this.set_display_text}
             />
+
+            {/* Optional overlay of days */}
+            {/* {this.state.display_text !== "" && */}
+            <div id='circular_clock_text' style={{position:"absolute", fontSize:"26px", pointerEvents:"none",}}></div>
+            {/* } */}
 
             {/* The control panel located at the bottom */}
             <Control_panel_graph_circular
                 day_offset      = {this.state.day_offset}
-                day_offset_up   = {this.day_offset_up  }
-                day_offset_down = {this.day_offset_down}
+                day_offset_up   = {this.day_offset_up   }
+                day_offset_down = {this.day_offset_down }
             />
 
         </div>
