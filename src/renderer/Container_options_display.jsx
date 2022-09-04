@@ -44,16 +44,17 @@ export default class Container_options_display extends Component
         <table>
         <tbody>
         <tr>
-            <td>Full</td>
+            <td>XL</td>
+            <td>M</td>
             <td>Day</td>
         </tr>
         <tr>
             <td><input
             type     = "radio"
             name     = "days"
-            checked  = {this.state.selected_radio === 0}
+            checked  = {this.state.selected_radio === 2}
             onChange = {this.changeRadio.bind(this)}
-            id       = {0}
+            id       = {2}
             /></td>
             <td><input
             type     = "radio"
@@ -61,6 +62,13 @@ export default class Container_options_display extends Component
             checked  = {this.state.selected_radio === 1}
             onChange = {this.changeRadio.bind(this)}
             id       = {1}
+            /></td>
+            <td><input
+            type     = "radio"
+            name     = "days"
+            checked  = {this.state.selected_radio === 0}
+            onChange = {this.changeRadio.bind(this)}
+            id       = {0}
             /></td>
         </tr>
         </tbody>

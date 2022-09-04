@@ -32,13 +32,17 @@ class Home extends Component
     super(props);
 
     let graph_timebars_margin : number = 15;
+    let width_graph           : number = window.innerWidth  - 340 - (this.props.graph_timebars_margin * 2);
 
-    let width_line      : number = 12;
-    let spacing_lines   : number = 5;
-    let width_graph     : number = window.innerWidth  - 340 - (this.props.graph_timebars_margin * 2);
+    let width_line      : number = 13;
+    let spacing_lines   : number = 7;
     let days_to_display : number = Math.floor((width_graph  - (40 * 2)) / (width_line + spacing_lines));
+    // console.log("days_to_display:", days_to_display)
 
-    console.log(days_to_display)
+    let width_line_xl      : number = 5;
+    let spacing_lines_xl   : number = 5;
+    let days_to_display_xl : number = Math.floor((width_graph  - (40 * 2)) / (width_line_xl + spacing_lines_xl));
+    // console.log("days_to_display_xl:", days_to_display_xl)
 
     window.mouse_is_held_down = false;
     window. ctrl_is_held_down = false;
@@ -61,8 +65,11 @@ class Home extends Component
       graph_circle_height: Math.floor(window.innerHeight * 0.8),
 
       display_mode    : 0,
-      days_to_display : days_to_display,
-      widthline       : width_line ,
+
+      days_to_display   : days_to_display,
+      widthline         : width_line,
+      days_to_display_xl: days_to_display_xl,
+      widthline_xl      : width_line_xl,
 
       menu_main_visible    : false,
       last_visibility_state: false,
@@ -379,34 +386,48 @@ class Home extends Component
 
     let graph;
 
+    // 1 day view
     if (this.state.display_mode == 0)
     {
-      graph = <Container_graphs_time
-
-      graph_timebars_margin = {this.props.graph_timebars_margin}
-      categories      = {this.state.categories     }
-      width           = {this.state.graph_width    }
-      height          = {this.state.graph_height   }
-      days_to_display = {this.state.days_to_display}
-      widthline       = {this.state.widthline      }
+      graph = <Container_graphs_circular
+        categories = {this.state.categories         }
+        width      = {this.state.graph_circle_width }
+        height     = {this.state.graph_circle_height}
       />
     }
 
+    // Multi day view M
     if (this.state.display_mode == 1)
     {
-      graph = <Container_graphs_circular
-      categories = {this.state.categories}
-      width      = {this.state.graph_circle_width }
-      height     = {this.state.graph_circle_height}
+      graph = <Container_graphs_time
+        graph_timebars_margin = {this.props.graph_timebars_margin}
+        categories            = {this.state.categories           }
+        width                 = {this.state.graph_width          }
+        height                = {this.state.graph_height         }
+        days_to_display       = {this.state.days_to_display      }
+        widthline             = {this.state.widthline            }
+      />
+    }
+
+    // Multi day view XL
+    if (this.state.display_mode == 2)
+    {
+      graph = <Container_graphs_time
+        graph_timebars_margin = {this.props.graph_timebars_margin}
+        categories            = {this.state.categories           }
+        width                 = {this.state.graph_width          }
+        height                = {this.state.graph_height         }
+        days_to_display       = {this.state.days_to_display_xl   }
+        widthline             = {this.state.widthline_xl         }
       />
     }
 
     return <div className='centered'>
     
+    {/* The graph */}
     {graph}
     
-    {/* <div className='spacer_10'/> */}
-
+    {/* Selector column */}
     <div className='centered_column' style={{position:"absolute", right:this.props.graph_timebars_margin}}>
 
         <Container_options_display

@@ -56,6 +56,8 @@ export default class Graph_multiple extends Component
     {
         let thiz = this // I guess the better way to do it is by binding (?)
 
+        console.log("Redrawing...", this.props.days_to_display)
+
         let this_groups = d3.select(thiz.refs.group_main)
         .selectAll("g")
         .data(this.props.data)
@@ -136,17 +138,10 @@ export default class Graph_multiple extends Component
                 if (e.target.getAttribute("tooltip"))
                 {
 
-                    // console.log(
-                    //     // e.target
-                    //     // e.target.getAttribute("days_ago")
-                    //     // e.target.getAttribute("days_ago") - thiz.props.days_to_display + 1
-                    // )
-
-                    let ooooo = document.querySelectorAll(".button_category").forEach(x => {
-                        // console.log(x)
+                    // Category higlihgt
+                    document.querySelectorAll(".button_category").forEach(x => {
                         x.style["color"] = "rgb(175, 175, 175)"
                     })
-
                     document.querySelectorAll(".button_category")[
                         e.target.getAttribute("index")
                     ].style["color"] = "rgb(240, 240, 240)";
@@ -156,59 +151,80 @@ export default class Graph_multiple extends Component
                     let x    = rect.x
                     let y    = rect.y + rect.height / 2
 
+                    if (thiz.tooltip)
+                    {
                     thiz.tooltip
                     .style("opacity", 1.0)
                     .style("display", "block");
+                    }
                     
+                    if (thiz.tooltip)
+                    {
                     thiz.tooltip
-                    // .transition()
-                    // .duration(70)
                     .html ((d, i) => {return e.target.getAttribute("tooltip")})
                     .style("left", d => {return x + "px"})
                     .style("top" , d => {return y + "px"});
+                    }
 
+                    if (thiz.tooltip)
+                    {
                     thiz.tooltip_date
                     .html ((d, i) => {return e.target.getAttribute("date")+" ("+e.target.getAttribute("days_ago")+" days ago)" + " ("+e.target.getAttribute("date_dayofweek")+")"})                         
                     .style("opacity", 1.0)
                     .style("display", "block")
                     .style("left", d => {return x + "px"})
                     .style("top" , d => {return "10px"});
+                    }
                     
                     let left_index      = thiz.props.days_to_display - e.target.getAttribute("days_ago") - 1;
                     let x_position_line = thiz.props.margin + (left_index / (thiz.props.days_to_display - 1)) * (thiz.props.width - (thiz.props.margin * 2));
+                    if (thiz.tooltip_linehighlight)
+                    {
                     thiz.tooltip_linehighlight
                     .style("display", "block")
                     .style("left", d => {return x_position_line + "px"})
+                    }
                 }
             })
             .on("mouseout", function(_d) {
 
-                let ooooo = document.querySelectorAll(".button_category").forEach(x => {
+                document.querySelectorAll(".button_category").forEach(x => {
                     x.style["color"] = "rgb(175, 175, 175)"
                 })
 
+                if (thiz.tooltip)
+                {
                 thiz.tooltip
-                // .transition()
-                // .duration(70)
-                .style("opacity", 0)
+                .style("opacity", 0.0)
                 .style("display", "none");
+                }
 
+                if (thiz.tooltip_date)
+                {
                 thiz.tooltip_date
                 .style("opacity", 0)
                 .style("display", "none");
+                }
 
+                if (thiz.tooltip_linehighlight)
+                {
                 thiz.tooltip_linehighlight
                 .style("display", "none")
+                }
             }),
         update => update
             // .style("r"      , d => d.size   )
-            .style("stroke"   , d => d.color  )
+            // WIP what properties need to be updated?
+            .attr("tooltip", d => d.tooltip)
+            .style("stroke", d => d.color)
             .style("opacity", d => d.opacity)
+            .style("stroke-width", this.props.widthline) // Should we have something like .style("stroke-width", x => (x.size ?? this.props.widthline))
             .attr("x1", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.start).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
             .attr("x2", i => { return thiz.props.margin + (1.0 - (moment().diff(moment(i.end  ).startOf('day'),"days") / (thiz.props?.days_to_display-1.0))) * (thiz.props.width - thiz.props.margin*2) })
             .attr("y1", i => { return thiz.props.margin + ((moment(i.start).hour()+moment(i.start).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
-            .attr("y2", i => { return thiz.props.margin + ((moment(i.end  ).hour()+moment(i.end  ).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) }),
-        exit   => exit
+            .attr("y2", i => { return thiz.props.margin + ((moment(i.end  ).hour()+moment(i.end  ).minutes()/60.0)/24.0) * (thiz.props.height - thiz.props.margin*2) })
+            .attr("days_ago", d => moment().diff(moment(d.start).startOf('day'),"days")),
+            exit   => exit
             .remove(),
         )
 
