@@ -129,8 +129,6 @@ export default class Graph_singleday extends Component
                 }
             ];
             
-            // arc_data = a_pieGenerator(a_data);
-            
             this.g = d3
                 .select(this.refs.group_main)
                 .append("g")
@@ -280,7 +278,7 @@ export default class Graph_singleday extends Component
             });
         }
         
-        // Display of single events as circles
+        // Display of single events as dots
         if (true)
         {
             // console.log(this.props.categories)
@@ -357,6 +355,7 @@ export default class Graph_singleday extends Component
 
             });
         }
+
     }
 
     componentDidMount()

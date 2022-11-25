@@ -168,6 +168,13 @@ class Home extends Component
         if (event.key == "Control") window.ctrl_is_held_down = false;
       });
 
+      // Detect pressing F5
+      window.addEventListener('keydown', (event) => {
+        if (event.key == "F5") {
+          this.refresh_data();
+        }
+      });
+
       ReactTooltip.rebuild()
   }
 

@@ -11,7 +11,7 @@ export default class Container_graphs_circular extends Component
 {
     constructor(props)
     {
-        super(props);
+        super(props)
 
         this.state = {
             day_offset  : 0,
@@ -20,66 +20,36 @@ export default class Container_graphs_circular extends Component
 
         this.day_offset_up    = this.day_offset_up   .bind(this)
         this.day_offset_down  = this.day_offset_down .bind(this)
-        // this.set_display_text = this.set_display_text.bind(this)
     }
 
     componentDidMount()
     {
         window.addEventListener('keydown', (event) => {
-
-            // console.log(event.key)
-            // if (event.key == "Control" && !window.ctrl_is_held_down) window.ctrl_is_held_down = true;
-
             if (event.key=== "ArrowLeft") {
                 this.day_offset_down()
             }
-
             if (event.key=== "ArrowRight") {
                 this.day_offset_up()
             }
-
         });
     }
 
-    day_offset_up()
-    {
-        // console.log(".")
-        if (this.state.day_offset < 0)
-        {
-            this.setState({
-                day_offset:this.state.day_offset + 1
-            })
-        }
-    }
-
-    day_offset_down()
-    {
-        // console.log("a")
-        this.setState({
-            day_offset:this.state.day_offset - 1
-        })
-    }
-
-    // Triggers a redraw every time...
-    // set_display_text(text: string)
-    // {
-    //     this.setState({
-    //         display_text: text,
-    //     })
-    // }
+    day_offset_up()   {if (this.state.day_offset < 0) {this.setState({day_offset:this.state.day_offset + 1})}}
+    day_offset_down() {this.setState({day_offset:this.state.day_offset - 1})}
+    day_offset_zero() {this.setState({day_offset:0})}
 
     render()
     {
         // return <div style={{position: "relative",}}>
         return <div className='centered'>
-            
+
             {/* The background with lines */}
             <Background_circular_clock
-                height={this.props.height}
-                width={this.props.width}
+                height = {this.props.height}
+                width  = {this.props.width}
             />
-            
-            {/* The handle of the clock */}
+
+            {/* The hour hand of the clock */}
             {this.state.day_offset === 0 &&
                 <Clock_circular
                 height = {this.props.height}
@@ -93,19 +63,17 @@ export default class Container_graphs_circular extends Component
             width            = {this.props.width     }
             categories       = {this.props.categories}
             day_offset       = {this.state.day_offset}
-            // set_display_text = {this.set_display_text}
             />
 
-            {/* Optional overlay of days */}
-            {/* {this.state.display_text !== "" && */}
+            {/* Overlay to display the information about a segment */}
             <div id='circular_clock_text' style={{position:"absolute", fontSize:"26px", pointerEvents:"none",}}></div>
-            {/* } */}
 
             {/* The control panel located at the bottom */}
             <Control_panel_graph_circular
                 day_offset      = {this.state.day_offset}
                 day_offset_up   = {this.day_offset_up   }
                 day_offset_down = {this.day_offset_down }
+                day_offset_zero = {this.day_offset_zero }
             />
 
         </div>
