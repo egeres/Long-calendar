@@ -44,6 +44,13 @@ class Home extends Component
     let days_to_display_xl : number = Math.floor((width_graph  - (40 * 2)) / (width_line_xl + spacing_lines_xl));
     // console.log("days_to_display_xl:", days_to_display_xl)
 
+
+
+    let days_to_display_w = 7;
+    let widthline_w       = 70;
+    let width_graph_w     = ((widthline_w + 20) * 7);
+
+
     window.mouse_is_held_down = false;
     window. ctrl_is_held_down = false;
 
@@ -64,10 +71,15 @@ class Home extends Component
       graph_circle_width : Math.floor(window.innerHeight * 0.8),
       graph_circle_height: Math.floor(window.innerHeight * 0.8),
 
-      display_mode    : 0,
+      display_mode    : 1,
 
       days_to_display   : days_to_display,
       widthline         : width_line,
+
+      graph_width_w     : width_graph_w,
+      days_to_display_w : days_to_display_w,
+      widthline_w       : widthline_w,
+
       days_to_display_xl: days_to_display_xl,
       widthline_xl      : width_line_xl,
 
@@ -132,7 +144,7 @@ class Home extends Component
           "window.display_mode",
       ])
 
-      console.log(collected_props);
+      // console.log(collected_props);
 
       this.setState({
         display_mode:collected_props["window.display_mode"] ?? 0,
@@ -301,10 +313,10 @@ class Home extends Component
   {
     let objIndex = this.state.categories.findIndex((obj => obj.id == id));
 
-    console.log(
-      this.state.categories[objIndex].color,
-      // this.hexToRgbA(this.state.categories[objIndex].color)
-    )
+    // console.log(
+    //   this.state.categories[objIndex].color,
+    //   // this.hexToRgbA(this.state.categories[objIndex].color)
+    // )
 
       let the_color : string = this.state.categories[objIndex].color;
       if (the_color.startsWith("rgba"))
@@ -396,8 +408,26 @@ class Home extends Component
       />
     }
 
-    // Multi day view M
+
+    // Week view
     if (this.state.display_mode == 1)
+    {
+      graph = <Container_graphs_time
+        graph_timebars_margin = {this.props.graph_timebars_margin}
+        categories            = {this.state.categories           }
+        width                 = {this.state.graph_width_w        }
+        height                = {this.state.graph_height - 500   }
+        days_to_display       = {this.state.days_to_display_w    }
+        widthline             = {this.state.widthline_w          }
+
+        total_graph_width     = {this.state.graph_width}
+        total_graph_height    = {window.innerHeight    }
+
+      />
+    }
+
+    // Multi day view M
+    if (this.state.display_mode == 2)
     {
       graph = <Container_graphs_time
         graph_timebars_margin = {this.props.graph_timebars_margin}
@@ -410,7 +440,7 @@ class Home extends Component
     }
 
     // Multi day view XL
-    if (this.state.display_mode == 2)
+    if (this.state.display_mode == 3)
     {
       graph = <Container_graphs_time
         graph_timebars_margin = {this.props.graph_timebars_margin}

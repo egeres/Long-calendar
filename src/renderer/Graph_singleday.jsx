@@ -40,7 +40,7 @@ export default class Graph_singleday extends Component
 
     draw()
     {
-        console.log("Redrawing...")
+        // console.log("Redrawing...")
 
         let thiz = this // I guess the better way to do it is by binding (?)
 

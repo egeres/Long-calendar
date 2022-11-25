@@ -14,7 +14,7 @@ export default class Container_options extends Component
 
     componentDidMount()
     {
-        console.log("mounting...")
+        // console.log("mounting...")
 
         this.props.set_days_to_display(event)
 

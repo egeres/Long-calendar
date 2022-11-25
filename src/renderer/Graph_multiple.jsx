@@ -56,7 +56,7 @@ export default class Graph_multiple extends Component
     {
         let thiz = this // I guess the better way to do it is by binding (?)
 
-        console.log("Redrawing...", this.props.days_to_display)
+        // console.log("Redrawing...", this.props.days_to_display)
 
         let this_groups = d3.select(thiz.refs.group_main)
         .selectAll("g")

@@ -46,9 +46,17 @@ export default class Container_options_display extends Component
         <tr>
             <td>XL</td>
             <td>M</td>
+            <td>W</td>
             <td>Day</td>
         </tr>
         <tr>
+        <td><input
+            type     = "radio"
+            name     = "days"
+            checked  = {this.state.selected_radio === 3}
+            onChange = {this.changeRadio.bind(this)}
+            id       = {3}
+            /></td>
             <td><input
             type     = "radio"
             name     = "days"

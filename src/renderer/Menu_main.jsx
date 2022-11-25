@@ -44,7 +44,7 @@ export default class Menu_main extends Component
             "window.shortcut",
         ])
         
-        console.log(collected_props)
+        // console.log(collected_props)
 
         await this.setState({
             fullscreen     : collected_props["window.fullscreen"     ] ?? true,

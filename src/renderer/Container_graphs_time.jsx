@@ -12,16 +12,31 @@ export default class Container_graphs_time extends Component
     static defaultProps = {
         graph_timebars_margin      : 15,
         graph_timebars_margin_inner: 40,
+        total_graph_width          : null,
+        total_graph_height         : null,
     };
 
     render()
     {
+
+        let style_left  = this.props.graph_timebars_margin;
+        let style_right = this.props.graph_timebars_margin;
+
+        if (this.props.total_graph_width !== null)
+        {
+            style_left = (this.props.total_graph_width - this.props.width) / 2;
+        }
+        if (this.props.total_graph_height !== null)
+        {
+            style_right = (this.props.total_graph_height - this.props.height) / 2;
+        }
+
         return <div style={{
             position: "absolute",
             width   : this.props.width  + "px",
             height  : this.props.height + "px",
-            left    : this.props.graph_timebars_margin,
-            top     : this.props.graph_timebars_margin,
+            left    : style_left,
+            top     : style_right,
         }}>
 
             <Graph_background
