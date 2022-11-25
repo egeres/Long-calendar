@@ -91,6 +91,16 @@ export default class Graph_time extends Component
     componentDidMount()
     {
     	this.draw();
+
+        // We redraw when the day changes
+        this.day_as_string_today = moment().subtract(1, "hours").format("YYYY-MM-DD");
+        setInterval(async () => {
+            let day_as_string = moment().subtract(1, "hours").format("YYYY-MM-DD");
+            if (day_as_string !== this.day_as_string_today) {
+                this.day_as_string_today = day_as_string;
+                this.draw();
+            }
+        }, 1000)
     }
 
     componentDidUpdate()
