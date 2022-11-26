@@ -20,19 +20,60 @@ import Menu_main from './Menu_main';
 import ReactTooltip from 'react-tooltip';
 import {arrayMoveImmutable} from 'array-move';
 
-class Home extends Component
+declare global {
+  interface Window {
+    mouse_is_held_down: boolean;
+    ctrl_is_held_down : boolean;
+    electron          : any;
+  }
+}
+
+type MyProps = { 
+  // width     : number,
+  // height    : number,
+  categories: object[],
+  graph_timebars_margin: number,
+};
+
+type MyState = {
+  display_mode       : number,
+  graph_circle_width : number,
+  graph_circle_height: number,
+
+  graph_width_w    : number;
+  graph_height     : number;
+  days_to_display_w: number;
+  widthline_w      : number;
+
+  graph_width    : number;
+  widthline      : number;
+  days_to_display: number;
+  categories     : object[],
+
+  days_to_display_xl: number;
+  widthline_xl      : number;
+
+  is_picking_color: boolean,
+  color           : string;
+
+  menu_main_visible: boolean;
+
+  // day_offset  : number,
+  // display_text: string,
+};
+
+class Home extends Component<MyProps, MyState>
 {
 
   static defaultProps = {
     graph_timebars_margin : 40,
   };
 
-  constructor(props)
+  constructor(props:MyProps)
   {
     super(props);
 
-    let graph_timebars_margin : number = 15;
-    let width_graph           : number = window.innerWidth  - 340 - (this.props.graph_timebars_margin * 2);
+    let width_graph     : number = window.innerWidth  - 340 - (this.props.graph_timebars_margin * 2);
 
     let width_line      : number = 13;
     let spacing_lines   : number = 9;
@@ -385,9 +426,6 @@ class Home extends Component
   }
 
   onSortEnd = ({oldIndex, newIndex}) => {
-
-      // console.log("a", oldIndex, newIndex)
-
       this.setState(({categories}) => ({
         categories: arrayMoveImmutable(categories, oldIndex, newIndex),
       }));

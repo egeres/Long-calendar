@@ -1,15 +1,24 @@
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Graph_singleday from "./Graph_singleday";
-import Clock_vertical  from "./Clock_vertical";
 import Clock_circular  from './Clock_circular';
-import Container_graphs_time from './Container_graphs_time';
 import Control_panel_graph_circular from './Control_panel_graph_circular';
 import Background_circular_clock from './Background_circular_clock';
 
-export default class Container_graphs_circular extends Component
+type MyProps = { 
+    width     : number,
+    height    : number,
+    categories: object[],
+};
+
+type MyState = {
+    day_offset  : number,
+    display_text: string,
+};
+
+export default class Container_graphs_circular extends Component<MyProps, MyState>
 {
-    constructor(props)
+    constructor(props:MyProps)
     {
         super(props)
 
@@ -18,8 +27,9 @@ export default class Container_graphs_circular extends Component
             display_text: "",
         }
 
-        this.day_offset_up    = this.day_offset_up   .bind(this)
-        this.day_offset_down  = this.day_offset_down .bind(this)
+        this.day_offset_up    = this.day_offset_up  .bind(this)
+        this.day_offset_down  = this.day_offset_down.bind(this)
+        this.day_offset_zero  = this.day_offset_zero.bind(this)
     }
 
     componentDidMount()
@@ -40,7 +50,6 @@ export default class Container_graphs_circular extends Component
 
     render()
     {
-        // return <div style={{position: "relative",}}>
         return <div className='centered'>
 
             {/* The background with lines */}

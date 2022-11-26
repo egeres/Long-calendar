@@ -19,7 +19,7 @@ npm start
 
 To generate data from a local ActivityWatch instance, run:
 
-```
+```bash
 python data_generator_activitywatch.py
 ```
 
