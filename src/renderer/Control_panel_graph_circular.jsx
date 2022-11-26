@@ -50,7 +50,8 @@ export default class Control_panel_graph_circular extends Component
             minWidth  : "50px",
             fontSize  : "26px",
             color     : "#FFF",
-            opacity   : 0.2,
+            opacity   : 0.3,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}>
             {this.props.day_offset}
         </div>
@@ -84,7 +85,8 @@ export default class Control_panel_graph_circular extends Component
             minWidth  : "50px",
             fontSize  : "26px",
             color     : "#FFF",
-            opacity   : 0.2,
+            opacity   : 0.3,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}>
             {moment().subtract(- this.props.day_offset, 'days').format('dddd, MMMM Do YYYY')}
         </div>

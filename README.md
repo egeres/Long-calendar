@@ -8,7 +8,9 @@ It can present two types of data: instant events (zero duration) and segments (h
 
 ## Usage
 
-```
+For development mode (with hot reloading):
+
+```bash
 git clone https://github.com/egeres/Long-calendar.git
 cd Long-calendar
 npm install

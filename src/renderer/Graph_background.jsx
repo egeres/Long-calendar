@@ -70,14 +70,30 @@ export default class Graph_background extends Component
             .attr("y2", thiz.props.height - thiz.props.margin)
             .attr("class", "line_vertical")
             .style("stroke-dasharray", ("2, 2"))
-            .style("opacity", 0.4)
-            .style("stroke", "#fff")
+            .style("stroke", function(_d, _i) {
+                let date = moment().subtract(thiz.props?.days_to_display - _i - 1, 'days');
+                if (date.day() == 0 || date.day() == 6) {
+                    return "#F00";
+                } else {
+                    return "#FFF";
+                }
+            })
+            .style("opacity", function(_d, _i) {
+                let date = moment().subtract(thiz.props?.days_to_display - _i - 1, 'days');
+                if (date.day() == 0 || date.day() == 6) {
+                    return 1.0;
+                } else {
+                    return 0.4;
+                }
+            })
+
+
             .style("shape-rendering", "crispEdges")
             .style("stroke-width", 0.4);
         
         // d3.select(lines.nodes()[3]).style("opacity", 1.0)
         // d3.select(lines).style("opacity", 0.4)
-        d3.selectAll(this.lines_drawn).style("opacity", 0.4)
+        // d3.selectAll(this.lines_drawn).style("opacity", 0.4)
 
         // console.log(
         //     // d3.select(this.refs.group_main).selectAll('.line_vertical')

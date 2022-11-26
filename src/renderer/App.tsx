@@ -423,7 +423,7 @@ class Home extends Component
         graph_timebars_margin = {this.props.graph_timebars_margin}
         categories            = {this.state.categories           }
         width                 = {this.state.graph_width_w        }
-        height                = {this.state.graph_height - 500   }
+        height                = {this.state.graph_height         }
         days_to_display       = {this.state.days_to_display_w    }
         widthline             = {this.state.widthline_w          }
 

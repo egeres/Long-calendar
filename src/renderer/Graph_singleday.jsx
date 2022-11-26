@@ -23,8 +23,6 @@ export default class Graph_singleday extends Component
 
     render()
     {
-        // console.log(this.props)
-
         return (
         <svg
             viewBox = {"0 0 "+this.props?.width+" "+this.props?.height}
