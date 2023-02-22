@@ -47,6 +47,17 @@ export default class Graph_singleday extends Component
         .selectAll("*")
         .remove();
         
+        // Draw a circle
+        d3.select(this.refs.group_main)
+            .append('circle')
+            .style("fill", "transparent")
+            .style("opacity", 0.2)
+            .style("stroke", "#FFF")
+            .style("stroke-width", 1)
+            .attr("cx", (this.props.width / 2))
+            .attr("cy", (this.props.height / 2))
+            .attr("r", (this.props.width / 2) - this.props.thickness/2);
+        
         if (false)
         {
 
