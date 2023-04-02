@@ -15,6 +15,7 @@ import Tooltip from './Tooltip';
 import Tooltip_date from './Tooltip_date';
 import Button_menu_main from './Button_menu_main';
 import Button_reload_data from './Button_reload_data';
+import Button_pencil from './Button_pencil';
 import Menu_main from './Menu_main';
 
 import ReactTooltip from 'react-tooltip';
@@ -439,8 +440,6 @@ class Home extends Component<MyProps, MyState>
 
   render()
   {
-
-
     let graph;
 
     // 1 day view
@@ -452,8 +451,6 @@ class Home extends Component<MyProps, MyState>
         height     = {this.state.graph_circle_height}
       />
     }
-
-
     // Week view
     if (this.state.display_mode == 1)
     {
@@ -470,7 +467,6 @@ class Home extends Component<MyProps, MyState>
 
       />
     }
-
     // Multi day view M
     if (this.state.display_mode == 2)
     {
@@ -483,7 +479,6 @@ class Home extends Component<MyProps, MyState>
         widthline             = {this.state.widthline            }
       />
     }
-
     // Multi day view XL
     if (this.state.display_mode == 3)
     {
@@ -503,7 +498,7 @@ class Home extends Component<MyProps, MyState>
     {graph}
     
     {/* Selector column */}
-    <div className='centered_column' style={{position:"absolute", right:this.props.graph_timebars_margin}}>
+    <div className='centered_column' style={{position:"absolute"}}>
 
         <Container_options_display
         set_display_mode = {this.set_display_mode}
@@ -524,6 +519,7 @@ class Home extends Component<MyProps, MyState>
 
     </div>
 
+    {/* Container for the color picker */}
     <Container_colorpicker
     visible             = {this.state.is_picking_color}
     color               = {this.state.color}
@@ -531,17 +527,19 @@ class Home extends Component<MyProps, MyState>
     set_color_by_id     = {this.set_color_by_id}
     />
 
+    {/* The tooltips */}
     <Tooltip/>
     <Tooltip_date/>
-
     <ReactTooltip
     className = 'customeTheme'
     place     = "right"
     effect    = "solid"
     />
 
+    {/* Top right corner buttons */}
     <Button_menu_main   show_menu_main={this.show_menu_main}/>
     <Button_reload_data refresh_data  ={this.refresh_data  }/>
+    <Button_pencil      show_menu_main={this.show_menu_main}/>
 
     {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
 

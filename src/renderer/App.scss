@@ -10,6 +10,8 @@ $spacing_s  : 5px;
 $spacing_m  : 10px;
 $spacing_l  : 20px;
 
+$spacing_borders: 40px;
+
 $font_family_0: sans-serif;
 
 
@@ -80,6 +82,7 @@ a:hover {
 .centered_column {
     display       : flex;
     flex-direction: column;
+    right         : $spacing_borders;
 }
   
 .small_circle {
@@ -294,24 +297,50 @@ body {
 
 #button_menu {
     position: absolute;
-    top     : 30px;
-    right   : 30px;
+    top     : $spacing_borders + (40px + $spacing_m) * 0;
+    right   : $spacing_borders;
     width   : 40px;
-    // background-color: red;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
     display         : flex;
     align-items     : center;
     justify-content : center;
 }
+#button_menu:hover {
+    background-color: $color_2;
+}
 
 #button_refresh {
     position: absolute;
-    top     : 30px * 2 + $spacing_m;
-    right   : 30px;
+    top     : $spacing_borders + (40px + $spacing_m) * 1;
+    right   : $spacing_borders;
     width   : 40px;
-    // background-color: red;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
     display         : flex;
     align-items     : center;
     justify-content : center;
+}
+#button_refresh:hover {
+    background-color: $color_2;
+}
+
+#button_pencil {
+    position: absolute;
+    top     : $spacing_borders + (40px + $spacing_m) * 2;
+    right   : $spacing_borders;
+    width   : 40px;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+}
+#button_pencil:hover {
+    background-color: $color_2;
 }
 
 .container_menu_main {

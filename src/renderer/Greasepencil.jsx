@@ -11,9 +11,9 @@ export default class Greasepencil extends Component {
         super(props);
         this.state = {
             drawing    : false,
+            can_draw   : false,
             strokeStyle: "#4C4",
             lineWidth  : 5,
-
         };
     }
 
@@ -23,7 +23,10 @@ export default class Greasepencil extends Component {
                 width={this.props?.width}
                 height={this.props?.height}
                 ref="root"
-                style={{ position: 'absolute' }}
+                style={{
+                    position     : 'absolute',
+                    pointerEvents: this.state.can_draw ? 'auto': 'none',
+                }}
                 onMouseDown={this.handleMouseDown}
                 onMouseMove={this.handleMouseMove}
                 onMouseUp={this.handleMouseUp}
@@ -33,9 +36,9 @@ export default class Greasepencil extends Component {
 
     handleMouseDown = (event) => {
 
-        const canvas = this.refs.root;
-        const ctx    = canvas.getContext('2d');
-        const rect   = canvas.getBoundingClientRect();
+        if (!this.state.can_draw) {return;}
+
+        let rect = this.canvas.getBoundingClientRect();
 
         this.setState({ drawing: true });
         this.startDrawing(
@@ -49,7 +52,7 @@ export default class Greasepencil extends Component {
     };
 
     handleMouseMove = (event) => {
-        if (this.state.drawing) {
+        if (this.state.drawing && this.state.can_draw) {
 
             const canvas = this.refs.root;
             const ctx = canvas.getContext('2d');
@@ -66,6 +69,9 @@ export default class Greasepencil extends Component {
     };
 
     handleTouchStart = (event) => {
+
+        if (!this.state.can_drawing) {return;}
+
         event.preventDefault();
         this.setState({ drawing: true });
 
@@ -81,33 +87,16 @@ export default class Greasepencil extends Component {
             event.touches[0].clientX - rect.left,
             event.touches[0].clientY - rect.top,
         );
-        // this.setState({ drawing: false });
-
-        // this.setState({ drawing: true });
-
-        // this.startDrawing(
-        //     event.touches[0].clientX - rect.left,
-        //     event.touches[0].clientY - rect.top,
-        // );
-
     };
 
     handleTouchMove = (event) => {
         event.preventDefault();
-        if (this.state.drawing) {
-            // this.draw(event.touches[0].clientX, event.touches[0].clientY);
-
-            const canvas = this.refs.root;
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.getBoundingClientRect();
-            // const x = e.clientX - rect.left;
-            // const y = e.clientY - rect.top;
-
+        if (this.state.drawing && this.state.can_draw) {
+            let rect = this.canvas.getBoundingClientRect();
             this.draw(
                 event.touches[0].clientX - rect.left,
                 event.touches[0].clientY - rect.top,
             );
-
         }
     };
 
@@ -138,5 +127,6 @@ export default class Greasepencil extends Component {
         this.refs.root.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         this.refs.root.addEventListener('touchend', this.handleTouchEnd, { passive: false });
 
+        this.canvas = this.refs.root;
     }
 }

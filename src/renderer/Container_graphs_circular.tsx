@@ -4,6 +4,7 @@ import Graph_singleday from "./Graph_singleday";
 import Clock_circular  from './Clock_circular';
 import Control_panel_graph_circular from './Control_panel_graph_circular';
 import Background_circular_clock from './Background_circular_clock';
+import Greasepencil from './Greasepencil';
 
 type MyProps = { 
     width     : number,
@@ -72,6 +73,11 @@ export default class Container_graphs_circular extends Component<MyProps, MyStat
             width            = {this.props.width     }
             categories       = {this.props.categories}
             day_offset       = {this.state.day_offset}
+            />
+
+            <Greasepencil
+                height = {this.props.height}
+                width  = {this.props.width  + 500}
             />
 
             {/* Overlay to display the information about a segment */}
