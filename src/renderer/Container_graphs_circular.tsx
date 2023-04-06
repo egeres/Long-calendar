@@ -7,9 +7,10 @@ import Background_circular_clock from './Background_circular_clock';
 import Greasepencil from './Greasepencil';
 
 type MyProps = { 
-    width     : number,
-    height    : number,
-    categories: object[],
+    categories  : object[],
+    width       : number,
+    height      : number,
+    drawing_mode: boolean,
 };
 
 type MyState = {
@@ -49,48 +50,48 @@ export default class Container_graphs_circular extends Component<MyProps, MyStat
     day_offset_down() {this.setState({day_offset:this.state.day_offset - 1})}
     day_offset_zero() {this.setState({day_offset:0})}
 
-    render()
-    {
-        return <div className='centered'>
+    render() {
+    return <div className='centered'>
 
-            {/* The background with lines */}
-            <Background_circular_clock
-                height = {this.props.height}
-                width  = {this.props.width}
+        {/* The background with lines */}
+        <Background_circular_clock
+            height = {this.props.height}
+            width  = {this.props.width}
+        />
+
+        {/* The hour hand of the clock */}
+        {this.state.day_offset === 0 &&
+            <Clock_circular
+            height = {this.props.height}
+            width  = {this.props.width }
             />
+        }
 
-            {/* The hour hand of the clock */}
-            {this.state.day_offset === 0 &&
-                <Clock_circular
-                height = {this.props.height}
-                width  = {this.props.width }
-                />
-            }
+        {/* The graph itself */}
+        <Graph_singleday
+        height           = {this.props.height    }
+        width            = {this.props.width     }
+        categories       = {this.props.categories}
+        day_offset       = {this.state.day_offset}
+        />
 
-            {/* The graph itself */}
-            <Graph_singleday
-            height           = {this.props.height    }
-            width            = {this.props.width     }
-            categories       = {this.props.categories}
-            day_offset       = {this.state.day_offset}
-            />
+        <Greasepencil
+            height  = {this.props.height}
+            width   = {this.props.width  + 500}
+            drawing = {this.props.drawing_mode}
+        />
 
-            <Greasepencil
-                height = {this.props.height}
-                width  = {this.props.width  + 500}
-            />
+        {/* Overlay to display the information about a segment */}
+        <div id='circular_clock_text' className='noselect' style={{position:"absolute", fontSize:"26px", pointerEvents:"none",}}></div>
 
-            {/* Overlay to display the information about a segment */}
-            <div id='circular_clock_text' className='noselect' style={{position:"absolute", fontSize:"26px", pointerEvents:"none",}}></div>
+        {/* The control panel located at the bottom */}
+        <Control_panel_graph_circular
+            day_offset      = {this.state.day_offset}
+            day_offset_up   = {this.day_offset_up   }
+            day_offset_down = {this.day_offset_down }
+            day_offset_zero = {this.day_offset_zero }
+        />
 
-            {/* The control panel located at the bottom */}
-            <Control_panel_graph_circular
-                day_offset      = {this.state.day_offset}
-                day_offset_up   = {this.day_offset_up   }
-                day_offset_down = {this.day_offset_down }
-                day_offset_zero = {this.day_offset_zero }
-            />
-
-        </div>
+    </div>
     }
 }

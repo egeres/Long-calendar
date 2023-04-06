@@ -343,6 +343,10 @@ body {
     background-color: $color_2;
 }
 
+#button_pencil.button_active {
+    background-color: $color_2;
+}
+
 .container_menu_main {
     position          : relative;
     width             : 40%;

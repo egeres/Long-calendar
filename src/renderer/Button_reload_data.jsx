@@ -12,7 +12,7 @@ export default class Button_reload_data extends Component
 
     render()
     {
-        return <div id="button_refresh" onClick={() => this.props.refresh_data()} >
+        return <div id="button_refresh" onClick={() => this.props.onClick()} >
             <i data-eva="refresh-outline" data-eva-fill="#FFF" />
         </div>
     }

@@ -12,7 +12,7 @@ export default class Button_menu_main extends Component
 
     render()
     {
-        return <div id="button_menu" onClick={() => this.props.show_menu_main()} >
+        return <div id="button_menu" onClick={() => this.props.onClick()} >
             <i data-eva="menu-outline" data-eva-fill="#FFF" />
         </div>
     }

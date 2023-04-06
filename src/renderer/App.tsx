@@ -57,6 +57,7 @@ type MyState = {
   is_picking_color: boolean,
   color           : string;
 
+  drawing_mode : boolean;
   menu_main_visible: boolean;
 
   // day_offset  : number,
@@ -126,6 +127,7 @@ class Home extends Component<MyProps, MyState>
       widthline_xl      : width_line_xl,
 
       menu_main_visible    : false,
+      drawing_mode         : false,
       last_visibility_state: false,
     }
 
@@ -140,6 +142,7 @@ class Home extends Component<MyProps, MyState>
     this.hide_menu_main           = this.hide_menu_main          .bind(this)
     this.onSortEnd                = this.onSortEnd               .bind(this)
     this.refresh_data             = this.refresh_data            .bind(this)
+    this.toggle_drawingmode       = this.toggle_drawingmode      .bind(this)
 
     // this.props.show_menu_main()
   }
@@ -438,6 +441,13 @@ class Home extends Component<MyProps, MyState>
     console.log("Reloading...")
   }
 
+  toggle_drawingmode()
+  {
+    this.setState({
+      drawing_mode: !this.state.drawing_mode,
+    })
+  }
+
   render()
   {
     let graph;
@@ -446,9 +456,10 @@ class Home extends Component<MyProps, MyState>
     if (this.state.display_mode == 0)
     {
       graph = <Container_graphs_circular
-        categories = {this.state.categories         }
-        width      = {this.state.graph_circle_width }
-        height     = {this.state.graph_circle_height}
+        categories   = {this.state.categories         }
+        width        = {this.state.graph_circle_width }
+        height       = {this.state.graph_circle_height}
+        drawing_mode = {this.state.drawing_mode}
       />
     }
     // Week view
@@ -537,9 +548,9 @@ class Home extends Component<MyProps, MyState>
     />
 
     {/* Top right corner buttons */}
-    <Button_menu_main   show_menu_main={this.show_menu_main}/>
-    <Button_reload_data refresh_data  ={this.refresh_data  }/>
-    <Button_pencil      show_menu_main={this.show_menu_main}/>
+    <Button_menu_main   onClick={this.show_menu_main}/>
+    <Button_reload_data onClick={this.refresh_data}/>
+    <Button_pencil      onClick={this.toggle_drawingmode} active={this.state.drawing_mode}/>
 
     {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
 
