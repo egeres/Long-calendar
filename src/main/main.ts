@@ -127,6 +127,49 @@ ipcMain.on('set_fullscreen_on' , async (event) => {
   mainWindow?.setFullScreen(true)
 });
 
+ipcMain.on('save_image', async (event, args) => {
+
+  const downloadsFolder = app.getPath('downloads');
+  const filePath        = path.join(downloadsFolder, args.filename);
+
+  fs.writeFile(filePath, args.image, 'base64', (err) => {
+    if (err) {
+        console.error('Failed to save the image', err);
+    } else {
+        console.log('Image saved successfully');
+    }
+  });
+
+});
+
+
+ipcMain.on('load_image', async (event, arg) => {
+
+  console.log("Loading image", arg.filename)
+
+  let filename = arg.filename
+  const downloadsFolder = app.getPath('downloads');
+  const filePath        = path.join(downloadsFolder, filename);
+
+  // Check if file exists
+  if (fs.existsSync(filePath)) {
+
+    console.log("Reading the image...");
+    
+    // We read the image and prepare it in base64
+    let o = fs.readFileSync(filePath, 'base64');
+
+    // We send the image to the renderer
+    event.returnValue = ({ "image": o });
+
+  }
+  else {
+    event.returnValue = ({ "image": null});
+  }
+
+});
+
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
