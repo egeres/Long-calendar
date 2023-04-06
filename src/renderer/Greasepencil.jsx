@@ -4,18 +4,20 @@ import * as d3 from 'd3';
 export default class Greasepencil extends Component {
 
     static defaultProps = {
-        width  : 500,
-        height : 500,
-        drawing: false,
+        width      : 500,
+        height     : 500,
+        drawing    : false,
+        day_to_load: null,
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            drawing    : false,
-            can_draw   : false,
-            strokeStyle: "#4C4",
-            lineWidth  : 5,
+            drawing            : false,
+            can_draw           : false,
+            strokeStyle        : "#4C4",
+            lineWidth          : 5,
+            did_i_edit_an_image: false,
         };
     }
 
@@ -29,9 +31,9 @@ export default class Greasepencil extends Component {
                     position     : 'absolute',
                     pointerEvents: this.props.drawing ? 'auto': 'none',
                 }}
-                onMouseDown={this.handleMouseDown}
-                onMouseMove={this.handleMouseMove}
-                onMouseUp={this.handleMouseUp}
+                onMouseDown = {this.handleMouseDown}
+                onMouseMove = {this.handleMouseMove}
+                onMouseUp   = {this.handleMouseUp}
             />
         );
     }
@@ -39,6 +41,7 @@ export default class Greasepencil extends Component {
     handleMouseDown = (event) => {
 
         if (!this.props.drawing) {return;}
+        this.setState({did_i_edit_an_image: true});
 
         let rect = this.canvas.getBoundingClientRect();
 
@@ -73,6 +76,7 @@ export default class Greasepencil extends Component {
     handleTouchStart = (event) => {
 
         if (!this.props.drawing) {return;}
+        this.setState({did_i_edit_an_image: true});
 
         event.preventDefault();
         this.setState({ drawing: true });
@@ -118,7 +122,8 @@ export default class Greasepencil extends Component {
         ctx.stroke();
     };
 
-    componentDidMount() {
+    componentDidMount() 
+    {
         let ctx = this.refs.root.getContext('2d');
         ctx.strokeStyle = this.state.strokeStyle;
         ctx.lineWidth   = this.state.lineWidth;
@@ -131,55 +136,71 @@ export default class Greasepencil extends Component {
 
         this.canvas = this.refs.root;
 
-        // Date of today in the format YYYY-MM-DD
-        let today = new Date();
-        let dd    = String(today.getDate()).padStart(2, '0');
-        let mm    = String(today.getMonth() + 1).padStart(2, '0');  //January is 0!
-        let yyyy  = today.getFullYear();
-        today = yyyy + '-' + mm + '-' + dd;
-
-        let o = window.electron.ipcRenderer.load_image({"filename":today+".png"});
-        
-        console.log("Got image: ", o, " for ", today+".png")
+        let o = window.electron.ipcRenderer.load_image({"filename":this.props.day_to_load});
         if (o?.image)
         {
-
             let base_64_img = o.image;
-
             let img = new Image();
             img.onload = () => {
                 ctx.drawImage(img, 0, 0);
             }
             img.src = "data:image/png;base64," + base_64_img;
-
         }
-
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.drawing && this.props.drawing !== prevProps.drawing) {
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+
+        if (this.props.day_to_load !== prevProps.day_to_load)
+        {
+            this.setState({did_i_edit_an_image: false});
+
+            let canvas  = this.refs.root;
+            let ctx     = canvas.getContext('2d');
+            let dataURL = canvas.toDataURL('image/png');
+            let img     = new Image();
+
+            if (this.state.did_i_edit_an_image)
+            {
+            const imageLoadPromise = new Promise((resolve) => {
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0);
+                    let dataURL = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
+                    window.electron.ipcRenderer.save_image({ "image": dataURL, "filename": prevProps.day_to_load });
+                    resolve();
+                };
+            });
+            img.src = dataURL;
+            await imageLoadPromise;
+            }
+            
+            await ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            let o = await window.electron.ipcRenderer.load_image({"filename":this.props.day_to_load});
+            if (o?.image)
+            {
+                let base_64_img = o.image;
+                let img = new Image();
+                img.onload = async () => {
+                    await ctx.drawImage(img, 0, 0);
+                }
+                img.src = "data:image/png;base64," + base_64_img;
+            }
+        }
+
+        if (this.props.day_to_load && prevProps.drawing && this.props.drawing !== prevProps.drawing) {
 
             console.log('this.props.drawing', this.props.drawing);
             
             // Save this.canvas as a PNG
-            let canvas = this.refs.root;
-            let ctx = canvas.getContext('2d');
+            let canvas  = this.refs.root;
+            let ctx     = canvas.getContext('2d');
             let dataURL = canvas.toDataURL('image/png');
-            let img = new Image();
+            let img     = new Image();
 
             img.onload = () => {
                 ctx.drawImage(img, 0, 0);
-
                 let dataURL = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
-                
-                // Date of today in the format YYYY-MM-DD
-                let today = new Date();
-                let dd    = String(today.getDate()).padStart(2, '0');
-                let mm    = String(today.getMonth() + 1).padStart(2, '0');  //January is 0!
-                let yyyy  = today.getFullYear();
-                today = yyyy + '-' + mm + '-' + dd;
-
-                window.electron.ipcRenderer.save_image({"image":dataURL, "filename":today+".png"});
+                window.electron.ipcRenderer.save_image({"image":dataURL, "filename":this.props.day_to_load});
             }
 
             img.src = dataURL;

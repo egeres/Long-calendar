@@ -51,6 +51,14 @@ export default class Container_graphs_circular extends Component<MyProps, MyStat
     day_offset_zero() {this.setState({day_offset:0})}
 
     render() {
+
+    let today = new Date();
+    today.setDate(today.getDate() + this.state.day_offset);
+    let dd        = String(today.getDate()).padStart(2, '0');
+    let mm        = String(today.getMonth() + 1).padStart(2, '0');  //January is 0!
+    let yyyy      = today.getFullYear();
+    let final_day = yyyy + '-' + mm + '-' + dd + ".png";
+
     return <div className='centered'>
 
         {/* The background with lines */}
@@ -76,9 +84,10 @@ export default class Container_graphs_circular extends Component<MyProps, MyStat
         />
 
         <Greasepencil
-            height  = {this.props.height}
-            width   = {this.props.width  + 500}
-            drawing = {this.props.drawing_mode}
+            height      = {this.props.height}
+            width       = {this.props.width  + 500}
+            drawing     = {this.props.drawing_mode}
+            day_to_load = {final_day}
         />
 
         {/* Overlay to display the information about a segment */}
