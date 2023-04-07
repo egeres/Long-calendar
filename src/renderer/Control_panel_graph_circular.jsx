@@ -34,6 +34,17 @@ export default class Control_panel_graph_circular extends Component
             justifyContent: "center",
         }}>
 
+        {/* << */}
+        <span onClick = {() => {}} className="brighten" style={{opacity:0.0}}>
+            <i
+            data-eva      = "arrowhead-left-outline"
+            width         = "28px"
+            height        = "28px"
+            data-eva-fill = "#FFF"
+            />
+        </span>
+
+        {/* <- */}
         <span onClick = {() => this.props.day_offset_down()} className="brighten">
             <i
             data-eva      = "arrow-back-outline"
@@ -43,11 +54,12 @@ export default class Control_panel_graph_circular extends Component
             />
         </span>
 
+        {/* 0 */}
         <div
         className = 'noselect'
         style     = {{
             textAlign : "center",
-            minWidth  : "50px",
+            minWidth  : "60px",
             fontSize  : "26px",
             color     : "#FFF",
             opacity   : 0.3,
@@ -56,6 +68,7 @@ export default class Control_panel_graph_circular extends Component
             {this.props.day_offset}
         </div>
 
+        {/* -> */}
         <span onClick = {() => this.props.day_offset_up()} className="brighten">
             <i
             data-eva      = "arrow-forward-outline"
@@ -65,6 +78,7 @@ export default class Control_panel_graph_circular extends Component
             />
         </span>
 
+        {/* >> */}
         <span onClick = {() => this.props.day_offset_zero()} className="brighten">
             <i
             data-eva      = "arrowhead-right-outline"
@@ -83,6 +97,7 @@ export default class Control_panel_graph_circular extends Component
         style     = {{
             textAlign : "center",
             minWidth  : "50px",
+            marginTop : "10px",
             fontSize  : "26px",
             color     : "#FFF",
             opacity   : 0.3,
