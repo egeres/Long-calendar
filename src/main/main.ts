@@ -38,8 +38,17 @@ if (last == "app.asar")
   path_dir_root = path.dirname(app.getPath('exe'))
 }
 
-let path_directory_data : string = path.join(path_dir_root, "data");
+let path_directory_data     : string = path.join(path_dir_root, "data");
+let path_directory_drawings : string = path.join(path_dir_root, "drawings");
 global.config = get_config_default()
+
+// We create missing directories if they don't exist
+if (!fs.existsSync(path_directory_drawings)){
+  fs.mkdirSync(path_directory_drawings);
+}
+if (!fs.existsSync(path_directory_data)){
+  fs.mkdirSync(path_directory_data);
+}
 
 directory_setup(path_dir_root);
 
@@ -129,8 +138,7 @@ ipcMain.on('set_fullscreen_on' , async (event) => {
 
 ipcMain.on('save_image', async (event, args) => {
 
-  const downloadsFolder = app.getPath('downloads');
-  const filePath        = path.join(downloadsFolder, args.filename);
+  const filePath = path.join(path_directory_drawings, args.filename);
 
   fs.writeFile(filePath, args.image, 'base64', (err) => {
     if (err) {
@@ -142,14 +150,12 @@ ipcMain.on('save_image', async (event, args) => {
 
 });
 
-
 ipcMain.on('load_image', async (event, arg) => {
 
   console.log("Loading image", arg.filename)
 
-  let filename = arg.filename
-  const downloadsFolder = app.getPath('downloads');
-  const filePath        = path.join(downloadsFolder, filename);
+  let   filename = arg.filename
+  const filePath = path.join(path_directory_drawings, filename);
 
   // Check if file exists
   if (fs.existsSync(filePath)) {
