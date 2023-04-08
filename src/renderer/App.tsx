@@ -18,7 +18,7 @@ import Button_reload_data from './Button_reload_data';
 import Button_pencil from './Button_pencil';
 import Menu_main from './Menu_main';
 
-import ReactTooltip from 'react-tooltip';
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 import {arrayMoveImmutable} from 'array-move';
 
 declare global {
@@ -68,7 +68,7 @@ class Home extends Component<MyProps, MyState>
 {
 
   static defaultProps = {
-    graph_timebars_margin : 40,
+    graph_timebars_margin : getComputedStyle(document.documentElement).getPropertyValue('--spacing-borders').trim().slice(0, -2),
   };
 
   constructor(props:MyProps)
@@ -184,7 +184,6 @@ class Home extends Component<MyProps, MyState>
 
   async componentDidMount()
   {
-
       let collected_props = window.electron.ipcRenderer.get_config_prop([
           "window.display_mode",
       ])
@@ -219,8 +218,6 @@ class Home extends Component<MyProps, MyState>
           this.refresh_data();
         }
       });
-
-      ReactTooltip.rebuild()
   }
 
   set_days_to_display(event)

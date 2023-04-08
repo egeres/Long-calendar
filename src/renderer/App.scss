@@ -10,12 +10,14 @@ $spacing_s  : 5px;
 $spacing_m  : 10px;
 $spacing_l  : 20px;
 
-$spacing_borders: 40px;
-
 $font_family_0: sans-serif;
 
-
-
+:root {
+    --spacing-borders: 100px;
+    --spacing-s      :  5px;
+    --spacing-m      : 10px;
+    --spacing-l      : 20px;
+}
 
 
 
@@ -82,7 +84,7 @@ a:hover {
 .centered_column {
     display       : flex;
     flex-direction: column;
-    right         : $spacing_borders;
+    right         : var(--spacing-borders);
 }
   
 .small_circle {
@@ -210,7 +212,7 @@ body {
     position       : relative;
     color          : $color_3;
     height         : 100vh;
-    background     : rgba(0, 0, 0, 0.664);
+    background     : rgba(255, 0, 0, 0.664);
     font-family    : $font_family_0;
     overflow       : hidden;
     display        : flex;
@@ -297,8 +299,8 @@ body {
 
 #button_menu {
     position: absolute;
-    top     : $spacing_borders + (40px + $spacing_m) * 0;
-    right   : $spacing_borders;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 0);
+    right   : var(--spacing-borders);
     width   : 40px;
     height  : 40px;
     background-color: $color_1;
@@ -313,8 +315,8 @@ body {
 
 #button_refresh {
     position: absolute;
-    top     : $spacing_borders + (40px + $spacing_m) * 1;
-    right   : $spacing_borders;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 1);
+    right   : var(--spacing-borders);
     width   : 40px;
     height  : 40px;
     background-color: $color_1;
@@ -329,8 +331,9 @@ body {
 
 #button_pencil {
     position: absolute;
-    top     : $spacing_borders + (40px + $spacing_m) * 2;
-    right   : $spacing_borders;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 2);
+    // top     : calc($spacing_borders + (40px + $spacing_m) * 2);
+    right   : var(--spacing-borders);
     width   : 40px;
     height  : 40px;
     background-color: $color_1;

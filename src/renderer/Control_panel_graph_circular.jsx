@@ -14,9 +14,8 @@ export default class Control_panel_graph_circular extends Component
     {
         return <div style={{
             position      : "absolute",
-            bottom        : "10px",
+            bottom        : getComputedStyle(document.documentElement).getPropertyValue('--spacing-borders').trim(),
             width         : "500px",
-            height        : "100px",
             display       : "flex",
             alignItems    : "center",
             justifyContent: "center",
