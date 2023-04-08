@@ -5,11 +5,6 @@ import './App.scss';
 
 export default class Button_eraser extends Component
 {
-    componentDidMount()
-    {
-        // eva.replace();
-    }
-
     render()
     {
         return <div id="button_eraser" onClick={() => this.props.onClick()} className={this.props.active ? "button_active" : ""}>

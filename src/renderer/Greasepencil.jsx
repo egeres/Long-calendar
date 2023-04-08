@@ -14,7 +14,7 @@ export default class Greasepencil extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            drawing            : false,
+            pendown            : false,
             can_draw           : false,
             strokeStyle        : "#4C4",
             lineWidth          : 5,
@@ -25,12 +25,12 @@ export default class Greasepencil extends Component {
     render() {
         return (
             <canvas
-                width={this.props?.width}
-                height={this.props?.height}
+                width  = {this.props?.width }
+                height = {this.props?.height}
                 ref="root"
                 style={{
                     position     : 'absolute',
-                    pointerEvents: this.props.drawing ? 'auto': 'none',
+                    pointerEvents: (this.props.drawing | this.props.erasing) ? 'auto': 'none',
                 }}
                 onMouseDown = {this.handleMouseDown}
                 onMouseMove = {this.handleMouseMove}
@@ -41,12 +41,12 @@ export default class Greasepencil extends Component {
 
     handleMouseDown = (event) => {
 
-        if (!this.props.drawing) {return;}
+        if (!(this.props.drawing | this.props.erasing)) {return;}
         this.setState({did_i_edit_an_image: true});
 
         let rect = this.canvas.getBoundingClientRect();
 
-        this.setState({ drawing: true });
+        this.setState({ pendown: true });
         this.startDrawing(
             event.clientX - rect.left,
             event.clientY - rect.top,
@@ -58,7 +58,7 @@ export default class Greasepencil extends Component {
     };
 
     handleMouseMove = (event) => {
-        if (this.state.drawing && this.props.drawing) {
+        if (this.state.pendown && this.props.drawing) {
 
             const canvas = this.refs.root;
             const ctx = canvas.getContext('2d');
@@ -68,19 +68,32 @@ export default class Greasepencil extends Component {
                 event.clientY - rect.top
             );
         }
+
+        if (this.state.pendown && this.props.erasing) {
+            console.log("erasing")
+            const canvas = this.refs.root;
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.getBoundingClientRect();
+            ctx.clearRect(
+                event.clientX - rect.left,
+                event.clientY - rect.top,
+                50,
+                50
+            );
+        }
     };
 
     handleMouseUp = () => {
-        this.setState({ drawing: false });
+        this.setState({ pendown: false });
     };
 
     handleTouchStart = (event) => {
 
-        if (!this.props.drawing) {return;}
+        if (!(this.props.drawing | this.props.erasing)) {return;}
         this.setState({did_i_edit_an_image: true});
 
         event.preventDefault();
-        this.setState({ drawing: true });
+        this.setState({ pendown: true });
 
         const canvas = this.refs.root;
         const ctx = canvas.getContext('2d');
@@ -98,17 +111,29 @@ export default class Greasepencil extends Component {
 
     handleTouchMove = (event) => {
         event.preventDefault();
-        if (this.state.drawing && this.props.drawing) {
+        if (this.state.pendown && this.props.drawing) {
             let rect = this.canvas.getBoundingClientRect();
             this.draw(
                 event.touches[0].clientX - rect.left,
                 event.touches[0].clientY - rect.top,
             );
         }
+
+        if (this.state.pendown && this.props.erasing) {
+            const canvas = this.refs.root;
+            const ctx    = canvas.getContext('2d');
+            const rect   = canvas.getBoundingClientRect();
+            ctx.clearRect(
+                event.touches[0].clientX - rect.left,
+                event.touches[0].clientY - rect.top,
+                50,
+                50
+            );
+        }
     };
 
     handleTouchEnd = () => {
-        this.setState({ drawing: false });
+        this.setState({ pendown: false });
     };
 
     startDrawing = (x, y) => {
@@ -188,24 +213,25 @@ export default class Greasepencil extends Component {
             }
         }
 
-        if (this.props.day_to_load && prevProps.drawing && this.props.drawing !== prevProps.drawing) {
+        if (
+            this.props.day_to_load &&
+            (prevProps.drawing | prevProps.erasing) &&
+            ((this.props.drawing !== prevProps.drawing) | (this.props.erasing !== prevProps.erasing))
+        ) {
 
-            console.log('this.props.drawing', this.props.drawing);
-            
+            console.log("Saving...")
+
             // Save this.canvas as a PNG
             let canvas  = this.refs.root;
             let ctx     = canvas.getContext('2d');
             let dataURL = canvas.toDataURL('image/png');
             let img     = new Image();
-
             img.onload = () => {
                 ctx.drawImage(img, 0, 0);
                 let dataURL = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
                 window.electron.ipcRenderer.save_image({"image":dataURL, "filename":this.props.day_to_load});
             }
-
             img.src = dataURL;
-
         }
     }
 

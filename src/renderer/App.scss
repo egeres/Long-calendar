@@ -364,7 +364,9 @@ body {
 #button_eraser:hover {
     background-color: $color_2;
 }
-
+#button_eraser.button_active {
+    background-color: $color_2;
+}
 
 
 

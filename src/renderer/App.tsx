@@ -146,6 +146,7 @@ class Home extends Component<MyProps, MyState>
     this.onSortEnd                = this.onSortEnd               .bind(this)
     this.refresh_data             = this.refresh_data            .bind(this)
     this.toggle_drawingmode       = this.toggle_drawingmode      .bind(this)
+    this.toggle_erasingmode       = this.toggle_erasingmode      .bind(this)
 
     // this.props.show_menu_main()
   }
@@ -449,17 +450,29 @@ class Home extends Component<MyProps, MyState>
     console.log("Reloading...")
   }
 
-  toggle_drawingmode()
+  async toggle_drawingmode()
   {
-    this.setState({
+    await this.setState({
       drawing_mode: !this.state.drawing_mode,
     })
+
+    if (this.state.drawing_mode)
+    this.setState({
+      erasing_mode: false,
+    })
+
   }
 
-  toggle_erasingmode()
+  async toggle_erasingmode()
   {
-    this.setState({
+    // console.log(this.state.erasing_mode)
+    await this.setState({
       erasing_mode: !this.state.erasing_mode,
+    })
+
+    if (this.state.erasing_mode)
+    this.setState({
+      drawing_mode: false,
     })
   }
 
