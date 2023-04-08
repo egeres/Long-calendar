@@ -13,7 +13,7 @@ $spacing_l  : 20px;
 $font_family_0: sans-serif;
 
 :root {
-    --spacing-borders: 100px;
+    --spacing-borders: 40px;
     --spacing-s      :  5px;
     --spacing-m      : 10px;
     --spacing-l      : 20px;
@@ -212,7 +212,7 @@ body {
     position       : relative;
     color          : $color_3;
     height         : 100vh;
-    background     : rgba(255, 0, 0, 0.664);
+    background     : rgba(0, 0, 0, 0.664);
     font-family    : $font_family_0;
     overflow       : hidden;
     display        : flex;
