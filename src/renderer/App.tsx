@@ -16,6 +16,7 @@ import Tooltip_date from './Tooltip_date';
 import Button_menu_main from './Button_menu_main';
 import Button_reload_data from './Button_reload_data';
 import Button_pencil from './Button_pencil';
+import Button_eraser from './Button_eraser';
 import Menu_main from './Menu_main';
 
 import { Tooltip as ReactTooltip } from 'react-tooltip'
@@ -58,6 +59,7 @@ type MyState = {
   color           : string;
 
   drawing_mode : boolean;
+  erasing_mode : boolean;
   menu_main_visible: boolean;
 
   // day_offset  : number,
@@ -128,6 +130,7 @@ class Home extends Component<MyProps, MyState>
 
       menu_main_visible    : false,
       drawing_mode         : false,
+      erasing_mode         : false,
       last_visibility_state: false,
     }
 
@@ -222,6 +225,7 @@ class Home extends Component<MyProps, MyState>
         if (event.key == "Escape") {
           this.setState({
             drawing_mode: false,
+            erasing_mode: false,
           })
         }
       });
@@ -452,6 +456,13 @@ class Home extends Component<MyProps, MyState>
     })
   }
 
+  toggle_erasingmode()
+  {
+    this.setState({
+      erasing_mode: !this.state.erasing_mode,
+    })
+  }
+
   render()
   {
     let graph;
@@ -464,6 +475,7 @@ class Home extends Component<MyProps, MyState>
         width        = {this.state.graph_circle_width }
         height       = {this.state.graph_circle_height}
         drawing_mode = {this.state.drawing_mode}
+        erasing_mode = {this.state.erasing_mode}
       />
     }
     // Week view
@@ -555,6 +567,7 @@ class Home extends Component<MyProps, MyState>
     <Button_menu_main   onClick={this.show_menu_main}/>
     <Button_reload_data onClick={this.refresh_data}/>
     <Button_pencil      onClick={this.toggle_drawingmode} active={this.state.drawing_mode}/>
+    <Button_eraser      onClick={this.toggle_erasingmode} active={this.state.erasing_mode}/>
 
     {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
 

@@ -11,6 +11,7 @@ type MyProps = {
     width       : number,
     height      : number,
     drawing_mode: boolean,
+    erasing_mode: boolean,
 };
 
 type MyState = {
@@ -87,6 +88,7 @@ export default class Container_graphs_circular extends Component<MyProps, MyStat
             height      = {this.props.height}
             width       = {this.props.width  + 500}
             drawing     = {this.props.drawing_mode}
+            erasing     = {this.props.erasing_mode}
             day_to_load = {final_day}
         />
 

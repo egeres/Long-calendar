@@ -7,6 +7,7 @@ export default class Greasepencil extends Component {
         width      : 500,
         height     : 500,
         drawing    : false,
+        erasing    : false,
         day_to_load: null,
     };
 

@@ -332,7 +332,6 @@ body {
 #button_pencil {
     position: absolute;
     top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 2);
-    // top     : calc($spacing_borders + (40px + $spacing_m) * 2);
     right   : var(--spacing-borders);
     width   : 40px;
     height  : 40px;
@@ -349,6 +348,26 @@ body {
 #button_pencil.button_active {
     background-color: $color_2;
 }
+
+#button_eraser {
+    position: absolute;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 3);
+    right   : var(--spacing-borders);
+    width   : 40px;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+}
+#button_eraser:hover {
+    background-color: $color_2;
+}
+
+
+
+
 
 .container_menu_main {
     position          : relative;
