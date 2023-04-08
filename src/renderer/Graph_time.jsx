@@ -108,16 +108,3 @@ export default class Graph_time extends Component
         this.draw();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

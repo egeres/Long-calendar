@@ -12,8 +12,12 @@ $spacing_l  : 20px;
 
 $font_family_0: sans-serif;
 
-
-
+:root {
+    --spacing-borders: 40px;
+    --spacing-s      :  5px;
+    --spacing-m      : 10px;
+    --spacing-l      : 20px;
+}
 
 
 
@@ -80,6 +84,7 @@ a:hover {
 .centered_column {
     display       : flex;
     flex-direction: column;
+    right         : var(--spacing-borders);
 }
   
 .small_circle {
@@ -294,25 +299,77 @@ body {
 
 #button_menu {
     position: absolute;
-    top     : 30px;
-    right   : 30px;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 0);
+    right   : var(--spacing-borders);
     width   : 40px;
-    // background-color: red;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
     display         : flex;
     align-items     : center;
     justify-content : center;
+}
+#button_menu:hover {
+    background-color: $color_2;
 }
 
 #button_refresh {
     position: absolute;
-    top     : 30px * 2 + $spacing_m;
-    right   : 30px;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 1);
+    right   : var(--spacing-borders);
     width   : 40px;
-    // background-color: red;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
     display         : flex;
     align-items     : center;
     justify-content : center;
 }
+#button_refresh:hover {
+    background-color: $color_2;
+}
+
+#button_pencil {
+    position: absolute;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 2);
+    right   : var(--spacing-borders);
+    width   : 40px;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+}
+#button_pencil:hover {
+    background-color: $color_2;
+}
+
+#button_pencil.button_active {
+    background-color: $color_2;
+}
+
+#button_eraser {
+    position: absolute;
+    top     : calc(var(--spacing-borders) + (40px + var(--spacing-m)) * 3);
+    right   : var(--spacing-borders);
+    width   : 40px;
+    height  : 40px;
+    background-color: $color_1;
+    border-radius: $corner_size;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+}
+#button_eraser:hover {
+    background-color: $color_2;
+}
+#button_eraser.button_active {
+    background-color: $color_2;
+}
+
+
+
 
 .container_menu_main {
     position          : relative;

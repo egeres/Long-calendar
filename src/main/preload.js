@@ -15,6 +15,14 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.send('reload');
     },
 
+    save_image(args) {
+      ipcRenderer.send('save_image', args);
+    },
+
+    load_image(args) {
+      return ipcRenderer.sendSync('load_image', args);
+    },
+
     sources_in_data_folder() {
       return ipcRenderer.sendSync('sources_in_data_folder');
     },

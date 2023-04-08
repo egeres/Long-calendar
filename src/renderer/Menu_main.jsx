@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Row_category from './Row_category';
-import * as eva from 'eva-icons';
+// import * as eva from 'eva-icons';
 import './App.scss';
 import Toggle from 'react-toggle'
 import "react-toggle/style.css" // for ES6 modules
@@ -52,10 +52,10 @@ export default class Menu_main extends Component
             shortcut       : collected_props["window.shortcut"       ] ?? "alt+e",
         })
 
-        eva.replace({
-            height: 28,
-            width : 28,
-        });
+        // eva.replace({
+        //     height: 28,
+        //     width : 28,
+        // });
     }
 
     handleClickOutside(event)

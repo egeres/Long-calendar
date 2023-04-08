@@ -1,6 +1,6 @@
 
 import React, { PureComponent, Component } from 'react';
-import * as eva from 'eva-icons';
+// import * as eva from 'eva-icons';
 
 export default class Container_options_display extends Component
 {

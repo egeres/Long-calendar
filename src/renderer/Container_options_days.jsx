@@ -1,6 +1,6 @@
 
 import React, { PureComponent, Component } from 'react';
-import * as eva from 'eva-icons';
+// import * as eva from 'eva-icons';
 
 export default class Container_options extends Component
 {
@@ -18,10 +18,10 @@ export default class Container_options extends Component
 
         this.props.set_days_to_display(event)
 
-        eva.replace({
-            height: 28,
-            width : 28,
-        });
+        // eva.replace({
+        //     height: 28,
+        //     width : 28,
+        // });
     }
 
     changeRadio = (event) => {

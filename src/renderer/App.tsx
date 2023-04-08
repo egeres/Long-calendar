@@ -15,9 +15,11 @@ import Tooltip from './Tooltip';
 import Tooltip_date from './Tooltip_date';
 import Button_menu_main from './Button_menu_main';
 import Button_reload_data from './Button_reload_data';
+import Button_pencil from './Button_pencil';
+import Button_eraser from './Button_eraser';
 import Menu_main from './Menu_main';
 
-import ReactTooltip from 'react-tooltip';
+import { Tooltip as ReactTooltip } from 'react-tooltip'
 import {arrayMoveImmutable} from 'array-move';
 
 declare global {
@@ -56,6 +58,8 @@ type MyState = {
   is_picking_color: boolean,
   color           : string;
 
+  drawing_mode : boolean;
+  erasing_mode : boolean;
   menu_main_visible: boolean;
 
   // day_offset  : number,
@@ -66,7 +70,7 @@ class Home extends Component<MyProps, MyState>
 {
 
   static defaultProps = {
-    graph_timebars_margin : 40,
+    graph_timebars_margin : getComputedStyle(document.documentElement).getPropertyValue('--spacing-borders').trim().slice(0, -2),
   };
 
   constructor(props:MyProps)
@@ -125,6 +129,8 @@ class Home extends Component<MyProps, MyState>
       widthline_xl      : width_line_xl,
 
       menu_main_visible    : false,
+      drawing_mode         : false,
+      erasing_mode         : false,
       last_visibility_state: false,
     }
 
@@ -139,6 +145,8 @@ class Home extends Component<MyProps, MyState>
     this.hide_menu_main           = this.hide_menu_main          .bind(this)
     this.onSortEnd                = this.onSortEnd               .bind(this)
     this.refresh_data             = this.refresh_data            .bind(this)
+    this.toggle_drawingmode       = this.toggle_drawingmode      .bind(this)
+    this.toggle_erasingmode       = this.toggle_erasingmode      .bind(this)
 
     // this.props.show_menu_main()
   }
@@ -180,7 +188,6 @@ class Home extends Component<MyProps, MyState>
 
   async componentDidMount()
   {
-
       let collected_props = window.electron.ipcRenderer.get_config_prop([
           "window.display_mode",
       ])
@@ -209,14 +216,20 @@ class Home extends Component<MyProps, MyState>
         if (event.key == "Control") window.ctrl_is_held_down = false;
       });
 
-      // Detect pressing F5
       window.addEventListener('keydown', (event) => {
         if (event.key == "F5") {
           this.refresh_data();
         }
       });
 
-      ReactTooltip.rebuild()
+      window.addEventListener('keydown', (event) => {
+        if (event.key == "Escape") {
+          this.setState({
+            drawing_mode: false,
+            erasing_mode: false,
+          })
+        }
+      });
   }
 
   set_days_to_display(event)
@@ -437,23 +450,47 @@ class Home extends Component<MyProps, MyState>
     console.log("Reloading...")
   }
 
+  async toggle_drawingmode()
+  {
+    await this.setState({
+      drawing_mode: !this.state.drawing_mode,
+    })
+
+    if (this.state.drawing_mode)
+    this.setState({
+      erasing_mode: false,
+    })
+
+  }
+
+  async toggle_erasingmode()
+  {
+    // console.log(this.state.erasing_mode)
+    await this.setState({
+      erasing_mode: !this.state.erasing_mode,
+    })
+
+    if (this.state.erasing_mode)
+    this.setState({
+      drawing_mode: false,
+    })
+  }
+
   render()
   {
-
-
     let graph;
 
     // 1 day view
     if (this.state.display_mode == 0)
     {
       graph = <Container_graphs_circular
-        categories = {this.state.categories         }
-        width      = {this.state.graph_circle_width }
-        height     = {this.state.graph_circle_height}
+        categories   = {this.state.categories         }
+        width        = {this.state.graph_circle_width }
+        height       = {this.state.graph_circle_height}
+        drawing_mode = {this.state.drawing_mode}
+        erasing_mode = {this.state.erasing_mode}
       />
     }
-
-
     // Week view
     if (this.state.display_mode == 1)
     {
@@ -470,7 +507,6 @@ class Home extends Component<MyProps, MyState>
 
       />
     }
-
     // Multi day view M
     if (this.state.display_mode == 2)
     {
@@ -483,7 +519,6 @@ class Home extends Component<MyProps, MyState>
         widthline             = {this.state.widthline            }
       />
     }
-
     // Multi day view XL
     if (this.state.display_mode == 3)
     {
@@ -503,7 +538,7 @@ class Home extends Component<MyProps, MyState>
     {graph}
     
     {/* Selector column */}
-    <div className='centered_column' style={{position:"absolute", right:this.props.graph_timebars_margin}}>
+    <div className='centered_column' style={{position:"absolute"}}>
 
         <Container_options_display
         set_display_mode = {this.set_display_mode}
@@ -524,6 +559,7 @@ class Home extends Component<MyProps, MyState>
 
     </div>
 
+    {/* Container for the color picker */}
     <Container_colorpicker
     visible             = {this.state.is_picking_color}
     color               = {this.state.color}
@@ -531,17 +567,20 @@ class Home extends Component<MyProps, MyState>
     set_color_by_id     = {this.set_color_by_id}
     />
 
+    {/* The tooltips */}
     <Tooltip/>
     <Tooltip_date/>
-
     <ReactTooltip
     className = 'customeTheme'
     place     = "right"
     effect    = "solid"
     />
 
-    <Button_menu_main   show_menu_main={this.show_menu_main}/>
-    <Button_reload_data refresh_data  ={this.refresh_data  }/>
+    {/* Top right corner buttons */}
+    <Button_menu_main   onClick={this.show_menu_main}/>
+    <Button_reload_data onClick={this.refresh_data}/>
+    <Button_pencil      onClick={this.toggle_drawingmode} active={this.state.drawing_mode}/>
+    <Button_eraser      onClick={this.toggle_erasingmode} active={this.state.erasing_mode}/>
 
     {/* <Menu_main        menu_main_visible={this.state.menu_main_visible}/> */}
 
