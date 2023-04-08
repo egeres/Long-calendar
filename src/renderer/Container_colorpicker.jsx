@@ -4,7 +4,7 @@ import Row_category from './Row_category';
 // import { HexColorPicker } from "react-colorful";
 import { RgbaStringColorPicker } from "react-colorful";
 
-import * as eva from 'eva-icons';
+// import * as eva from 'eva-icons';
 
 export default class Container_colorpicker extends Component
 {
@@ -17,7 +17,7 @@ export default class Container_colorpicker extends Component
     
     componentDidMount()
     {
-        eva.replace();
+        // eva.replace();
         document.addEventListener("mousedown", this.handleClickOutside);
     }
 

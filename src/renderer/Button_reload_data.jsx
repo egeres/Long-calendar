@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import Row_category from './Row_category';
-import * as eva from 'eva-icons';
+// import * as eva from 'eva-icons';
 import './App.scss';
 
 export default class Button_reload_data extends Component
 {
     componentDidMount()
     {
-        eva.replace();
+        // eva.replace();
     }
 
     render()

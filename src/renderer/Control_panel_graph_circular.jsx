@@ -1,13 +1,13 @@
 
 import React, { Component } from 'react';
-import * as eva from 'eva-icons';
+// import * as eva from 'eva-icons';
 import moment from 'moment';
 
 export default class Control_panel_graph_circular extends Component
 {
     componentDidMount()
     {
-        eva.replace();
+        // eva.replace();
     }
 
     render()
@@ -35,22 +35,33 @@ export default class Control_panel_graph_circular extends Component
 
         {/* << */}
         <span onClick = {() => {}} className="brighten" style={{opacity:0.0}}>
-            <i
+            {/* <i
             data-eva      = "arrowhead-left-outline"
             width         = "28px"
             height        = "28px"
             data-eva-fill = "#FFF"
-            />
+            /> */}
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevrons-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M11 7l-5 5l5 5"></path>
+            <path d="M17 7l-5 5l5 5"></path>
+            </svg>
         </span>
 
         {/* <- */}
         <span onClick = {() => this.props.day_offset_down()} className="brighten">
-            <i
+            {/* <i
             data-eva      = "arrow-back-outline"
             width         = "28px"
             height        = "28px"
             data-eva-fill = "#FFF"
-            />
+            /> */}
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M15 6l-6 6l6 6"></path>
+            </svg>
         </span>
 
         {/* 0 */}
@@ -69,22 +80,33 @@ export default class Control_panel_graph_circular extends Component
 
         {/* -> */}
         <span onClick = {() => this.props.day_offset_up()} className="brighten">
-            <i
+            {/* <i
             data-eva      = "arrow-forward-outline"
             width         = "28px"
             height        = "28px"
             data-eva-fill = "#FFF"
-            />
+            /> */}
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M9 6l6 6l-6 6"></path>
+            </svg>
         </span>
 
         {/* >> */}
         <span onClick = {() => this.props.day_offset_zero()} className="brighten">
-            <i
+            {/* <i
             data-eva      = "arrowhead-right-outline"
             width         = "28px"
             height        = "28px"
             data-eva-fill = "#FFF"
-            />
+            /> */}
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevrons-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M7 7l5 5l-5 5"></path>
+            <path d="M13 7l5 5l-5 5"></path>
+            </svg>
         </span>
 
         </div>

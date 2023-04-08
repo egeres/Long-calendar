@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import Row_category from './Row_category';
-import * as eva from 'eva-icons';
+// import * as eva from 'eva-icons';
 import e from 'express';
 
 import {
@@ -50,7 +50,7 @@ export default class Container_categories extends Component
 {
     componentDidMount()
     {
-        eva.replace();
+        // eva.replace();
     }
 
     render()
