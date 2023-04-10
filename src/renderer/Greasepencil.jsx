@@ -76,8 +76,8 @@ export default class Greasepencil extends Component {
         }
         if (this.state.pendown && this.props.erasing) {
             this.ctx.clearRect(
-                event.clientX - this.rect_bounds.left,
-                event.clientY - this.rect_bounds.top,
+                event.clientX - this.rect_bounds.left - 25,
+                event.clientY - this.rect_bounds.top  - 25,
                 50,
                 50
             );
@@ -89,13 +89,10 @@ export default class Greasepencil extends Component {
     };
 
     handleTouchStart = (event) => {
-
         if (!(this.props.drawing | this.props.erasing)) {return;}
         this.setState({did_i_edit_an_image: true});
-
         event.preventDefault();
         this.setState({ pendown: true });
-        
         if (this.props.drawing)
         {
             this.startDrawing(
