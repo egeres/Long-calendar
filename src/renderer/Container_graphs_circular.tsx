@@ -85,8 +85,8 @@ export default class Container_graphs_circular extends Component<MyProps, MyStat
         />
 
         <Greasepencil
-            height      = {this.props.height}
-            width       = {this.props.width  + 500}
+            height      = {window.innerHeight}
+            width       = {window.innerWidth }
             drawing     = {this.props.drawing_mode}
             erasing     = {this.props.erasing_mode}
             day_to_load = {final_day}

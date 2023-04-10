@@ -5,7 +5,6 @@ import * as d3 from 'd3';
 
 export default class Clock_circular extends Component
 {
-
     static defaultProps = {
         width : 500,
         height: 500,
