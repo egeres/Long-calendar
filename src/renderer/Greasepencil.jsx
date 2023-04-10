@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+import moment from 'moment';
 
 export default class Greasepencil extends Component {
 
@@ -17,7 +18,7 @@ export default class Greasepencil extends Component {
             pendown            : false,
             can_draw           : false,
             strokeStyle        : "#4C4",
-            lineWidth          : 5,
+            lineWidth          : 2,
             did_i_edit_an_image: false,
         };
     }
@@ -61,7 +62,6 @@ export default class Greasepencil extends Component {
         if (this.state.pendown && this.props.drawing) {
 
             const canvas = this.refs.root;
-            const ctx = canvas.getContext('2d');
             const rect = canvas.getBoundingClientRect();
             this.draw(
                 event.clientX - rect.left,
@@ -70,11 +70,9 @@ export default class Greasepencil extends Component {
         }
 
         if (this.state.pendown && this.props.erasing) {
-            console.log("erasing")
             const canvas = this.refs.root;
-            const ctx = canvas.getContext('2d');
             const rect = canvas.getBoundingClientRect();
-            ctx.clearRect(
+            this.ctx.clearRect(
                 event.clientX - rect.left,
                 event.clientY - rect.top,
                 50,
@@ -96,7 +94,6 @@ export default class Greasepencil extends Component {
         this.setState({ pendown: true });
 
         const canvas = this.refs.root;
-        const ctx = canvas.getContext('2d');
         const rect = canvas.getBoundingClientRect();
         
         this.startDrawing(
@@ -121,9 +118,8 @@ export default class Greasepencil extends Component {
 
         if (this.state.pendown && this.props.erasing) {
             const canvas = this.refs.root;
-            const ctx    = canvas.getContext('2d');
             const rect   = canvas.getBoundingClientRect();
-            ctx.clearRect(
+            this.ctx.clearRect(
                 event.touches[0].clientX - rect.left,
                 event.touches[0].clientY - rect.top,
                 50,
@@ -137,24 +133,22 @@ export default class Greasepencil extends Component {
     };
 
     startDrawing = (x, y) => {
-        let ctx = this.refs.root.getContext('2d');
-        ctx.beginPath();
-        ctx.moveTo(x, y);
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, y);
     };
 
     draw = (x, y) => {
-        let ctx = this.refs.root.getContext('2d');
-        ctx.lineTo(x, y);
-        ctx.stroke();
+        this.ctx.lineTo(x, y);
+        this.ctx.stroke();
     };
 
     componentDidMount() 
     {
-        let ctx = this.refs.root.getContext('2d');
-        ctx.strokeStyle = this.state.strokeStyle;
-        ctx.lineWidth   = this.state.lineWidth;
-        ctx.lineJoin    = 'round';
-        ctx.lineCap     = 'round';
+        this.ctx = this.refs.root.getContext('2d');
+        this.ctx.strokeStyle = this.state.strokeStyle;
+        this.ctx.lineWidth   = this.state.lineWidth;
+        this.ctx.lineJoin    = 'round';
+        this.ctx.lineCap     = 'round';
 
         this.refs.root.addEventListener('touchstart', this.handleTouchStart, { passive: false });
         this.refs.root.addEventListener('touchmove', this.handleTouchMove, { passive: false });
@@ -168,13 +162,38 @@ export default class Greasepencil extends Component {
             let base_64_img = o.image;
             let img = new Image();
             img.onload = () => {
-                ctx.drawImage(img, 0, 0);
+                this.ctx.drawImage(img, 0, 0);
             }
             img.src = "data:image/png;base64," + base_64_img;
         }
+
+        setInterval(() => {
+
+            // Random color
+            // let the_color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
+
+            // Color based on time of day, 07:00 is 0 and 23:59 is 1
+            const currentTime = moment();
+            const startTime   = moment('07:00', 'HH:mm');
+            const endTime     = moment('23:59', 'HH:mm');
+            const totalMinutes   = endTime.diff(startTime, 'minutes');
+            const elapsedMinutes = currentTime.diff(startTime, 'minutes');
+            let the_color = d3.interpolateSpectral(elapsedMinutes / totalMinutes); // https://github.com/d3/d3-scale-chromatic
+            
+            // WIP, except if we are writting on a previous day, which should be "blue", or, if we write in the future "red"?
+
+            // We set the color
+            this.setState({strokeStyle:the_color});
+
+        }, 5000);
     }
 
-    async componentDidUpdate(prevProps, prevState, snapshot) {
+    async componentDidUpdate(prevProps, prevSetate, snapshot) {
+
+        if (this.state.strokeStyle !== prevState.drawing)
+        {
+            this.ctx.strokeStyle = this.props.drawing ? this.state.strokeStyle : "white";
+        }
 
         if (this.props.day_to_load !== prevProps.day_to_load)
         {
@@ -223,11 +242,10 @@ export default class Greasepencil extends Component {
 
             // Save this.canvas as a PNG
             let canvas  = this.refs.root;
-            let ctx     = canvas.getContext('2d');
             let dataURL = canvas.toDataURL('image/png');
             let img     = new Image();
             img.onload = () => {
-                ctx.drawImage(img, 0, 0);
+                this.ctx.drawImage(img, 0, 0);
                 let dataURL = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
                 window.electron.ipcRenderer.save_image({"image":dataURL, "filename":this.props.day_to_load});
             }
