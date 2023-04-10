@@ -40,41 +40,44 @@ export default class Greasepencil extends Component {
         );
     }
 
+    startDrawing = (x, y) => {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, y);
+    };
+
+    draw = (x, y) => {
+        this.ctx.lineTo(x, y);
+        this.ctx.stroke();
+    };
+
     handleMouseDown = (event) => {
-
         if (!(this.props.drawing | this.props.erasing)) {return;}
-        this.setState({did_i_edit_an_image: true});
+        this.setState({did_i_edit_an_image: true, pendown: true});
+        if (this.props.drawing)
+        {
+            this.startDrawing(
+                event.clientX - this.rect_bounds.left,
+                event.clientY - this.rect_bounds.top,
+            );
+            this.draw(
+                event.clientX - this.rect_bounds.left,
+                event.clientY - this.rect_bounds.top,
+            );
+        }
 
-        let rect = this.canvas.getBoundingClientRect();
-
-        this.setState({ pendown: true });
-        this.startDrawing(
-            event.clientX - rect.left,
-            event.clientY - rect.top,
-        );
-        this.draw(
-            event.clientX - rect.left,
-            event.clientY - rect.top,
-        );
     };
 
     handleMouseMove = (event) => {
         if (this.state.pendown && this.props.drawing) {
-
-            const canvas = this.refs.root;
-            const rect = canvas.getBoundingClientRect();
             this.draw(
-                event.clientX - rect.left,
-                event.clientY - rect.top
+                event.clientX - this.rect_bounds.left,
+                event.clientY - this.rect_bounds.top
             );
         }
-
         if (this.state.pendown && this.props.erasing) {
-            const canvas = this.refs.root;
-            const rect = canvas.getBoundingClientRect();
             this.ctx.clearRect(
-                event.clientX - rect.left,
-                event.clientY - rect.top,
+                event.clientX - this.rect_bounds.left,
+                event.clientY - this.rect_bounds.top,
                 50,
                 50
             );
@@ -92,36 +95,33 @@ export default class Greasepencil extends Component {
 
         event.preventDefault();
         this.setState({ pendown: true });
-
-        const canvas = this.refs.root;
-        const rect = canvas.getBoundingClientRect();
         
-        this.startDrawing(
-            event.touches[0].clientX - rect.left,
-            event.touches[0].clientY - rect.top,
-        );
-        this.draw(
-            event.touches[0].clientX - rect.left,
-            event.touches[0].clientY - rect.top,
-        );
+        if (this.props.drawing)
+        {
+            this.startDrawing(
+                event.touches[0].clientX - this.rect_bounds.left,
+                event.touches[0].clientY - this.rect_bounds.top,
+            );
+            this.draw(
+                event.touches[0].clientX - this.rect_bounds.left,
+                event.touches[0].clientY - this.rect_bounds.top,
+            );
+        }
+
     };
 
     handleTouchMove = (event) => {
         event.preventDefault();
         if (this.state.pendown && this.props.drawing) {
-            let rect = this.canvas.getBoundingClientRect();
             this.draw(
-                event.touches[0].clientX - rect.left,
-                event.touches[0].clientY - rect.top,
+                event.touches[0].clientX - this.rect_bounds.left,
+                event.touches[0].clientY - this.rect_bounds.top,
             );
         }
-
         if (this.state.pendown && this.props.erasing) {
-            const canvas = this.refs.root;
-            const rect   = canvas.getBoundingClientRect();
             this.ctx.clearRect(
-                event.touches[0].clientX - rect.left,
-                event.touches[0].clientY - rect.top,
+                event.touches[0].clientX - this.rect_bounds.left,
+                event.touches[0].clientY - this.rect_bounds.top,
                 50,
                 50
             );
@@ -130,16 +130,6 @@ export default class Greasepencil extends Component {
 
     handleTouchEnd = () => {
         this.setState({ pendown: false });
-    };
-
-    startDrawing = (x, y) => {
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y);
-    };
-
-    draw = (x, y) => {
-        this.ctx.lineTo(x, y);
-        this.ctx.stroke();
     };
 
     componentDidMount() 
@@ -154,7 +144,8 @@ export default class Greasepencil extends Component {
         this.refs.root.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         this.refs.root.addEventListener('touchend', this.handleTouchEnd, { passive: false });
 
-        this.canvas = this.refs.root;
+        this.canvas      = this.refs.root;
+        this.rect_bounds = this.refs.root.getBoundingClientRect();
 
         let o = window.electron.ipcRenderer.load_image({"filename":this.props.day_to_load});
         if (o?.image)
@@ -188,7 +179,7 @@ export default class Greasepencil extends Component {
         }, 5000);
     }
 
-    async componentDidUpdate(prevProps, prevSetate, snapshot) {
+    async componentDidUpdate(prevProps, prevState, snapshot) {
 
         if (this.state.strokeStyle !== prevState.drawing)
         {
