@@ -70,7 +70,7 @@ class Home extends Component<MyProps, MyState>
 {
 
   static defaultProps = {
-    graph_timebars_margin : getComputedStyle(document.documentElement).getPropertyValue('--spacing-borders').trim().slice(0, -2),
+    graph_timebars_margin : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--spacing-borders').trim().slice(0, -2)),
   };
 
   constructor(props:MyProps)
