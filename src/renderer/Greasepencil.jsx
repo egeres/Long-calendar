@@ -28,14 +28,15 @@ export default class Greasepencil extends Component {
             <canvas
                 width  = {this.props?.width }
                 height = {this.props?.height}
-                ref="root"
-                style={{
+                className='grease_pencil_canvas'
+                ref    = "root"
+                style  = {{
                     position     : 'absolute',
                     pointerEvents: (this.props.drawing | this.props.erasing) ? 'auto': 'none',
                 }}
                 onMouseDown = {this.handleMouseDown}
                 onMouseMove = {this.handleMouseMove}
-                onMouseUp   = {this.handleMouseUp}
+                onMouseUp   = {this.handleMouseUp  }
             />
         );
     }
@@ -95,6 +96,8 @@ export default class Greasepencil extends Component {
         this.setState({ pendown: true });
         if (this.props.drawing)
         {
+            this.refs.root.classList.add('drawing-cursor');
+
             this.startDrawing(
                 event.touches[0].clientX - this.rect_bounds.left,
                 event.touches[0].clientY - this.rect_bounds.top,
@@ -127,6 +130,7 @@ export default class Greasepencil extends Component {
 
     handleTouchEnd = () => {
         this.setState({ pendown: false });
+        this.refs.root.classList.remove('drawing-cursor');
     };
 
     componentDidMount() 
@@ -138,8 +142,8 @@ export default class Greasepencil extends Component {
         this.ctx.lineCap     = 'round';
 
         this.refs.root.addEventListener('touchstart', this.handleTouchStart, { passive: false });
-        this.refs.root.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-        this.refs.root.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+        this.refs.root.addEventListener('touchmove' , this.handleTouchMove,  { passive: false });
+        this.refs.root.addEventListener('touchend'  , this.handleTouchEnd,   { passive: false });
 
         this.canvas      = this.refs.root;
         this.rect_bounds = this.refs.root.getBoundingClientRect();
@@ -155,25 +159,28 @@ export default class Greasepencil extends Component {
             img.src = "data:image/png;base64," + base_64_img;
         }
 
-        setInterval(() => {
+        setInterval(() => {this.set_color_according_to_hour()}, 5000);
 
-            // Random color
-            // let the_color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
+        this.set_color_according_to_hour();
+    }
 
-            // Color based on time of day, 07:00 is 0 and 23:59 is 1
-            const currentTime = moment();
-            const startTime   = moment('07:00', 'HH:mm');
-            const endTime     = moment('23:59', 'HH:mm');
-            const totalMinutes   = endTime.diff(startTime, 'minutes');
-            const elapsedMinutes = currentTime.diff(startTime, 'minutes');
-            let the_color = d3.interpolateSpectral(elapsedMinutes / totalMinutes); // https://github.com/d3/d3-scale-chromatic
-            
-            // WIP, except if we are writting on a previous day, which should be "blue", or, if we write in the future "red"?
+    set_color_according_to_hour = () => {
 
-            // We set the color
-            this.setState({strokeStyle:the_color});
+        // Random color
+        // let the_color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`
 
-        }, 5000);
+        // Color based on time of day, 07:00 is 0 and 23:59 is 1
+        const currentTime = moment();
+        const startTime   = moment('07:00', 'HH:mm');
+        const endTime     = moment('23:59', 'HH:mm');
+        const totalMinutes   = endTime.diff(startTime, 'minutes');
+        const elapsedMinutes = currentTime.diff(startTime, 'minutes');
+        let the_color = d3.interpolateSpectral(elapsedMinutes / totalMinutes); // https://github.com/d3/d3-scale-chromatic
+        
+        // WIP, except if we are writting on a previous day, which should be "blue", or, if we write in the future "red"?
+
+        // We set the color
+        this.setState({strokeStyle:the_color});
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {

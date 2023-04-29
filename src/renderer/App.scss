@@ -24,7 +24,17 @@ $font_family_0: sans-serif;
 
 
 
+.grease_pencil_canvas {
+    // background-color: red;
+    cursor: crosshair !important;
+    touch-action: none;
+}
 
+
+
+.drawing-cursor {
+    cursor: crosshair !important;
+}
 
 
 /*
