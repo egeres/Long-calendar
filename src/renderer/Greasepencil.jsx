@@ -53,6 +53,13 @@ export default class Greasepencil extends Component {
 
     handleMouseDown = (event) => {
         if (!(this.props.drawing | this.props.erasing)) {return;}
+
+        // Clear the existing timeout if it exists
+        if (window.timeout_save) {
+            clearTimeout(window.timeout_save);
+            window.timeout_save = null;
+        }
+
         this.setState({did_i_edit_an_image: true, pendown: true});
         if (this.props.drawing)
         {
@@ -87,10 +94,23 @@ export default class Greasepencil extends Component {
 
     handleMouseUp = () => {
         this.setState({ pendown: false });
+
+        window.timeout_save = setTimeout(() => {
+            if (this.state.did_i_edit_an_image) {
+                this.save_canvas();
+            }
+        }, 10000);
     };
 
     handleTouchStart = (event) => {
         if (!(this.props.drawing | this.props.erasing)) {return;}
+
+        // Clear the existing timeout if it exists
+        if (window.timeout_save) {
+            clearTimeout(window.timeout_save);
+            window.timeout_save = null;
+        }
+
         this.setState({did_i_edit_an_image: true});
         event.preventDefault();
         this.setState({ pendown: true });
@@ -131,6 +151,12 @@ export default class Greasepencil extends Component {
     handleTouchEnd = () => {
         this.setState({ pendown: false });
         this.refs.root.classList.remove('drawing-cursor');
+
+        window.timeout_save = setTimeout(() => {
+            if (this.state.did_i_edit_an_image) {
+                this.save_canvas();
+            }
+        }, 10000);
     };
 
     componentDidMount() 
@@ -183,6 +209,21 @@ export default class Greasepencil extends Component {
         this.setState({strokeStyle:the_color});
     }
 
+    save_canvas = () => {
+        console.log("Saving...")
+
+        // Save this.canvas as a PNG
+        let canvas  = this.refs.root;
+        let dataURL = canvas.toDataURL('image/png');
+        let img     = new Image();
+        img.onload = () => {
+            this.ctx.drawImage(img, 0, 0);
+            let dataURL = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
+            window.electron.ipcRenderer.save_image({"image":dataURL, "filename":this.props.day_to_load});
+        }
+        img.src = dataURL;
+    }
+
     async componentDidUpdate(prevProps, prevState, snapshot) {
 
         if (this.state.strokeStyle !== prevState.drawing)
@@ -232,19 +273,7 @@ export default class Greasepencil extends Component {
             (prevProps.drawing | prevProps.erasing) &&
             ((this.props.drawing !== prevProps.drawing) | (this.props.erasing !== prevProps.erasing))
         ) {
-
-            console.log("Saving...")
-
-            // Save this.canvas as a PNG
-            let canvas  = this.refs.root;
-            let dataURL = canvas.toDataURL('image/png');
-            let img     = new Image();
-            img.onload = () => {
-                this.ctx.drawImage(img, 0, 0);
-                let dataURL = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
-                window.electron.ipcRenderer.save_image({"image":dataURL, "filename":this.props.day_to_load});
-            }
-            img.src = dataURL;
+            this.save_canvas();
         }
     }
 
