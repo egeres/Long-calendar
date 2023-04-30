@@ -93,7 +93,7 @@ export default class Container_graphs_circular extends Component<MyProps, MyStat
         />
 
         {/* Overlay to display the information about a segment */}
-        <div id='circular_clock_text' className='noselect' style={{position:"absolute", fontSize:"26px", pointerEvents:"none",}}></div>
+        <div id='circular_clock_text' className='noselect' style={{position:"absolute", fontSize:"26px", pointerEvents:"none", textAlign:"center"}}></div>
 
         {/* The control panel located at the bottom */}
         <Control_panel_graph_circular

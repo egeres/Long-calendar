@@ -163,11 +163,38 @@ export default class Background_circular_clock extends Component
             }
 
             // now that angle_raw is between 0 and 1, write this.circular_clock_text html's such that I have HH:mm format
-            let hours   = Math.floor(angle_raw * 24);
+            let hours   = Math.floor( angle_raw * 24);
             let minutes = Math.floor((angle_raw * 24 - hours) * 60);
             let hours_string   = hours   < 10 ? '0' + hours   : hours;
             let minutes_string = minutes < 10 ? '0' + minutes : minutes;
             this.circular_clock_text.innerHTML = hours_string + ':' + minutes_string;
+
+            // We get the current time of the day in hours + minutes
+            let current_time         = new Date();
+            let current_time_hours   = current_time.getHours();
+            let current_time_minutes = current_time.getMinutes();
+
+            // Now we get the difference just in hours between the current time and the time we are hovering over
+            let difference_in_hours = (angle_raw * 24) - (current_time_hours + current_time_minutes / 60);
+            // console.log(difference_in_hours);
+            
+            let text_to_set = "-";
+
+            if (difference_in_hours >= 0) {
+            text_to_set = "<div style='color:#c76b61;opacity:0.5'>"
+            text_to_set += "+ " + Math.floor(difference_in_hours)          + "h " + Math.floor((difference_in_hours - Math.floor(difference_in_hours)) * 60) + "m";
+            text_to_set += "</div>"
+            }
+            else {
+            text_to_set = "<div style='color:#727bc2;opacity:0.5'>"
+            text_to_set += "- " + Math.abs(Math.ceil(difference_in_hours)) + "h " + Math.abs(Math.ceil((difference_in_hours - Math.ceil(difference_in_hours)) * 60)) + "m";
+            text_to_set += "</div>"
+            }
+
+            this.circular_clock_text.innerHTML += "<br>"+text_to_set+"";
+
+
+
 
         }
     }
