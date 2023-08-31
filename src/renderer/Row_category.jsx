@@ -4,13 +4,13 @@ import React, { PureComponent, Component } from 'react';
 import ReactTooltip from 'react-tooltip';
 
 
-import {
-    sortableContainer,
-    sortableElement,
-    sortableHandle,
-} from 'react-sortable-hoc';
+// import {
+//     sortableContainer,
+//     sortableElement,
+//     sortableHandle,
+// } from 'react-sortable-hoc';
 
-const DragHandle = sortableHandle(() => <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>);
+// const DragHandle = sortableHandle(() => <i data-eva="more-vertical-outline" data-eva-fill="#FFF"/>);
 
 export default class Row_category extends Component
 {
