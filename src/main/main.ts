@@ -22,6 +22,7 @@ import { set_config_prop }            from "./long_calendar_functionality";
 import { get_config_prop }            from "./long_calendar_functionality";
 import { get_config_default }         from "./long_calendar_functionality";
 
+import express from 'express';
 import chalk from 'chalk';
 const electron = require('electron');
 const fs       = require('fs');
@@ -297,7 +298,8 @@ const createWindow = async () => {
 
   mainWindow.on('ready-to-show', () => {
 
-    globalShortcut.register(global?.config?.window?.shortcut ?? "Alt+E", () => {
+    console.log("Registering stuff...")
+    const registered = globalShortcut.register(global?.config?.window?.shortcut ?? "Alt+E", () => {
 
       if (mainWindow_cantogglehidden_cooldown) {
 
@@ -320,6 +322,12 @@ const createWindow = async () => {
       }
         
     })
+
+  	if (!registered) {
+    	console.log('Global shortcut registration failed!');
+  	} else {
+    	console.log('Global shortcut registered successfully.');
+  	}
 
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -413,6 +421,32 @@ app
       .on('error',  function(error) { console.error('Error happened', error); })
 
     createWindow();
+
+
+
+    const express_app = express();
+    express_app.get('/toggle_display', (req, res) => {
+      if (mainWindow_cantogglehidden_cooldown) {
+        mainWindow_cantogglehidden_cooldown = false;
+        setTimeout(() => {
+          mainWindow_cantogglehidden_cooldown = true;
+        }, 300);
+        
+        if (!mainWindow_ishidden) {
+          mainWindow?.hide();
+          mainWindow_ishidden = true;
+        } else {
+          mainWindow?.show();
+          mainWindow_ishidden = false;
+        }
+      }
+      res.json({ status: 'ok' });
+    });
+    
+    express_app.listen(18233, () => {
+      console.log('API listening on 18233');
+    });
+
 
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

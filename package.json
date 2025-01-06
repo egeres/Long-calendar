@@ -114,6 +114,7 @@
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^5.2.3",
+    "express": "^4.21.2",
     "hjson": "^3.2.2",
     "moment": "^2.29.4",
     "react": "^18.2.0",
